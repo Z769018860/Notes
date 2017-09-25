@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# TODO: title
+# TODO: theme
+# TODO: vertical-slides
+# TODO: learn-the-md-html-converer
+
 import subprocess
 import sys
 
@@ -109,6 +114,23 @@ add(r'''<!doctype html>
 	<body>
 		<div class="reveal">
 			<div class="slides">
+
+				<section id="themes">
+					<h2>Settings</h2>
+					<h6>Original code from reveal.js</h6>
+					<h6>Converter by AW</h6>
+					<h6>ESC to show general view.</h6>
+					<h6>S to use speecher's mode.</h6>
+					<p>
+						You can select from different transitions, like: <br>
+						<a href="?transition=none#/transitions">None</a> -
+						<a href="?transition=fade#/transitions">Fade</a> -
+						<a href="?transition=slide#/transitions">Slide</a> -
+						<a href="?transition=convex#/transitions">Convex</a> -
+						<a href="?transition=concave#/transitions">Concave</a> -
+						<a href="?transition=zoom#/transitions">Zoom</a>
+					</p>
+				</section>
 				<section data-markdown>
 					<textarea data-template>
 ''')
@@ -167,6 +189,5 @@ print(command2)
 subprocess.call(command)
 subprocess.call(command2)
 print("Convert finished.")
-subprocess.call(command2)
-ps=input()
+input()
 
