@@ -172,6 +172,17 @@ According to *Coco Jamboo's* answer on Zhihu.com about the question: **if nitrou
 ---
 
 > Actress Demi Moore was hospitalized on Monday, Jan. 23, after suffering a seizure during an evening spent inhaling dangerous amounts of nitrous oxide, also known as "whip-its." Moore's friend called the paramedics after the actress "lapsed into semi-consciousness," according to TMZ. The 49-year-old actress reportedly exhibited symptoms of a seizure after inhaling the gas. 
+
+---
+
+### Drug abuse in campus.
+
+---
+What can we learn from this astonishing fact? 
+
+What is the general status of drug or drug-like substances abuse in the US?
+
+We asked two students in US for their opinions about this.
 ---
 ### America's overall drug using status.
 
@@ -179,6 +190,8 @@ Data from ONDCP
 (Office of National Drug Control Policy, see <https://www.whitehouse.gov/ondcp>)
 
 > These drugs include opioids (including the misuse of prescription opioid medications, heroin, and fentanyl); cocaine; marijuana; methamphetamine; and new psychoactive substances.  
+
+---
 
 * Prescription Opioid(鸦片) Misuse, Heroin, and Fentanyl(芬太尼)
 * Cocaine
@@ -244,14 +257,6 @@ No, because in America the justice system is not majority owned by the cartels w
 
 LSD
 
----
-
-### Drug abuse in campus.
-
----
-## What can we learn from this astonishing fact? What is the general status of drug or drug-like substances abuse in the US?
-
-### We asked a student in US for her opinion about this.
 
 ---
 ## The end.

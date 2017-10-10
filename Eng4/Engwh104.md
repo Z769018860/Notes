@@ -1,0 +1,9 @@
+# My view on time management
+
+There are many factors that may influence the effiency of time using, and different people have different views on what these factors are. Yet all the factors that can influence the effiency of time using can be sorted into two types: inner factors and outside factors. Therefore, the best way to manage time properly is to take all these factors into consideration.
+
+It is reported that the inner factors can influence the way people use time. As Alan Lakein reported in 1996, people tend to have two different types of time period. In one period people get better result when they are contacting with other people, while in another on people can get better results when they are working on his own. People's usage of energy also contributes a lot to the effiency. Many people are believed not using their mental power in suffcient depth, according to the research of William James in 1990. In general, in order to manage time better, the inner factors must be taken into consideration. For instance, people can make plan ahead to take better use of the two different periods of time and the mode of fatigue.
+
+Not only the inner factor, but also the outside factor have a great influence on how efficent people use time. *Will power alone can not induce concentration* (Walter Pauk, 1989). Researchs hvae show taht the environment also influence the quality of working in many ways. As a result, *it is important to prepare oneself and one's environment for peak performance*(Jean Guittion, 1969). Anyway, people need to pay attention to the environment they are in in order to better manage their time.
+
+To sum up, there is no reason to deny that both inner and outside factors should be taken into consideration while trying to manage time more properly. For people who want to seize their time tight, it is of great importance to figure out the problems that may lower efficency and take correspond measures to overcome them.
