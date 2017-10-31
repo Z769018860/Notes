@@ -28,6 +28,6 @@ begin
     default:status_now=status2;
 end
 
-always #50 clk=`clk;
+always #50 clk=~clk;
 
 endmodule
