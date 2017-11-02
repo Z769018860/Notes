@@ -15,7 +15,7 @@ next_state;
 reg
 toout,
 clk;
-
+  
 parameter
 IDLE=2'd0,
 state1 =2'd1,
