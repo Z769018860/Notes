@@ -69,7 +69,7 @@ $display("Start test.");
   get();
   setlong(1);
   get();
-  repeat(100)
+  repeat(1000)
   begin
   randomtest();
   end

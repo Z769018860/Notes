@@ -33,9 +33,7 @@ always@(posedge clk)begin
     else
     case({input_enable,input_valid,output_enable,output_valid})
         4'b1100://input
-        begin
-            if(!(pos_read==(pos_write+1)||(pos_write-7)==pos_read))
-            begin     
+        begin 
             if(writelow)begin
             ram[pos_write][3:0]<=Data_In;
             writelow<=~writelow;
@@ -45,7 +43,6 @@ always@(posedge clk)begin
             ram[pos_write][7:4]<=Data_In;
             writelow<=~writelow;
             pos_write<=pos_write+1;
-            end
             end
 
         if(!(pos_read==(pos_write+1)||(pos_write-7)==pos_read))
@@ -64,13 +61,10 @@ always@(posedge clk)begin
 
         4'b0011:
         begin
-            if(pos_read===(pos_write+1)||pos_read===(pos_write-7))begin
             Data_Out<=ram[pos_read];
             pos_read<=pos_read+1;
             input_valid<=1;
             output_valid<=0;
-            end
-        
         end
 
         default:
