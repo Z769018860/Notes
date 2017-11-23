@@ -30,7 +30,7 @@ output out_v,in_en;
 wire    out_v,in_en,in_v,out_en;
 reg    [7:0]data_out;  
 
-reg    [3:0] ram[15:0];//dual port��RAM
+reg    [3:0] ram[7:0];//dual port��RAM
 reg    [3:0] rd_ptr;//д�Ͷ�ָ��
 reg    [3:0] wr_ptr;
 reg    [3:0] counter;//�����жϿ���
@@ -43,7 +43,7 @@ begin
   data_out=0;
   wr_ptr=0;
   rd_ptr=0;
-  ram[0]=0;
+//   ram[0]=0;
  end
  else
  begin
