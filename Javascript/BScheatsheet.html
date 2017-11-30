@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<script src="js/jquery/2.0.0/jquery.min.js"></script>
+<link href="css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
+<script src="js/bootstrap/3.3.6/bootstrap.min.js"></script>
+
+
+<head>
+    <meta http-equiv="Content-Type" Content="text/html;charset=UTF-8">
+</head>
+
+<html>
+<H1 class="h1">Bootstrap cheatsheet</H1>
+<H2 class="h2">By A.W.</H2>
+<div>
+    <p>Ref:http://how2j.cn
+        <p>
+
+            <p>
+                For buttons, see:
+                <a href="http://how2j.cn/k/boostrap/boostrap-button/477.html">Button</a>
+                <button class="btn btn-success btn-large ">Button1</button>
+                <br> Tips: class can be used together to combine complex styles together.
+                <br> For hyperlinks, it can also use the classes of btn, see:
+                <a class="btn btn-info" href="http://how2j.cn/k/boostrap/boostrap-button/477.html">Hyperlink!</a>
+                <hr class="label">
+                <hr> Remarks: 按钮样式 可以用于 :
+                <br> 按钮元素
+                <button> </button>
+                超链元素
+                <a></a>
+                按钮类型的input元素
+                <!-- <input type="input">  -->
+                提交类型的input元素
+                <!-- <input type="submit">  -->
+                重置类型的input元素
+                <!-- <input type="reset"> -->
+
+            </p>
+</div>
+<br>
+<div>
+    <p>Table</p>
+    <table class="table table-condensed table-bordered table-striped">
+        <thead>
+            <th>Name</th>
+            <th>Class</th>
+            <th>ID</th>
+        </thead>
+        <tbody>
+            <tr class="success">
+                <td>WHQ</td>
+                <td>1605</td>
+                <td>1</td>
+            </tr>
+            <tr class="info">
+                <td>ZZR</td>
+                <td>1601</td>
+                <td>1</td>
+            </tr>
+            <tr class="danger">
+                <td>errortest1</td>
+                <td>errortest2</td>
+                <td>errortest3</td>
+                <td>errortest4</td>
+            </tr>
+            <tr class="active">
+                <td>poi</td>
+                <td>poi</td>
+                <td>poi</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <textarea class="primary">INPUT</textarea>
+    <br>
+    <input type="input" name="INP" value="233" class="form-control" id="INP1">
+    <br>
+    <input type="input" name="INP2" value="234" class="form-control" id="INP2">
+    <br>
+    <select class="form-control">
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+    </select>
+</div>
+
+<div>
+    <img src="http://how2j.cn/example.gif" class="img-rounded">
+    <img src="http://how2j.cn/example.gif" class="img-thumbnail">
+    <img src="http://how2j.cn/example.gif" class="img-fluid">
+</div>
+
+<div>
+    <span class="text-capitalize text-center text-info">My life for Aiur</span>
+    <textarea CLASS="text-danger">tEXTAREA</textarea>
+    <p class="bg-primary">p with background.</p>
+</div>
+<hr>
+
+<div class="pull-right">
+    Plain text.
+    <button class="close" type="button" aria-hidden="true">&times;</button>
+    <button class="btn btn-default">Button</button>
+    <button class="hidden">233</button>
+    <button class="invisible">233</button>
+    <span class="caret"></span>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class='col-xs-12'>
+            12col in total.
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-1">1111</div>
+        <div class="col-xs-1">1112</div>
+        <div class="col-xs-1">1113</div>
+        <div class="col-xs-1">1115</div>
+        <div class="col-xs-1">1111</div>
+        <div class="col-xs-1">1111</div>
+        <div class="col-xs-1">1111</div>
+        <div class="col-xs-1">1111</div>
+        <div class="col-xs-1">1110</div>
+        <div class="col-xs-1">1111</div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-4">1111</div>
+        <div class="col-xs-4">1112</div>
+        <div class="col-xs-2">1113</div>
+        <div class="col-xs-1">1115</div>
+        <div class="col-xs-1">1111</div>
+    </div>
+</div>
+<style>
+    div.container div.row div {
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(165, 159, 255);
+        text-align: center;
+    }
+</style>
+
+<div class="dropdown">
+    <button type="button" class="btn dropdown">
+        NAME of DROPdown</button>
+</div>
+<div class="btn-toolbar" role="toolbar">
+    <div class="btn-group" role="group" aria-label="web">
+        <button type="button" class="btn btn-default">CHOOSE1</button>
+        <button type="button" class="btn btn-default">CHOOSE2</button>
+        <button type="button" class="btn btn-default">CHOOSE3</button>
+    </div>
+
+    <div class="btn-group" role="group" aria-label="web">
+        <button type="button" class="btn btn-default">CHOOSE0</button>
+        <button type="button" class="btn btn-default">CHOOSE0</button>
+        <button type="button" class="btn btn-default">CHOOSE0</button>
+        <button type="button" class="btn btn-default">CHOOSE0</button>
+        <button type="button" class="btn btn-default">CHOOSE0</button>
+    </div>
+
+</div>
+
+<div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-default active">
+          <input type="checkbox" checked>1
+        </label>
+        <label class="btn btn-default">
+          <input type="checkbox" > 2
+        </label>
+        <label class="btn btn-default">
+          <input type="checkbox" > 3
+        </label>
+</div>
+</html>
