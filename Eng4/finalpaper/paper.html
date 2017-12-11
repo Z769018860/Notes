@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>paper</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///C:\Users\autum\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.3.1\node_modules\@shd101wyy\mume\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+ 
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <h1 class="mume-header" id="classification-of-take-out-orderers-by-expectation-maximization-algorithm">Classification of take-out orderers by Expectation Maximization Algorithm.</h1>
+
+<ul>
+<li>
+<p>Topic: Research on UCAS students' online take-out ordering</p>
+</li>
+<li>
+<p>Group members: 王华强、高云聪、杨钊、刘蕴哲</p>
+</li>
+</ul>
+<hr>
+<h2 class="mume-header" id="introduction">Introduction</h2>
+
+<p>With the fast development of the mobile Internet, more and more people are using online take-out food platforms to order food. According to the report of Institute of Frontier Industry Research in 2016, the whole market of online take-out selling will reach at 118 billion yuan per year at the end of 2017. Meanwhile, the fast-growing Big Data technology and the Mobile Internet technology have exerted a more and more powerful impact on traditional food markets (iiMedia Research, 2016). The growth trend of the O2O food market is unstoppable and it is easy to predict that the market will grow even faster in the following few years (iiMedia Research, 2017). Above all, it is obvious that buying online take-out food is becoming a natural part of urban citizens' life.(How relevant is this sentence here?)</p>
+<p>Among all the people who buy take-out online, students are the very first group of people who use online platform for take-out as soon as they are launched, and also an unignoreable group of people who buy food online (TrustData, 2017).  TrustData found a strong relationship between the number of take-out orders and the number of universities, which also suggests that students consumed a large number of online take-out(citation information needed). However, among all the exist studies, no math model of university students' take-out ordering pattern has been developed. Despite many reports focusing on the whole market of take-out, none of them is detailed enough to show the buying pattern on campus. There have also been reports made by other universities’ students which are based on rather casual questionnaires and guesses (reference needed), which is not enough to reveal the whole pattern of campus online take-out buying.</p>
+<p>Our research is focused on the data obtained from UCAS’s Yuquan campus. With the help of data analysis algorithm offered by Weka, it is easier to find out the pattern of online take-out buying and the relationships between all these factors. After the analysis of the results of xxx questionnaires, the result clearly shows that (Add our result here when we finished analysis), which will benefit (......).</p>
+<h2 class="mume-header" id="methods">Methods</h2>
+
+<h3 class="mume-header" id="1-questionnaire-design">1. Questionnaire design</h3>
+
+<p>For the purpose of the research, we adopt the method of online questionnaire. The object of the survey is all the undergraduates in the Yuquanlu campus of University of Chinese Academy of Sciences(hereinafter referred to as UCAS).</p>
+<p>We have posted our online questionnaire on all the major social platforms at school. It is convenient to count the data through the backstage when the number of samples are large enough.</p>
+<p>The main contents of the questionnaire include the following aspects:</p>
+<h4 class="mume-header" id="11-consumption-situation-on-online-ordering">1.1 Consumption situation on online ordering</h4>
+
+<ol>
+<li>Online ordering frequency: the options were set to as follows: ”never”, ”no more than three times a month”, ”several times a week”, ”almost once a day”, ”two or three times a day”.</li>
+<li>Online ordering time: the options were set to as follows: ”mostly on weekends”, ”mostly on weekdays”, ”whenever I want”.</li>
+<li>Online ordering platform: the options included the three most commonly used takeout platforms.</li>
+<li>Online ordering price range: the options were set to as follows: ”&lt;15 rmb/share”, ”15-25 rmb/share”, ”25-50rmb/share”, ”&gt;50 rmb/share”.</li>
+</ol>
+<p>Take the eleme app as an example, the starting discount price of most stores is set at approximately 20-30 rmb, the preferential larger can reach 15 rmb, there may be a part of classmate hoping to reach the most affordable prices; for most of the students, in order to use the red envelopes, each consumer has to reach more than 35 rmb, the final cost will be more than 25 yuan. So we set up the price range above.</p>
+<h4 class="mume-header" id="12-influence-factors-on-online-ordering">1.2 Influence factors on online ordering</h4>
+
+<ol>
+<li>The main factors considered in online ordering: we considered the subjective needs of the consumers and the quality of the store's service as two major aspects and provided several possible options, an “Other-Specify” is also included.</li>
+<li>The main reasons for choosing online ordering: we provided following possible options: ”terrible food in canteen”, ”terrible food in canteen“, “crowded canteen”, “coupons “, ”recommend by others”, “Several people together has a discount”, “missed the meal time”, ”want to have a big meal”, “do not want to go out”, “too much money”,an “Other-Specify” is also included.</li>
+</ol>
+<h4 class="mume-header" id="13-other-views-on-takeout">1.3 Other views on takeout</h4>
+
+<p>In this part, we investigated the degree of concern about the hygiene of takeout, the degree of parents' support for child ordering online and students’ general evaluations of takeout. We also added a fill - in question to investigate what causes the students to give up their takeout, hoping to provide more information for the later analysis.</p>
+<h3 class="mume-header" id="2-preliminary-studies">2. Preliminary studies</h3>
+
+<h3 class="mume-header" id="3-pre-process">3. Pre-process</h3>
+
+<h3 class="mume-header" id="4-basic-analyzation">4. Basic analyzation</h3>
+
+<h3 class="mume-header" id="5-applying-the-expectation-maximization-algorithm">5. Applying the Expectation Maximization Algorithm</h3>
+
+<p>After collecting and pre-processing the data, we are going to analyze the influence factors through the EM algorithm to explore some possible relationships between the various factors. Expectation–Maximization (EM) algorithm is an iterative method to find maximum likelihood or maximum a posteriori (MAP) estimates of parameters in statistical models, where the model depends on unobserved latent variables.</p>
+<blockquote>
+<p>岳佳. (2007). 基于EM算法的模型聚类的研究及应用. (Doctoral dissertation, 江南大学).</p>
+</blockquote>
+<p>The EM Algorithm ,as the name suggests, is an algorithm used for getting the classification of a known data set which have the max expectation(Do, C. B., &amp; Batzoglou, S. (2008)). In this experiment, we used the EM algorithm included in Weka (Waikato Environment for Knowledge Analysis) by the University of Waikato.</p>
+<p>(Do, C. B., &amp; Batzoglou, S. (2008). What is the expectation maximization algorithm?. Nature biotechnology, 26(8), 897.)</p>
+<p>At the very begining, we apply the EM algorithm directly to the pre-processed data, the first test uses the following parameters:</p>
+<pre class="language-">weka.clusterers.EM -I 100 -N -1 -X 10 -max -1 -ll-cv 1.0E-6 -ll-iter 1.0E-6 -M 1.0E-6 -K 10 -num-slots 1 -S 100
+</pre>
+<p>The results are listed as follow.</p>
+<pre class="language-">EM
+Number of clusters selected by cross validation: 2
+Number of iterations performed: 14
+                               Cluster
+Attribute                            0       1
+                                (0.56)  (0.44)
+===============================================
+WHERE-ELM
+  yes                           29.1075 35.8925
+  no                             17.871   1.129
+  [total]                       46.9785 37.0215
+WHERE-BD
+  yes                            9.6428 16.3572
+  no                            37.3356 20.6644
+  [total]                       46.9785 37.0215
+</pre>
+<p>The result includes a large sum of data, which is quite hard to find some significant results in it. However, the EM algorithm did succeed in part the raw data into two different sets with similar size. For most of the attributes int the result list, the difference is not obvious. However, for some of the binary attributes, the classification martix showed that the 2 sets generated by this algorithm have huge difference in those properities. We picked out these attributes as following:</p>
+<pre class="language-">att picked out by EM
+
+WHY-TOGETHER
+  no                    28.7305 32.2695
+  yes                   17.9241  5.0759
+  [total]               46.6546 37.3454
+WHY-OUTOFLUNCHTIME
+  yes                   29.7774 12.2226
+  no                    16.8772 25.1228
+  [total]               46.6546 37.3454
+FREQUENCY
+  c                     15.7128 29.2872
+  b                     28.9297  1.0703
+  d                      1.0111  6.9889
+  e                      1.0024  1.9976
+  a                      2.9985  1.0015
+  [total]               49.6546 40.3454
+AT_TIME
+  c                     19.2888 27.7112
+  a                     25.4579  9.5421
+  b                      2.9078  1.0922
+  [total]               47.6546 38.3454
+WHY-AWFULCANTEEN
+  no                    25.9073  5.0927
+  yes                   20.7473 32.2527
+  [total]               46.6546 37.3454
+WHY-CROWDEDCANTEEN
+  no                    35.1047 10.8953
+  yes                   11.5498 26.4502
+  [total]               46.6546 37.3454
+
+......
+</pre>
+<p>All the attributes listed above had obvious difference in the two groups, and this was only the basic result generated by the EM algorithm with the initial parameters.</p>
+<h3 class="mume-header" id="6-improve-the-algorithm">6. Improve the Algorithm</h3>
+
+<p>Although we could already see the difference in the two groups, there were still vast improvement space for it.</p>
+<p>In the first classification, we take 25 factors into consideration. However, according to the result, only some of them shows great differences in the two sets, which showed they had no significant contribution for the classification. Therefore, doing further process of these attributes should be able to improve the outcome greatly.</p>
+<p>For some of the other attributes, the choices gathered together in single choices.</p>
+<p><img src="style.png" alt="attr"><br>
+<strong>(Pre-processed data, 1-1)</strong></p>
+<p>For instance, in attributes like WHY-MATESUGGEST (which asked if the responder choose to order out-take because of ohter peoples' suggest), is greatly imbalanced. As the graph suggests, few participants order out-take because others' suggest. In this situation, this attribute can be deleted in the next EM test, for it can hardly provide any useful informations for classification, so according to the principle of EM. , deleting them will not harm the general result. Also, if left untouched, these imbalance attrtbute will introduce more Randomness into the result of EM. Attributes with similar conditions are:</p>
+<pre class="language-">WHY-IAMRICH
+CHOOSE-ELSE
+WHERE-ELSE
+WHY-MATESSUGGEST
+WHY-TASTE
+CHOOSE-SERVICE
+WHY-NOOUTDOOR
+</pre>
+<p>These attributes were removed before the next turn of EM began.</p>
+<p>Not only the common pattern will make blur of the results, but  also one question with many different options can also add up to the difficulty of data analize. In order to avoid this, we choosed to merge the options of such questions.</p>
+<p>Take the score for canteen attribute for instance. In the questionnaire, the question asking participants to make a score foe the canteen was designed as a Likek scale (Likert summated rating scale) in order to make out te difference between the slight difference in attitudes towards the canteen. Unfortunately, the design also made the result too complexed so that the algorithm could not use this key to do classify works correctly, for the algorithm does not know the relationship between &quot;dislike&quot; and &quot;hate&quot;. The algorithm considered these 2 options as totally different emotions while in fact they are only representation of different level of negative emotions. Therefore, merge such options together as negative attitude can greatly improve the outcome of the algorithm.</p>
+<blockquote>
+<p>林东方. (2012). 基于EM算法的不完全测量数据的处理方法研究. (Doctoral dissertation, 中南大学).</p>
+</blockquote>
+<p>Attributes with merged options are listed below.</p>
+<pre class="language-">SCORE-CANTEEN
+  neutral               33.9477 26.0523
+  positive               10.721   5.279
+  negative               2.9859  7.0141
+  [total]               47.6546 38.3454
+SCORE_TAKEOUT2s
+  neutral               29.6341 19.3659
+  positive              17.0205 17.9795
+  [total]               46.6546 37.3454
+</pre>
+<p>At the same time, we also did the same thing for the special points in &quot;PRICE&quot;, &quot;AT-TIME&quot;, &quot;FREQUENCY&quot; and &quot;SPEND-PERCENTAGE&quot;. For these salient points are limited in number so that they can be sort into adjecant classes, hence we can get a better result.</p>
+<p>Apply EM algorithm again to the adjusted data, we get the result as following:</p>
+<pre class="language-">=== Clustering model (full training set) ===
+
+
+EM
+==
+
+Number of clusters selected by cross validation: 2
+Number of iterations performed: 20
+
+
+                       Cluster
+Attribute                    0       1
+                        (0.58)  (0.42)
+=======================================
+WHERE-ELM
+  yes                   30.3819 34.6181
+  no                    17.6323  1.3677
+  [total]               48.0142 35.9858
+WHERE-BD
+  yes                    9.4627 16.5373
+  no                    38.5514 19.4486
+  [total]               48.0142 35.9858
+WHERE-MT
+  no                    17.1953 25.8047
+  yes                   30.8189 10.1811
+  [total]               48.0142 35.9858
+FREQUENCY
+  c                     17.1175 27.8825
+  b                     28.8838  1.1162
+  d                      1.0127  6.9873
+  e                      1.0013  1.9987
+  a                      2.9989  1.0011
+  [total]               51.0142 38.9858
+AT_TIME
+  c                     20.3408 26.6592
+  a                     25.7288  9.2712
+  b                      2.9446  1.0554
+  [total]               49.0142 36.9858
+PRICE
+  b                      27.734  23.266
+  c                     16.2951 10.7049
+  a                      3.9873  3.0127
+  d                      1.9979  1.0021
+  [total]               50.0142 37.9858
+SPEND_PERCENTAGE
+  a                     40.0709  2.9291
+  c                      1.7132 13.2868
+  b                      6.2307 18.7693
+  d                      1.9994  3.0006
+  [total]               50.0142 37.9858
+CHOOSE-PRICE
+  yes                   35.7326 31.2674
+  no                    12.2816  4.7184
+  [total]               48.0142 35.9858
+CHOOSE-PERSONALFAVOR
+  yes                   27.6935 21.3065
+  no                    20.3207 14.6793
+  [total]               48.0142 35.9858
+WHY-AWFULCANTEEN
+  no                     26.908   4.092
+  yes                   21.1061 31.8939
+  [total]               48.0142 35.9858
+WHY-CROWDEDCANTEEN
+  no                    36.4262  9.5738
+  yes                    11.588  26.412
+  [total]               48.0142 35.9858
+WHY-HAVEDISCOUNT
+  yes                    18.976  15.024
+  no                    29.0382 20.9618
+  [total]               48.0142 35.9858
+WHY-TOGETHER
+  no                    29.8723 31.1277
+  yes                   18.1419  4.8581
+  [total]               48.0142 35.9858
+WHY-OUTOFLUNCHTIME
+  yes                   30.1958 11.8042
+  no                    17.8183 24.1817
+  [total]               48.0142 35.9858
+WHY-WANNAEATBETTER
+  no                    31.5739 25.4261
+  yes                   16.4403 10.5597
+  [total]               48.0142 35.9858
+SCORE-CANTEEN
+  neutral               35.1152 24.8848
+  positive              10.8694  5.1306
+  negative               3.0295  6.9705
+  [total]               49.0142 36.9858
+SCORE_TAKEOUT2s
+  neutral               30.8225 18.1775
+  positive              17.1917 17.8083
+  [total]               48.0142 35.9858
+
+
+Time taken to build model (full training data) : 0.48 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0      45 ( 56%)
+1      35 ( 44%)
+
+
+Log likelihood: -11.44594
+
+</pre>
+<h3 class="mume-header" id="7-verifing-of-the-final-result-by-em">7. Verifing of the final result by EM.</h3>
+
+<h2 class="mume-header" id="result">Result</h2>
+
+<p>Combine the result of the EM algorithm and the result of the interview, we can devide the out-take orderers in UCAS roughly into two groups. Generally, the first group can be described as a group of people who have negative attitude towards the canteen, most of them evaluate the out-taken as high level, and enjoy ordering out-take together with their roommates.<br>
+Meanwhile, most of them also believes the canteen is too crowded some times.</p>
+<p>The other group of people share different characteristic with the first group of people. While half of them claim that they choose out-take because the canteen is too awful(which is far less then the first group, in which almost all the people believes that the awful canteen is the reason for them to order out-take), they order out-take mainly because of they missed the time for lunch or dinner. These people order out-take mainly at the weekends, and they are less likely to share out-take with their friends.</p>
+<p>To sum up, the first group of people can be defined as those who do not like the school canteen so that they choose to take out-take, while another group, which is similar in size with the first group, mainly because they want food out of the meal time and dinner time.</p>
+<p>Therefore, some suggestions ...</p>
+<h2 class="mume-header" id="discussion">Discussion</h2>
+
+<h2 class="mume-header" id="references">References</h2>
+
+
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#classification-of-take-out-orderers-by-expectation-maximization-algorithm">Classification of take-out orderers by Expectation Maximization Algorithm.</a>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#methods">Methods</a>
+<ul>
+<li><a href="#1-questionnaire-design">1. Questionnaire design</a>
+<ul>
+<li><a href="#11-consumption-situation-on-online-ordering">1.1 Consumption situation on online ordering</a></li>
+<li><a href="#12-influence-factors-on-online-ordering">1.2 Influence factors on online ordering</a></li>
+<li><a href="#13-other-views-on-takeout">1.3 Other views on takeout</a></li>
+</ul>
+</li>
+<li><a href="#2-preliminary-studies">2. Preliminary studies</a></li>
+<li><a href="#3-pre-process">3. Pre-process</a></li>
+<li><a href="#4-basic-analyzation">4. Basic analyzation</a></li>
+<li><a href="#5-applying-the-expectation-maximization-algorithm">5. Applying the Expectation Maximization Algorithm</a></li>
+<li><a href="#6-improve-the-algorithm">6. Improve the Algorithm</a></li>
+<li><a href="#7-verifing-of-the-final-result-by-em">7. Verifing of the final result by EM.</a></li>
+</ul>
+</li>
+<li><a href="#result">Result</a></li>
+<li><a href="#discussion">Discussion</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    
+    
+    <script>
+(function bindTaskListEvent() {
+  var taskListItemCheckboxes = document.body.getElementsByClassName('task-list-item-checkbox')
+  for (var i = 0; i < taskListItemCheckboxes.length; i++) {
+    var checkbox = taskListItemCheckboxes[i]
+    var li = checkbox.parentElement
+    if (li.tagName !== 'LI') li = li.parentElement
+    if (li.tagName === 'LI') {
+      li.classList.add('task-list-item')
+    }
+  }
+}())    
+</script>
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
