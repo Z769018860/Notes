@@ -17,37 +17,59 @@ Our research is focused on the data obtained from UCAS’s Yuquan campus. With t
 <!-- Insert reference where necessary. -->
 <!-- Consider how to synthesize source information in the second paragraph. -->
 
+## Objective
+
+The aim of this paper is to provide a pattern for out-take orderers in UCAS Yuquan campus, and provide a method to conjecture one's out-take ordering behavior according to his everyday behavior. Thence, we can get a clear view of the out-take ordering behavior in Yuquan campus and give some useful suggestions to the school logistics department.
+
 ## Methods
+
 ### 1. Questionnaire design
 <!-- 2.Methods -->
-For the purpose of the research, we adopt the method of online questionnaire. The object of the survey is all the undergraduates in the Yuquanlu campus of University of Chinese Academy of Sciences(hereinafter referred to as UCAS).  
+We adopt the method of online questionnaire. The object of the survey is all the undergraduates in the Yuquanlu campus of University of Chinese Academy of Sciences (hereinafter referred to as UCAS).  
 
-We have posted our online questionnaire on all the major social platforms at school. It is convenient to count the data through the backstage when the number of samples are large enough.
+We posted our online questionnaire on all the major social platforms. It is convenient to collect the data through the backstage especially when the sample scale is large.
 
-The main contents of the questionnaire include the following aspects:    
-#### 1.1 Consumption situation on online ordering
+The contents of the questionnaire are listed as follows:    
 
-1. Online ordering frequency: the options were set to as follows: ”never”, ”no more than three times a month”, ”several times a week”, ”almost once a day”, ”two or three times a day”.
-1. Online ordering time: the options were set to as follows: ”mostly on weekends”, ”mostly on weekdays”, ”whenever I want”.
-1. Online ordering platform: the options included the three most commonly used takeout platforms.
-1. Online ordering price range: the options were set to as follows: ”<15 rmb/share”, ”15-25 rmb/share”, ”25-50rmb/share”, ”>50 rmb/share”. 
+#### 1. Consumption situation on online ordering
 
-Take the eleme app as an example, the starting discount price of most stores is set at approximately 20-30 rmb, the preferential larger can reach 15 rmb, there may be a part of classmate hoping to reach the most affordable prices; for most of the students, in order to use the red envelopes, each consumer has to reach more than 35 rmb, the final cost will be more than 25 yuan. So we set up the price range above. 
+1. Online ordering frequency: the options were set as follows: ”never”, ”no more than three times a month”, ”several times a week”, ”almost once a day”, ”two or three times a day”.
+1. Online ordering time: the options were set as follows: ”mostly on weekends”, ”mostly on weekdays”, ”whenever I want”.
+1. Online ordering platform: the options included three most commonly used takeout platforms.
+1. Online ordering price range: the options were set as follows: ”<15 rmb/share”, ”15-25 rmb/share”, ”25-50rmb/share”, ”>50 rmb/share”. 
 
-#### 1.2 Influence factors on online ordering
+Take the eleme app as an example. The lowest discount price of most stores is set in the range of 20-30 yuan. A part of the students possibly order what they want only. However, most of the students, in order to use the red envelopes, have to purchase food valued over 35 yuan. The final cost will consequently exceed 25 yuan. As a result, we set the price range as above. 
 
-1. The main factors considered in online ordering: we considered the subjective needs of the consumers and the quality of the store's service as two major aspects and provided several possible options, an “Other-Specify” is also included.
-1. The main reasons for choosing online ordering: we provided following possible options: ”terrible food in canteen”, ”terrible food in canteen“, “crowded canteen”, “coupons “, ”recommend by others”, “Several people together has a discount”, “missed the meal time”, ”want to have a big meal”, “do not want to go out”, “too much money”,an “Other-Specify” is also included.
+#### 2. Influence factors on online ordering
 
-#### 1.3 Other views on takeout
+1. The main factors considered in online ordering: we considered subjective needs of consumers and quality of store's service as two major factors. In addition, we provided several other options, “Other-Specify” included.
+1. The main reasons for choosing online ordering: we provided following options: ”felt bad about food in canteen“, “felt crowded in canteen”, “got coupons “, ”be recommended by others”, “joined others to obtain a discount”, “missed the meal time”, ”expected for a big meal”, “refused to go out”, “had too much money”, an “Other-Specify” is also included.
 
-In this part, we investigated the degree of concern about the hygiene of takeout, the degree of parents' support for child ordering online and students’ general evaluations of takeout. We also added a fill - in question to investigate what causes the students to give up their takeout, hoping to provide more information for the later analysis.
+####	3. Other views on takeout
 
-### 2. Preliminary studies
+In this part, we investigated the degree of concern about takeout hygiene, the degree of parents' support for children ordering online and students’ general evaluations of takeout. We also added a fill - in question to investigate conditions in which the students will give up ordering online, hoping to collect more information for later analysis.
 
-### 3. Pre-process
+### 2. Basic analize
 
-### 4. Basic analyzation
+In our survey, we received totally 105 sets of questionnaire answers, of which 103 are valid.  2 responses were eliminated because though the participants confirmed that they ordered take-out, they called for deliveries at a frequency of null. According to the data, over half of the students had take-out several times a week. A similar percentage of students mostly had take-out on weekends. Major factors which students considered when ordering online is the price along with the taste. It is partly confirmed by following data. Around sixty percent of students spent 15 to 25 yuan per share. Half of them allocated less than 15 percent of their living expenses to take-out. In addition, both parents and children worried little about take-out hygiene. The reasons why students chose to have take-out are highly diversified.  Poor impression on canteen contributed to the popularity of take-out because over half of the students spoke evilly about the taste of dishes offered in canteen.
+
+We first finished basic analysis of the data. 
+
+_Do you order online?_
+
+![res1.png](res1.png)
+
+It is a seemingly meaningful result that three fourths of the students order online. However, we conducted the survey with an online questionnaire, which means we have no access to obtain the recovery rate of the questionnaire.  In addition, the title of our questionnaire is Take-out in UCAS.  As a result, undergraduates who never conducted online ordering probably overlooked the questionnaire.  In conclusion, it is not a proper sampling of undergraduates in UCAS.  Consequently, we are not able to conclude the ratio of take-out users according to the answers of this question.
+
+![res2.png](res2.png)
+
+In order to rule out redundant information, we are going to analyze the influence factors with the EM algorithm.  We expect to explore possible relationships among various factors. Expectation–Maximization (EM) algorithm is an iterative method to find maximum likelihood or maximum a posteriori (MAP) estimates of parameters in statistical models, where the model depends on unobserved latent variables.
+
+### 3. Preliminary studies
+
+### 4. Data pre-process
+
+<!-- ### 4. Basic analyzation -->
 
 ### 5. Applying the Expectation Maximization Algorithm
 
@@ -91,7 +113,7 @@ The result includes a large sum of data, which is quite hard to find some signif
 
 
 ```
-att picked out by EM
+Attributes picked out in the result of EM
 
 WHY-TOGETHER
   no                    28.7305 32.2695
@@ -281,21 +303,40 @@ Clustered Instances
 Log likelihood: -11.44594
 
 ``` 
-### 7. Verifing of the final result by EM.
+<!-- ### 7. Verifing of the final result by EM. -->
 
 
 
 ## Result
 
-Combine the result of the EM algorithm and the result of the interview, we can devide the out-take orderers in UCAS roughly into two groups. Generally, the first group can be described as a group of people who have negative attitude towards the canteen, most of them evaluate the out-taken as high level, and enjoy ordering out-take together with their roommates.
+Combine the result of the EM algorithm and the result of the basic analyzation, we can devide the out-take orderers in UCAS roughly into two groups. Generally, the first group can be described as a group of people who have negative attitude towards the canteen, most of them evaluate the out-taken as high level, and enjoy ordering out-take together with their roommates.
 Meanwhile, most of them also believes the canteen is too crowded some times.
 
 The other group of people share different characteristic with the first group of people. While half of them claim that they choose out-take because the canteen is too awful(which is far less then the first group, in which almost all the people believes that the awful canteen is the reason for them to order out-take), they order out-take mainly because of they missed the time for lunch or dinner. These people order out-take mainly at the weekends, and they are less likely to share out-take with their friends.
 
 To sum up, the first group of people can be defined as those who do not like the school canteen so that they choose to take out-take, while another group, which is similar in size with the first group, mainly because they want food out of the meal time and dinner time.
 
-Therefore, some suggestions ...
 
 ## Discussion
- 
+
+By using the method of superwised machine learning, we get the behavior pattern of the UCAS out-take orderer for the first time. In the model build by the EM algorithm, we can see the difference between the people who are not satisfied with the university canteen and the people who order take-out only for its effeciency. Compared with other researches about the university take-out ordering , this research provides a quantified model for out-take ordering, which is far more convincing and more repeatable. By using this model, we can speculate one person's out-taken ordering pattern from limited informations.
+
+Some suggestions can be given from the result of the algorithm... (to be finished)
+
+However, limitation for this research do exists. The greatest challenge is from the data we can use. We suspect that the activity of out-take ordering is also related to the academic achievement and the physical fitness of the orderer. However, for two limitation factors listed as follow, the suspection can not be discussed in this paper. 
+
+The first limitation factor is the size of the questionnaire. Experience shows that too many questions will make the participants feel board so that the quantity for the questionnaire retrieved will drop sharply. In our questionnaire there were already 14 questions so it is unwise to add more questions to it.
+
+The second limitation factor is about the privicy of the participants. For some of the participants may not want to offer their GPA, it is hard to establish the link between out-take ordering and grades. Meanwhile, because the questionare is annoymous, is is also impossible to establish the link between the participants with the publiced information about grades. 
+
+As a result, the research is only about the out-take ordering itself. Yet we believe further research about the relationship between out-take ordering and academical and physical perform will lead to more exciting findings.
+
 ## References
+
+> iiMedia Research. (2016). Research report for Chinese take-out industry(2016).
+
+> iiMedia Research. (2017). Research report for Chinese take-out industry(2017). 
+
+> 岳佳. (2007). 基于EM算法的模型聚类的研究及应用. (Doctoral dissertation, 江南大学).
+
+> 林东方. (2012). 基于EM算法的不完全测量数据的处理方法研究. (Doctoral dissertation, 中南大学).
