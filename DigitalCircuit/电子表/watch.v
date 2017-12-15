@@ -28,6 +28,7 @@ module watch(clk, resetn, set, key_col1, key_col2, key_row2, key_row3, key_row4,
    
    //---------------------------------------------计算1s----------------------------------------------//
    parameter COUNTER_SUM = 27'd99_999_999;   //100MHz。计数满COUNTER_SUM时，秒数加1s。
+//   parameter COUNTER_SUM = 27'd5;   //100MHz。计数满COUNTER_SUM时，秒数加1s。
 
    reg [26:0] count;                             //计数器，上限为COUNTER_SUM
    always @(posedge clk)
@@ -35,6 +36,12 @@ module watch(clk, resetn, set, key_col1, key_col2, key_row2, key_row3, key_row4,
       if ( !resetn )                              //复位
          begin
             count <= 27'd0;
+            hour_h<=2'b0;         //0~2,小时的十位
+            hour_l<=4'b0;         //0~9,小时的个位
+            min_h<=3'b0;          //0~5
+            min_l<=4'b0;          //0~9
+            sec_h<=3'b0;          //0~5
+            sec_l<=4'b0;          //0~9
          end
       else if ( count < COUNTER_SUM )
          begin
@@ -86,7 +93,7 @@ module watch(clk, resetn, set, key_col1, key_col2, key_row2, key_row3, key_row4,
       begin
          state <= 3'd0;
       end
-      else if (state_count[3])
+      else if (state_count[3])//每到state_count[3], go to next state
       begin
          state <= next_state;
       end
@@ -155,7 +162,20 @@ module watch(clk, resetn, set, key_col1, key_col2, key_row2, key_row3, key_row4,
    wire sec_l_addEn;
    assign sec_l_addEn = set ? ( (state==3'd3)&state_count[3]&!key_row4 ) : one_second;
    //TODO 1:reg [3:0] sec_l
+    always@(posedge clk)
+    if(sec_l_addEn)
+    begin
+    if(sec_l==4'd9)
+        begin
+        sec_l<=4'b0;
+        end
+    else
+        begin
+        sec_l<=sec_l+4'b1;
+        end
+    end
    wire sec_l_to_h;
+    assign sec_l_to_h=((sec_l==4'd9)&sec_l_addEn);
    //TODO 2:assign sec_l_to_h;
    
    //---------------------------------------------sec_h-------------------------------------------------//
@@ -163,38 +183,103 @@ module watch(clk, resetn, set, key_col1, key_col2, key_row2, key_row3, key_row4,
    wire sec_h_addEn;
    assign sec_h_addEn = set ? ( (state==3'd1)&state_count[3]&!key_row4 ) : sec_l_to_h;
    //TODO 3: reg [2:0] sec_h
+   always@(posedge clk)
+   if(sec_h_addEn)
+   begin
+        if(sec_h==3'd5)
+            begin
+            sec_h<=3'd0;
+            end
+        else
+            begin
+            sec_h<=sec_h+3'b1;
+            end
+        end
    wire sec_to_min;
    //TODO 4:assign sec_to_min;
+   assign sec_to_min=((sec_h==3'd5)&sec_h_addEn);
    
    //---------------------------------------------min_l-------------------------------------------------//
    //min_l累加使能信号：set为1时，来一个对应脉冲（row3 & col2）则有效；否则，sec_to_min有进位时有效
    wire min_l_addEn;
    assign min_l_addEn = set ? ( (state==3'd3)&state_count[3]&!key_row3 ) : sec_to_min;
    //TODO 5: reg [3:0] min_l;
+   always@(posedge clk)
+   if(min_l_addEn)
+   begin
+        if(min_l==4'd9)
+            begin
+            min_l<=4'd0;
+            end
+        else
+            begin
+            min_l<=min_l+4'b1;
+            end
+        end
    wire min_l_to_h;
    //TODO 6:assign min_l_to_h;
+   assign min_l_to_h = ((min_l==4'd9)&min_l_addEn);
    
    //---------------------------------------------min_h-------------------------------------------------//
    //min_h累加使能信号：set为1时，来一个对应脉冲（row3 & col1）则有效；否则，min_l_to_h有进位时有效
    wire min_h_addEn;
    assign min_h_addEn = set ? ( (state==3'd1)&state_count[3]&!key_row3 ) : min_l_to_h;
    //TODO 7: reg [2:0] min_h
+    always@(posedge clk)
+    if(min_h_addEn)
+   begin
+        if(min_h==3'd5)
+            begin
+            min_h<=3'd0;
+            end
+        else
+            begin
+            min_h<=min_h+3'b1;
+            end
+        end
    wire min_to_hour;
    //TODO 8:assign min_to_hour;
+   assign min_to_hour =((min_h==3'd5)&min_h_addEn);
    
    //---------------------------------------------hour_l-------------------------------------------------//
    //hour_l累加使能信号：set为1时，来一个对应脉冲（row2 & col2）则有效；否则，min_to_hour有进位时有效
    wire hour_l_addEn;
    assign hour_l_addEn = set ? ( (state==3'd3)&state_count[3]&!key_row2 ) : min_to_hour;
    //TODO 9:reg [3:0] hour_l;
+   always@(posedge clk)
+   if(hour_l_addEn)
+   begin 
+        if(hour_l==4'd9)
+            begin
+            hour_l<=4'd0;
+            end
+        else
+            begin
+            if((hour_h==2'd2)&hour_l==4'd3)
+                begin
+                hour_h<=2'd0;
+                hour_l<=4'd0;
+                end
+            else
+                begin
+                hour_l<=hour_l+4'b1;
+                end
+            end
+        end
    wire hour_l_to_h;
    //TODO 10:assign hour_l_to_h;
+   assign hour_l_to_h=((hour_l==4'd9)&hour_l_addEn);
    
    //---------------------------------------------hour_h-------------------------------------------------//
    //min_h累加使能信号：set为1时，来一个对应脉冲（row2 & col1）则有效；否则，min_l_to_h有进位时有效
    wire hour_h_addEn;
    assign hour_h_addEn = set ? ( (state==3'd1)&state_count[3]&!key_row2 ) : hour_l_to_h;
    //TODO 11:reg [1:0] hour_h;
+    always@(posedge clk)
+    if(hour_h_addEn)
+    begin 
+          hour_h<=hour_h+4'b1;
+    end
 
    //---------------------------------------------display-------------------------------------------------//
    //FPGA_NUM0 display
