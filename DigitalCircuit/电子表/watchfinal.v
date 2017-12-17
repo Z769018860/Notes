@@ -308,14 +308,25 @@ module watch(clk, resetn, set, key_col1, key_col2, key_row2, key_row3, key_row4,
        end
        else
     if(hour_h_addEn)
-    begin 
-          hour_h<=hour_h+4'b1;
-    end
-    else
-        if((hour_h==2'd2)&(hour_l==4'd3))
-        begin
-        hour_h<=2'd0;
+ 
+        begin 
+        if(hour_l==4'd9)
+            begin
+            hour_l<=4'd0;
+            end
+        else
+            begin
+            if((hour_h==2'd2)&hour_l==4'd3)
+                begin
+                hour_h<=2'd0;
+                end
+            else
+                begin
+                hour_h<=hour_h+4'b1;
+                end
+            end
         end
+
 
    //---------------------------------------------display-------------------------------------------------//
    //FPGA_NUM0 display
