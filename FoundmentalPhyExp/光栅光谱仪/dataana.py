@@ -42,7 +42,7 @@ def findhalf(y,maxindex):
     _find=1000
     get=0
     a=maxindex-1
-    while(y[a-1]<y[a] and a-1>0):
+    while(y[a]>y[maxindex]/8*3 and (a-1)>0):
         if(z[a]<_find):
             get=a
             _find=z[a]
@@ -53,7 +53,7 @@ def findhalf(y,maxindex):
     
     _find=1000
     b=maxindex+1
-    while(y[b+1]<y[b] and b+1<len(y)):
+    while((b+1)<len(y) and y[b]>y[maxindex]/8*3 ):
         if(z[b]<_find):
             get=b
             _find=z[b]
@@ -63,18 +63,20 @@ def findhalf(y,maxindex):
         
 
     difresult=[]
-    print(result)
-    while(len(result)!=0):
+    print("Find half peak point at:",result, ",which are:")
+    for i in result:
+        print("    ",x[i],"nm")
+    while(len(result)!=0 and len(result)%2==0):
         # print(len(result))
         difresult.append(abs(x[result.pop()]-x[result.pop()]))
     return difresult
 
 
-print("(x) = ",x[maxindex])
-print("(ymax) = ",y[maxindex])
+print("wavelength (x) = ",x[maxindex])
+print("energy (ymax) = ",y[maxindex])
 
-print ("Half peak width:",findhalf(y,maxindex))
-
+print ("Half peak width:",round(findhalf(y,maxindex).pop(),2),"nm")
+print("Scan step length:", round(x[1]-x[0],2),"nm")
 
 
 #Draw curve
@@ -88,7 +90,10 @@ plt.plot(x,y,color="black",linewidth=2)
 plt.xlabel("wavelength/nm")
 plt.ylabel("energy")
 plt.title(title)
+# plt.annotate("test",xy=(0,0),xytext=(0,0))
+plt.savefig(title+"_energy.png")
 plt.show()
+
 
 #Find alpha
 d=1.5*10e-3 #m
@@ -99,4 +104,5 @@ plt.plot(x,alpha,color="black",linewidth=2)
 plt.xlabel("wavelength/nm")
 plt.ylabel("alpha/m^(-1)")
 plt.title(title)
+plt.savefig(title+"_alpha.png")
 plt.show()
