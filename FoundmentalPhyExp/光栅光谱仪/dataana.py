@@ -4,6 +4,12 @@ import matplotlib.pyplot as plt
 import math
 import sys
 
+if(len(sys.argv)==1):
+    print(r"Usage: python .\dataana.py <name_of_txt> (<range:leftbound> <range:rightbound>)")
+    print(r"Usage example: python .\dataana.py .\1030.txt <500> <1000>")
+    print(r"Usage example: python .\dataana.py .\1030.txt")
+    exit();
+
 x=[]
 y=[]
 
@@ -17,6 +23,10 @@ for line in file:
 
 x=list(map(float,x))
 y=list(map(float,y))
+
+if(sys.argv[2] and sys.argv[3]):
+    x=x[int(sys.argv[2]):int(sys.argv[3])]
+    y=y[int(sys.argv[2]):int(sys.argv[3])]
 
 #Analyze data
 
