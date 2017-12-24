@@ -151,10 +151,10 @@ FIFO buf2(
     .workmode(buf2_mode)
 );
 
-assign dma_to_mem_valid=(!input_buf==`buf1)?buf1.output_valid:buf2.output_valid;
-assign mem_to_dma_enable=(input_buf==`buf1)?buf1.input_enable:buf2.input_enable;
-assign cpu_to_dma_enable=(input_buf==`buf1)?buf1.input_enable:buf2.input_enable;
-assign dma_to_cpu_valid=(!input_buf==`buf1)?buf1.output_valid:buf2.output_valid;
+assign dma_to_mem_valid=(mode==`mode_cpu_to_mem)&((~input_buf==`buf1)?buf1.output_valid:buf2.output_valid);
+assign mem_to_dma_enable=(mode==`mode_mem_to_cpu)&((input_buf==`buf1)?buf1.input_enable:buf2.input_enable);
+assign cpu_to_dma_enable=(mode==`mode_cpu_to_mem)&((input_buf==`buf1)?buf1.input_enable:buf2.input_enable);
+assign dma_to_cpu_valid=(mode==`mode_mem_to_cpu)&((~input_buf==`buf1)?buf1.output_valid:buf2.output_valid);
 assign mem_data_in=(!input_buf==`buf1)?buf1.fifo_out[3:0]:buf2.fifo_out[3:0];
 assign cpu_data_in=(!input_buf==`buf1)?buf1.fifo_out:buf2.fifo_out;
 
@@ -163,7 +163,7 @@ assign cpu_data_in=(!input_buf==`buf1)?buf1.fifo_out:buf2.fifo_out;
 // assign dma_to_cpu_enable=(!input_buf==`buf1)?buf1.output_enable:buf2.output_enable;
 // assign cpu_to_dma_valid=(input_buf==`buf1)?buf1.input_valid:buf2.input_valid;
 assign buf1.output_enable=((mode==`mode_cpu_to_mem)?dma_to_mem_enable:dma_to_cpu_enable)&(!input_buf==`buf1);
-assign buf2.output_enable=((mode==`mode_cpu_to_mem)?dma_to_mem_enable:dma_to_cpu_valid)&(!input_buf==`buf2);
+assign buf2.output_enable=((mode==`mode_cpu_to_mem)?dma_to_mem_enable:dma_to_cpu_enable)&(!input_buf==`buf2);
 assign buf1.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_valid)&(input_buf==`buf1);
 assign buf2.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_valid)&(input_buf==`buf2);
 
@@ -192,7 +192,7 @@ begin
     end
 end
 
-always@(buf1.full|buf1.empty|buf2.full|buf2.empty)
+always@(*)
 begin
     if(buf1.full&buf2.empty)
         begin 

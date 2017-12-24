@@ -11,16 +11,13 @@
 
 With the fast development of the mobile Internet, incresing people are using online take-out platforms. According to the report of Institute of Frontier Industry Research in 2016, the whole market of online take-out selling will reach at 118 billion yuan per year at the end of 2017. Meanwhile, the fast-growing Big Data technology and the Mobile Internet technology have exerted an increasingly powerful impact on traditional food markets (iiMedia Research, 2016). The growth trend of the O2O food market is inversable and it is easy to predict that the market will grow even faster in the following few years (iiMedia Research, 2017). Above all, take-out is becoming a part of urban citizens' life.
 
-Among people who order take-out online, students are the very first group of people who use online platform for take-out as soon as they are launched, and also an unignoreable group of people who buy food online (TrustData, 2017).  TrustData found a strong relationship between the number of take-out orders and the number of universities, which also suggests that students consumed a large number of online take-out(citation information needed). However, among all the exist studies, no math model of university students' take-out ordering pattern has been developed. Despite many reports focusing on the whole market of take-out, none of them is detailed enough to show the buying pattern on campus. There have also been reports made by other universities’ students which are based on rather casual questionnaires and guesses (reference needed), which is not enough to reveal the whole pattern of campus online take-out buying.
+Among people who order take-out online, students are the very first group of people who use online platform for take-out as soon as they are launched, and also an unignoreable group of people who buy food online (TrustData, 2017).  TrustData found a strong relationship between the number of take-out orders and the number of universities, which also suggests that students consumed a large number of online take-out(citation information needed). However, among all the exist studies, no math model of university students' take-out ordering pattern has been developed. Despite many reports focusing on the whole market of take-out, none of them is detailed enough to show the buying pattern on campus. There have also been reports made by other universities’ students which are based on rather casual questionnaires and guesses (李鲁静. (2015). 大学生网络外卖消费现状及发展研究. 商场现代化(2), 25-25.), (赵耀. (2016). 大学生外卖消费现况及其影响因素分析——以安徽财经大学为例. 江苏商论(20), 164-165.), which is not enough to reveal the whole pattern of campus online take-out buying.
 
-Our research is focused on the data obtained from UCAS’s Yuquan campus. With the help of data analysis algorithm offered by Weka, it is easier to find out the pattern of online take-out buying and the relationships between all these factors. After the analysis of the results of 107 questionnaires, the result clearly showed two different activity patterns of take-out orderers, which will help both the take-out providers and the canteen to serve the students better.
+Our research is focused on the data obtained from UCAS’s Yuquan campus. With the help of data analysis algorithm offered by Weka, it is easier to find out the pattern of online take-out buying and the relationships between all these factors. Meanwhile, a method to conjecture one's take-out ordering behavior according to his daily routine can also be provided. Thence, we can get a clear view of the take-out ordering behavior in Yuquan campus and offer some useful suggestions for the university's logistics department. After the analysis of the results of 107 questionnaires, the result clearly showed two different activity patterns of take-out orderers, which will help both the take-out providers and the canteen to serve the students better.
 
 <!-- The language can be improved. -->
 <!-- Insert reference where necessary. -->
 <!-- Consider how to synthesize source information in the second paragraph. -->
-
-## Objective
-The aim of this paper is to provide a pattern for take-out orderers in UCAS Yuquan campus, and provide a method to conjecture one's take-out ordering behavior according to his daily routine. Thence, we can get a clear view of the take-out ordering behavior in Yuquan campus and offer some useful suggestions for the university's logistics department.
 
 ## Methods
 
@@ -54,25 +51,30 @@ In our survey, we received totally 105 sets of questionnaire answers, of which 1
 
 We first finished basic analyzation of the data. Having collected enough information, we exported spreadsheet data. Then we made pie charts and bar charts on the basis of the data.  Before setting out to find intern relationships among data, we ruled out some invalid information. Some of the questions were not set properly. Consequently, their results have no reference value.
 
-_Do you order online?_
 
 ![res1.png](res1.png)
+_Figure 2.1. Do you order online?_|
+-|-
 
 It is a seemingly meaningful result that three fourths of the students order online. However, we conducted the survey with an online questionnaire, which means we have no access to obtain the recovery rate of the questionnaire.  In addition, the title of our questionnaire is Take-out in UCAS.  As a result, undergraduates who never conducted online ordering probably overlooked the questionnaire.  In conclusion, it is not a proper sampling of undergraduates in UCAS.  Consequently, we are not able to conclude the ratio of take-out users according to the answers of our second question.
 
-_What factors will you consider when choosing take-out?_
 
 ![res2.png](res2.png)
+_Figure 2.2. What factors will you consider when choosing take-out?_| 
+-|-
 
 The options of the question were not properly set because the meaning of the word preference was not explicit enough for participants. As a result, the fourth option has various interpretations.  In conclusion, the result of the question is invalid strictly.
 
 In order to cover all possible factors which affect students’ take-out ordering behavior, we set a large number of questions. In addition, some of the questions have weak relation between each other.  As a result, we soon found that some data are redundant.  Additionally, it is still difficult to conclude rules manually according to the simply-processed datas.
 
-### 3. Preliminary studies
+### 3. Preliminary analysis
 
-For it is impossible for us to give out rules from the simply-processed datas, we choosed to use machine learning algorithm to analyze these data. Before we formally start mining the data, we did some preliminary studies to find a correct direction. Because there are so many algorithms to choose, is is hard to decide which one to use. Therefore, in is step we choose to test every valid algorithm in Weka (Waikato Environment for Knowledge Analysis) using the initial parameter, and compare each one for the better result.
+As it is impossible for us to give out rules from the simply-processed data, we chose to use machine learning algorithm to analyze these data. Before we formally start mining the data, we did some preliminary studies to find a correct direction. Because there are so many algorithms to choose, it is hard to decide which one to use. Therefore, we chose to test every valid algorithm in Weka (Waikato Environment for Knowledge Analysis) using the initial parameter, and compare each one for the better result.
 
-The result revealed that all the classify algorithm returned result with kappa less than 0.2, some of the even had negative kappa value which means the results were even worse that the result of random classify. The same result also happened in the associate algorithms. Surprisingly, the EM algorithm, although did not offer a clear pattren, did privided some meaningful findings with the disordered data. As a result, we choose to use the EM algorithm to do the further mining job. 
+result|
+-|-
+
+The result above revealed that all the classify algorithm returned result with kappa less than 0.2, some of the even had negative kappa value which means the results were even worse that the result of random classify. The same result also happened in the associate algorithms. Surprisingly, the EM algorithm, although did not offer a clear pattern, did provide some meaningful findings with the disordered data. As a result, we choose to use the EM algorithm to do the further mining job. 
 
 
 <!-- ### 4. Basic analyzation -->
@@ -114,8 +116,10 @@ WHERE-BD
   ......
   (23 attributes unlisted)
 ```
+_Table 4.1 Head of the first test's result_|
+-|-
 
-The result includes a large sum of data, which is quite hard to find some significant results in it. However, the EM algorithm did succeed in part the raw data into two different sets with similar size. For most of the attributes int the result list, the difference is not obvious. However, for some of the binary attributes, the classification martix showed that the 2 sets generated by this algorithm have huge difference in those properities. We picked out these attributes as following:
+The result includes a large sum of data, which is quite hard to find some significant results in it. However, the EM algorithm did succeed in part the raw data into two different sets with similar size. For most of the attributes int the result list, the difference is not obvious. However, for some of the binary attributes, the classification matrix showed that the 2 sets generated by this algorithm have huge difference in those properties. We picked out these attributes as following:
 
 
 ```
@@ -152,6 +156,9 @@ WHY-CROWDEDCANTEEN
 
 ......
 ```
+_Table 4.2 Attributes picked out_|
+-|-
+
 All the attributes listed above had obvious difference in the two groups, and this was only the basic result generated by the EM algorithm with the initial parameters. 
 
 ### 5. Improve the Algorithm: further data process
@@ -164,7 +171,8 @@ For some of the other attributes, the choices gathered together in single choice
 
 ![attr](style.png)
 
-**(Pre-processed data, 1-1)**
+_Figure 5.1. Pre-processed data_|
+-|-
 
 
 For instance, in attributes like WHY-MATESUGGEST (which asked if the responder choose to order take-out because of ohter peoples' suggest), is greatly imbalanced. As the graph suggests, few participants order take-out because others' suggest. In this situation, this attribute can be deleted in the next EM test, for it can hardly provide any useful informations for classification, so according to the principle of EM. , deleting them will not harm the general result. Also, if left untouched, these imbalance attrtbute will introduce more Randomness into the result of EM. Attributes with similar conditions are:
@@ -178,7 +186,10 @@ WHY-TASTE
 CHOOSE-SERVICE
 WHY-NOOUTDOOR
 ```
+_Table 5.2.  Attributes chosen_|
+-|-
 These attributes were removed before the next turn of EM began.
+
 <!-- For we have found that other attributes showed no great difference in the two groups, -->
 
 Not only the common pattern will make blur of the results, but  also one question with many different options can also add up to the difficulty of data analize. In order to avoid this, we choosed to merge the options of such questions.
@@ -199,6 +210,8 @@ SCORE_TAKEOUT2s
   positive              17.0205 17.9795
   [total]               46.6546 37.3454
 ``` 
+_Table 5.3. Attributes with merged options_|
+-|-
 
 At the same time, we also did the same thing for the special points in "PRICE", "AT-TIME", "FREQUENCY" and "SPEND-PERCENTAGE". For these salient points are limited in number so that they can be sort into adjecant classes, hence we can get a better result.
 
@@ -310,6 +323,8 @@ Clustered Instances
 Log likelihood: -11.44594
 
 ``` 
+_Table 5.4. Clustering model_|
+-|-
 <!-- ### 7. Verifing of the final result by EM. -->
 
 This result is far more better than the result generated in the preliminary studies.
@@ -340,7 +355,7 @@ As a result, the research is only about the take-out ordering itself. Yet we bel
 
 ## References
 
-(Not all included...... yet)
+<!-- (Not all included...... yet) -->
 
 > iiMedia Research. (2016). Research report for Chinese take-out industry(2016).
 

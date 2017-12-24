@@ -24,7 +24,7 @@ for line in file:
 x=list(map(float,x))
 y=list(map(float,y))
 
-if(sys.argv[2] and sys.argv[3]):
+if(len(sys.argv)==4 and sys.argv[2] and sys.argv[3]):
     x=x[int(sys.argv[2]):int(sys.argv[3])]
     y=y[int(sys.argv[2]):int(sys.argv[3])]
 
@@ -106,7 +106,7 @@ plt.show()
 
 
 #Find alpha
-d=1.5*10e-3 #m
+d=1*1e-3 #m
 alpha=list(map(lambda x: math.log(1/(x/100))/d,y))
 
 plt.figure(figsize=(8,4))

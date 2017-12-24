@@ -1,4 +1,4 @@
-`define MODE 1
+`define MODE 0
 `timescale 1ns/1ps
 // parameter mode_cpu_to_mem 1'b1;
 // parameter mode_mem_to_cpu 1'b0;
@@ -142,8 +142,8 @@ begin
     mode=`MODE;
     #100
     resetn=1;
-   #10000
-   $finish;
+//   #10000
+//   $finish;
 end
 
 always@(posedge clk)
