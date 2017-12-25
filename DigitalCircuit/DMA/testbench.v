@@ -5,7 +5,7 @@
 
 module CPU(
 input clk,
-
+input resetn,
 input cpu_to_dma_enable, //DMA准备好自CPU接收数据
 input dma_to_cpu_valid, //向CPU传出的数据是否有效
 input [7:0] cpu_in_socket,
@@ -17,28 +17,30 @@ output reg [7:0] cpu_out_socket
 
 always@ (posedge clk)
 begin
-    
-    //give out random status and data.
-    dma_to_cpu_enable=$random%2;
-    cpu_to_dma_valid=$random%2;
-    cpu_out_socket=$random%'b100000000;
 
+    //give out random status and data.
+    dma_to_cpu_enable<=$random%2;
+    cpu_to_dma_valid<=$random%2;
+    cpu_out_socket=$random%'b100000000;
+if(resetn)
+    begin
     if(cpu_to_dma_valid&cpu_to_dma_enable)
     begin
-        $display("cpu->dma: cpu gived %d\n",cpu_out_socket);
+        $display("cpu->dma: cpu gived %x",cpu_out_socket);
     end
 
     if(dma_to_cpu_enable&dma_to_cpu_valid)
     begin
-        $display("dma->cpu: cpu received %d\n",cpu_in_socket);
+        $display("dma->cpu: cpu received %x",cpu_in_socket);
     end
+end
 end
 
 endmodule
 
 module MEM(
 input clk,
-
+input resetn,
 input mem_to_dma_enable, //DMA准备好自MEM接收数据
 input dma_to_mem_valid, //向MEM传出的数据是否有效
 input [3:0] mem_in_socket,
@@ -48,24 +50,63 @@ output reg mem_to_dma_valid, //MEM传入的数据是否有效。
 output reg [3:0] mem_out_socket
 
 );
+reg [7:0] _received;
+reg [7:0]  _sent;
+reg _rec_high;
+reg _st_high;
+
+initial
+begin
+    _rec_high<=0;
+    _st_high<=0;
+    _received<=8'b0;
+    _sent<=8'b0;
+end
 
 always@ (posedge clk)
+
 begin
     
     //give out random status and data.
-    dma_to_mem_enable=$random%2;
-    mem_to_dma_valid=$random%2;
-    mem_out_socket=$random%'b10000;
-
+    dma_to_mem_enable<=$random%2;
+    mem_to_dma_valid<=$random%2;
+    mem_out_socket<=$random%'b10000;
+    
+if(resetn)
+    begin
+    
     if(mem_to_dma_valid&mem_to_dma_enable)
     begin
-        $display("mem->dma: mem gived %d\n",mem_out_socket);
+        $display("mem->dma: mem gived %x",mem_out_socket);
+        if(_st_high)
+        begin
+            _sent[7:4]=mem_out_socket;
+            $display("mem gived %x in 8 bits",_sent);
+            _st_high=~_st_high;            
+        end
+        else
+        begin
+            _sent[3:0]=mem_out_socket;
+            _st_high=~_st_high;
+        end
     end
 
-    if(dma_to_mem_enable&dma_to_mem_valid)
+    if(dma_to_mem_enable&dma_to_mem_valid&TEST.resetn)
     begin
-        $display("dma->mem: mem received %d\n",mem_in_socket);
+        $display("dma->mem: mem received %x",mem_in_socket);
+        if(_rec_high)
+        begin
+            _received[7:4]=mem_in_socket;
+            $display("mem gived %x in 8 bits",_received);
+            _rec_high=~_rec_high;            
+        end
+        else
+        begin
+            _received[3:0]=mem_in_socket;
+            _rec_high=~_rec_high;
+        end
     end
+end
 end
 
 endmodule
@@ -90,6 +131,7 @@ wire [7:0]cpu_out_wire;
 
 MEM memins(
     .clk(clk),
+    .resetn(resetn),
     .mem_to_dma_enable(mem_to_dma_enable),
     .mem_to_dma_valid(mem_to_dma_valid),
     .dma_to_mem_enable(dma_to_mem_enable),
@@ -100,6 +142,7 @@ MEM memins(
 
 CPU cpuins(
     .clk(clk),
+    .resetn(resetn),
     .cpu_to_dma_enable(cpu_to_dma_enable),
     .cpu_to_dma_valid(cpu_to_dma_valid),
     .dma_to_cpu_enable(dma_to_cpu_enable),
@@ -124,7 +167,7 @@ DMA dmains(
     .dma_to_mem_valid(dma_to_mem_valid), //向MEM传出的数据是否有效
     .mem_to_dma_enable(mem_to_dma_enable), //DMA准备好自MEM接收数据
     .cpu_to_dma_enable(cpu_to_dma_enable), //DMA准备好自CPU接收数据
-    .dma_to_cpu_valid(dma_to_mem_valid), //向CPU传出的数据是否有效
+    .dma_to_cpu_valid(dma_to_cpu_valid), //向CPU传出的数据是否有效
 
     .mem_data_in(mem_in_wire),
     .cpu_data_in(cpu_in_wire)
