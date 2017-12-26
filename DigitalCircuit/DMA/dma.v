@@ -1,14 +1,15 @@
-//Huaqiang Wang (c) 2017
+// Copyright (c) 2017 Augustus Wang.
+
 `timescale 1ns/1ps
 `define workmode_4 0 //Uses [3:0] in inout socket
 `define workmode_8 1
 module FIFO(
     input clk,
     input resetn,
-    input workmode,
-    input input_valid, output_enable,
-    input [7:0] fifo_in,
-    output reg[7:0] fifo_out,
+    input workmode, //决定每次输入输出的位宽
+    input input_valid, output_enable,  //外部信号:输入值有效, 可以进行输出
+    input [7:0] fifo_in,        //8bits输入端口
+    output reg[7:0] fifo_out,   //8bits输出端口
     output reg output_valid,
     output reg input_enable,
     output empty,
@@ -113,25 +114,26 @@ endmodule
 `define buf2 1'b1
 
 module DMA(
+
 input clk,
 input resetn,
-input mode,
+input mode,              //模式选择:控制DMA的工作方式:内存->CPU 或 CPU->内存
 
 input dma_to_mem_enable, //MEM是否准备好接收数据。
 input mem_to_dma_valid, //MEM中传入的数据是否有效。
 input dma_to_cpu_enable, //CPU是否准备好接收数据。
 input cpu_to_dma_valid, //CPU传入的数据是否有效。
 
-input [3:0] mem_data_out,
-input [7:0] cpu_data_out,
+input [3:0] mem_data_out, //内存信号输出
+input [7:0] cpu_data_out,  //中央处理器信号输出
 
 output dma_to_mem_valid, //向MEM传出的数据是否有效
 output mem_to_dma_enable, //DMA准备好自MEM接收数据
 output cpu_to_dma_enable, //DMA准备好自CPU接收数据
 output dma_to_cpu_valid, //向CPU传出的数据是否有效
 
-output [3:0] mem_data_in,
-output [7:0] cpu_data_in
+output [3:0] mem_data_in, //内存信号输入
+output [7:0] cpu_data_in  //中央处理器信号输入
 );
 
 reg buf1_mode;
@@ -158,19 +160,57 @@ assign dma_to_cpu_valid=(mode==`mode_mem_to_cpu)&((~input_buf==`buf1)?buf1.outpu
 assign mem_data_in=(!input_buf==`buf1)?buf1.fifo_out[3:0]:buf2.fifo_out[3:0];
 assign cpu_data_in=(!input_buf==`buf1)?buf1.fifo_out:buf2.fifo_out;
 
-// assign dma_to_mem_enable=(!input_buf==`buf1)?buf1.output_enable:buf2.output_enable;
-// assign mem_to_dma_valid=(input_buf==`buf1)?buf1.input_valid:buf2.input_valid;
-// assign dma_to_cpu_enable=(!input_buf==`buf1)?buf1.output_enable:buf2.output_enable;
-// assign cpu_to_dma_valid=(input_buf==`buf1)?buf1.input_valid:buf2.input_valid;
 assign buf1.output_enable=((mode==`mode_cpu_to_mem)?dma_to_mem_enable:dma_to_cpu_enable)&(!input_buf==`buf1);
 assign buf2.output_enable=((mode==`mode_cpu_to_mem)?dma_to_mem_enable:dma_to_cpu_enable)&(!input_buf==`buf2);
 assign buf1.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_valid)&(input_buf==`buf1);
 assign buf2.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_valid)&(input_buf==`buf2);
-
-// assign mem_data_out[3:0]=(input_buf==`buf1)?buf1.fifo_in[3:0]:buf2.fifo_in[3:0];
-// assign cpu_data_out[7:0]=(input_buf==`buf1)?buf1.fifo_in:buf2.fifo_in;
 assign buf1.fifo_in=((mode==`mode_cpu_to_mem)?cpu_data_out:{4'b0000,mem_data_out});
 assign buf2.fifo_in=((mode==`mode_mem_to_cpu)?cpu_data_out:{4'b0000,mem_data_out});
+
+// always@(posedge clk)
+// if(mode==`mode_mem_to_cpu)
+// begin
+//     if(input_buf==`buf1)
+//     begin
+//         mem_to_dma_enable=buf1.input_enable;
+//         buf1.input_valid=mem_to_dma_valid;
+//         dma_to_cpu_valid=buf2.output_valid;
+//         buf2.output_enable=dma_to_cpu_enable;
+//         buf1.fifo_in=mem_data_out;
+//         cpu_data_in=buf2.fifo_out;
+//     end
+//     else//(input_buf==`buf2)
+//     begin
+//         mem_to_dma_enable=buf2.input_enable;
+//         buf2.input_valid=mem_to_dma_valid;
+//         dma_to_cpu_valid=buf1.output_valid;
+//         buf1.output_enable=dma_to_cpu_enable;
+//         buf2.fifo_in=mem_data_out;
+//         cpu_data_in=buf1.fifo_out;
+//     end
+// end
+// else//(mode==`mode_cpu_to_mem)
+// begin
+//     if(input_buf==`buf1)
+//     begin
+//         cpu_to_dma_enable=buf1.input_enable;
+//         buf1.input_valid=cpu_to_dma_valid;
+//         dma_to_mem_valid=buf2.output_valid;
+//         buf2.output_enable=dma_to_mem_enable;
+//         buf1.fifo_in=cpu_data_out;
+//         mem_data_in=buf2.fifo_out;
+//     end
+//     else//(input_buf==`buf2)
+//     begin
+//         cpu_to_dma_enable=buf2.input_enable;
+//         buf2.input_valid=cpu_to_dma_valid;
+//         dma_to_mem_valid=buf1.output_valid;
+//         buf1.output_enable=dma_to_mem_enable;
+//         buf2.fifo_in=cpu_data_out;
+//         mem_data_in=buf1.fifo_out;
+//     end
+// end
+
 
 always@(posedge clk)
 begin

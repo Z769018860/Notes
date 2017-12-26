@@ -1,3 +1,5 @@
+// Copyright (c) 2017 Augustus Wang.
+
 `define MODE 0
 `timescale 1ns/1ps
 // parameter mode_cpu_to_mem 1'b1;
