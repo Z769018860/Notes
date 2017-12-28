@@ -49,7 +49,7 @@ In this part, we investigated the degree of concern about takeout hygiene, the d
 
 In our survey, we received totally 105 sets of questionnaire answers, of which 103 are valid.  2 responses were eliminated because though the participants confirmed that they ordered take-out, they called for deliveries at a frequency of null. According to the data, over half of the students had take-out several times a week. A Similar percentage of students mostly had take-out on weekends. The major factor which students considered when ordering online is the price along with the taste. It is partly confirmed by following data. Around sixty percent of students spent 15 to 25 yuan per share. Half of them allocated less than 15 percent of their living expenses to take-out. In addition, both parents and children worried little about take-out hygiene. The reasons why students chose to have take-out are highly diversified.  Poor impression on canteen contributed to the popularity of take-out because over half of the students spoke evilly about the taste of dishes offered in canteen.
 
-We first finished basic analyzation of the data. Having collected enough information, we exported spreadsheet data. Then we made pie charts and bar charts on the basis of the data.  Before setting out to find intern relationships among data, we ruled out some invalid information. Some of the questions were not set properly. Consequently, their results have no reference value.
+We first finished basic analyzing of the data. Having collected enough information, we exported spreadsheet data. Then we made pie charts and bar charts on the basis of the data.  Before setting out to find intern relationships among data, we ruled out some invalid information. Some of the questions were not set properly. Consequently, their results have no reference value.
 
 
 ![res1.png](res1.png)
@@ -65,7 +65,7 @@ _Figure 2.2. What factors will you consider when choosing take-out?_|
 
 The options of the question were not properly set because the meaning of the word preference was not explicit enough for participants. As a result, the fourth option has various interpretations.  In conclusion, the result of the question is invalid strictly.
 
-In order to cover all possible factors which affect students’ take-out ordering behavior, we set a large number of questions. In addition, some of the questions have weak relation between each other.  As a result, we soon found that some data are redundant.  Additionally, it is still difficult to conclude rules manually according to the simply-processed datas.
+In order to cover all possible factors which affect students’ take-out ordering behavior, we set a large number of questions. In addition, some of the questions have weak relation between each other.  As a result, we soon found that some data are redundant.  Additionally, it is still difficult to conclude rules manually according to the simply-processed data.
 
 ### 3. Preliminary analysis
 
@@ -81,15 +81,14 @@ The result above revealed that all the classify algorithm returned result with k
 
 ### 4. Applying the Expectation Maximization Algorithm
 
-In order to rule out redundant information, we are going to analyze the influence factors with the EM algorithm.  We expect to explore possible relationships among various factors. Expectation–Maximization (EM) algorithm is an iterative method to find maximum likelihood or maximum a posteriori (MAP) estimates of parameters in statistical models, where the model depends on unobserved latent variables.
+In order to rule out redundant information, we are going to analyze the influence factors with the EM algorithm.  We expect to explore possible relationships among various factors. Expectation–Maximization (EM) algorithm is an iterative method to find maximum likelihood or maximum a posteriori (MAP) estimates of parameters in statistical models, where the model depends on unobserved latent variables (岳佳, 2007).
 
->岳佳. (2007). 基于EM算法的模型聚类的研究及应用. (Doctoral dissertation, 江南大学).
 
-The EM Algorithm ,as the name suggests, is an algorithm used for getting the classification of a known data set which have the max expectation(Do, C. B., & Batzoglou, S. (2008)). In this experiment, we used the EM algorithm included in Weka (Waikato Environment for Knowledge Analysis) by the University of Waikato.
 
-(Do, C. B., & Batzoglou, S. (2008). What is the expectation maximization algorithm?. Nature biotechnology, 26(8), 897.)
+The EM Algorithm ,as the name suggests, is an algorithm used for getting the classification of a known data set which have the max expectation (Do, C. B., & Batzoglou, S. (2008)). In this experiment, we used the EM algorithm included in Weka (Waikato Environment for Knowledge Analysis) by the University of Waikato.
 
-At the very begining, we apply the EM algorithm directly to the pre-processed data, the first test used the following parameters:
+
+At the very beginning, we apply the EM algorithm directly to the pre-processed data, the first test used the following parameters:
 
 ```
 weka.clusterers.EM -I 100 -N -1 -X 10 -max -1 -ll-cv 1.0E-6 -ll-iter 1.0E-6 -M 1.0E-6 -K 10 -num-slots 1 -S 100
@@ -175,7 +174,7 @@ _Figure 5.1. Pre-processed data_|
 -|-
 
 
-For instance, in attributes like WHY-MATESUGGEST (which asked if the responder choose to order take-out because of ohter peoples' suggest), is greatly imbalanced. As the graph suggests, few participants order take-out because others' suggest. In this situation, this attribute can be deleted in the next EM test, for it can hardly provide any useful informations for classification, so according to the principle of EM. , deleting them will not harm the general result. Also, if left untouched, these imbalance attrtbute will introduce more Randomness into the result of EM. Attributes with similar conditions are:
+For instance, in attributes like WHY-MATESUGGEST (which asked if the responder choose to order take-out because of other peoples' suggest), is greatly imbalanced. As the graph suggests, few participants order take-out because others' suggest. In this situation, this attribute can be deleted in the next EM test, for it can hardly provide any useful information for classification, so according to the principle of EM. , deleting them will not harm the general result. Also, if left untouched, these imbalance attribute will introduce more Randomness into the result of EM. Attributes with similar conditions are:
 
 ```
 WHY-IAMRICH
@@ -192,7 +191,7 @@ These attributes were removed before the next turn of EM began.
 
 <!-- For we have found that other attributes showed no great difference in the two groups, -->
 
-Not only the common pattern will make blur of the results, but  also one question with many different options can also add up to the difficulty of data analize. In order to avoid this, we choosed to merge the options of such questions.
+Not only the common pattern will make blur of the results, but  also one question with many different options can also add up to the difficulty of data analyze. In order to avoid this, we choosed to merge the options of such questions.
 
 Take the score for canteen attribute for instance. In the questionnaire, the question asking participants to make a score foe the canteen was designed as a Likek scale (Likert summated rating scale) in order to make out te difference between the slight difference in attitudes towards the canteen. Unfortunately, the design also made the result too complexed so that the algorithm could not use this key to do classify works correctly, for the algorithm does not know the relationship between "dislike" and "hate". The algorithm considered these 2 options as totally different emotions while in fact they are only representation of different level of negative emotions. Therefore, merge such options together as negative attitude can greatly improve the outcome of the algorithm.
 
@@ -325,14 +324,14 @@ Log likelihood: -11.44594
 ``` 
 _Table 5.4. Clustering model_|
 -|-
-<!-- ### 7. Verifing of the final result by EM. -->
+<!-- ### 7. Verifying of the final result by EM. -->
 
 This result is far more better than the result generated in the preliminary studies.
 
 
 ## Result
 
-Combine the result of the EM algorithm and the result of the basic analyzation, we can roughly devide the take-out orderers in UCAS  into two groups. Generally, the first group can be described as people who have negative attitudes towards the canteen, most of them highly evaluated take-out, and enjoyed ordering take-out together with their roommates. Meanwhile, most of them also believes that the canteen is too crowded some times.
+Combine the result of the EM algorithm and the result of the basic analyzing, we can roughly divide the take-out orderers in UCAS  into two groups. Generally, the first group can be described as people who have negative attitudes towards the canteen, most of them highly evaluated take-out, and enjoyed ordering take-out together with their roommates. Meanwhile, most of them also believes that the canteen is too crowded some times.
 
 The other group of people share different characteristic with the first group of people. While half of them claim that they choose take-out because the canteen is too awful(which is far less then the first group, in which almost all the people believes that the awful canteen is the reason for them to order take-out), they order take-out mainly because of they missed the time for lunch or dinner. These people order take-out mainly at the weekends, and they are less likely to share take-out with their friends.
 
@@ -341,17 +340,17 @@ To sum up, the first group of people can be defined as those who do not like the
 
 ## Discussion
 
-By using the method of superwised machine learning, we get the behavior pattern of the UCAS take-out orderer for the first time. In the model build by the EM algorithm, we can see the difference between the people who are not satisfied with the university canteen and the people who order take-out only for its effeciency. Compared with other researches about the university take-out ordering , this research provides a quantified model for take-out ordering, which is far more convincing and more repeatable. By using this model, we can speculate one person's take-outn ordering pattern from limited informations.
+By using the method of supervised machine learning, we get the behavior pattern of the UCAS take-out orderer for the first time. In the model build by the EM algorithm, we can see the difference between the people who are not satisfied with the university canteen and the people who order take-out only for its efficiency. Compared with other researches about the university take-out ordering , this research provides a quantified model for take-out ordering, which is far more convincing and more repeatable. By using this model, we can speculate one person's taken-out ordering pattern from limited information.
 
-Some suggestions can be given from the result of the algorithm... (to be finished)
+<!-- Some suggestions can be given from the result of the algorithm... (to be finished) -->
 
 However, limitation for this research do exists. The greatest challenge is from the data we can use. We suspect that the activity of take-out ordering is also related to the academic achievement and the physical fitness of the orderer. However, for two limitation factors listed as follow, the suspection can not be discussed in this paper. 
 
 The first limitation factor is the size of the questionnaire. Experience shows that too many questions will make the participants feel board so that the quantity for the questionnaire retrieved will drop sharply. In our questionnaire there were already 14 questions so it is unwise to add more questions to it.
 
-The second limitation factor is about the privicy of the participants. For some of the participants may not want to offer their GPA, it is hard to establish the link between take-out ordering and grades. Meanwhile, because the questionare is annoymous, is is also impossible to establish the link between the participants with the publiced information about grades. 
+The second limitation factor is about the privacy of the participants. For some of the participants may not want to offer their GPA, it is hard to establish the link between take-out ordering and grades. Meanwhile, because the questionare is anonymous, it is also impossible to establish the link between the participants with the publicated information about grades. 
 
-As a result, the research is only about the take-out ordering itself. Yet we believe further research about the relationship between take-out ordering and academical and physical perform will lead to more exciting findings.
+As a result, the research is only about the take-out ordering itself. Yet we believe further research about the relationship between take-out ordering and academical and physical performance will lead to more exciting findings.
 
 ## References
 
@@ -364,3 +363,9 @@ As a result, the research is only about the take-out ordering itself. Yet we bel
 > 岳佳. (2007). 基于EM算法的模型聚类的研究及应用. (Doctoral dissertation, 江南大学).
 
 > 林东方. (2012). 基于EM算法的不完全测量数据的处理方法研究. (Doctoral dissertation, 中南大学).
+
+> 李鲁静. (2015). 大学生网络外卖消费现状及发展研究. 商场现代化(2), 25-25.
+
+> 赵耀. (2016). 大学生外卖消费现况及其影响因素分析——以安徽财经大学为例. 江苏商论(20), 164-165.
+
+> Do, C. B., & Batzoglou, S. (2008). What is the expectation maximization algorithm?. Nature biotechnology, 26(8), 897.

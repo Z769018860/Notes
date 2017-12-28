@@ -1,15 +1,14 @@
-// Copyright (c) 2017 Augustus Wang.
-
+//Huaqiang Wang (c) 2017
 `timescale 1ns/1ps
 `define workmode_4 0 //Uses [3:0] in inout socket
 `define workmode_8 1
 module FIFO(
     input clk,
     input resetn,
-    input workmode, //决定每次输入输出的位宽
-    input input_valid, output_enable,  //外部信号:输入值有效, 可以进行输出
-    input [7:0] fifo_in,        //8bits输入端口
-    output reg[7:0] fifo_out,   //8bits输出端口
+    input workmode,
+    input input_valid, output_enable,
+    input [7:0] fifo_in,
+    output reg[7:0] fifo_out,
     output reg output_valid,
     output reg input_enable,
     output empty,
@@ -160,14 +159,22 @@ assign dma_to_cpu_valid=(mode==`mode_mem_to_cpu)&((~input_buf==`buf1)?buf1.outpu
 assign mem_data_in=(!input_buf==`buf1)?buf1.fifo_out[3:0]:buf2.fifo_out[3:0];
 assign cpu_data_in=(!input_buf==`buf1)?buf1.fifo_out:buf2.fifo_out;
 
+// assign dma_to_mem_enable=(!input_buf==`buf1)?buf1.output_enable:buf2.output_enable;
+// assign mem_to_dma_valid=(input_buf==`buf1)?buf1.input_valid:buf2.input_valid;
+// assign dma_to_cpu_enable=(!input_buf==`buf1)?buf1.output_enable:buf2.output_enable;
+// assign cpu_to_dma_valid=(input_buf==`buf1)?buf1.input_valid:buf2.input_valid;
 assign buf1.output_enable=((mode==`mode_cpu_to_mem)?dma_to_mem_enable:dma_to_cpu_enable)&(!input_buf==`buf1);
 assign buf2.output_enable=((mode==`mode_cpu_to_mem)?dma_to_mem_enable:dma_to_cpu_enable)&(!input_buf==`buf2);
 assign buf1.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_valid)&(input_buf==`buf1);
 assign buf2.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_valid)&(input_buf==`buf2);
+
+// assign mem_data_out[3:0]=(input_buf==`buf1)?buf1.fifo_in[3:0]:buf2.fifo_in[3:0];
+// assign cpu_data_out[7:0]=(input_buf==`buf1)?buf1.fifo_in:buf2.fifo_in;
 assign buf1.fifo_in=((mode==`mode_cpu_to_mem)?cpu_data_out:{4'b0000,mem_data_out});
 assign buf2.fifo_in=((mode==`mode_mem_to_cpu)?cpu_data_out:{4'b0000,mem_data_out});
 
-// always@(posedge clk)
+// P-code
+// always@(*)
 // if(mode==`mode_mem_to_cpu)
 // begin
 //     if(input_buf==`buf1)
@@ -210,7 +217,6 @@ assign buf2.fifo_in=((mode==`mode_mem_to_cpu)?cpu_data_out:{4'b0000,mem_data_out
 //         mem_data_in=buf1.fifo_out;
 //     end
 // end
-
 
 always@(posedge clk)
 begin

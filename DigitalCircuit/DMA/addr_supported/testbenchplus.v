@@ -14,8 +14,17 @@ input [7:0] cpu_in_socket,
 
 output reg dma_to_cpu_enable, //CPU是否准备好接收数据。
 output reg cpu_to_dma_valid, //CPU传入的数据是否有效。
-output reg [7:0] cpu_out_socket
+output reg [7:0] cpu_out_socket,
+//------------------------------
+input addr_out_enable,  //DMA准备好自CPU接收地址
+output reg addr_out_valid,  //CPU正在传出有效的地址
+
+output reg [31:0] addr_out,
+output reg [31:0] len_out
+
 );
+reg [31:0] out_cnt;
+reg [31:0] addr_save;
 
 always@ (posedge clk)
 begin
@@ -24,17 +33,43 @@ begin
     dma_to_cpu_enable<=$random%2;
     cpu_to_dma_valid<=$random%2;
     cpu_out_socket=$random%'b100000000;
-if(resetn)
-    begin
-    if(cpu_to_dma_valid&cpu_to_dma_enable)
-    begin
-        $display("cpu->dma: cpu gived %x",cpu_out_socket);
-    end
+    //---------------------------------------------
 
-    if(dma_to_cpu_enable&dma_to_cpu_valid)
-    begin
-        $display("dma->cpu: cpu received %x",cpu_in_socket);
-    end
+    addr_out_valid<=1;
+    len_out<=0;
+    addr_out<=0;
+    addr_save<=0;
+if(resetn)
+begin
+//-------------------------------------------------------------------------
+        if(addr_out_enable&addr_out_valid)
+        begin
+          addr_out=$random;
+          addr_len=8;
+          addr_out_enable<=0;
+          addr_save<=addr_out;
+        end
+        if(!addr_out_valid) //Data transfering
+            if(cpu_to_dma_enable&cpu_to_dma_valid)
+            begin
+              out_cnt=out_cnt+1;
+              if(out_cnt>=addr_save) //Transfer finished
+              begin
+                out_cnt<=0;
+                addr_save<=0;
+                addr_out_valid<=1;
+              end
+            end
+//===================================================================
+        if(cpu_to_dma_valid&cpu_to_dma_enable&addr_out_enable&addr_out_valid)
+        begin
+            $display("cpu->dma: cpu gived %x",cpu_out_socket);
+        end
+
+        if(dma_to_cpu_enable&dma_to_cpu_valid)
+        begin
+            $display("dma->cpu: cpu received %x",cpu_in_socket);
+        end
 end
 end
 
@@ -49,13 +84,22 @@ input [3:0] mem_in_socket,
 
 output reg dma_to_mem_enable, //MEM是否准备好接收数据。
 output reg mem_to_dma_valid, //MEM传入的数据是否有效。
-output reg [3:0] mem_out_socket
+output reg [3:0] mem_out_socket,
+//--------------------------------------
+input addr_in_valid,  //DMA传出有效的地址
+output reg addr_in_enable,  //MEM可以接收地址
+
+input [31:0] addr_in,
+input [31:0] len_in
 
 );
 reg [7:0] _received;
 reg [7:0]  _sent;
 reg _rec_high;
 reg _st_high;
+//-------------------------
+reg [31:0] len_reg;
+reg [31:0] out_cnt;
 
 initial
 begin
@@ -173,6 +217,18 @@ DMA dmains(
 
     .mem_data_in(mem_in_wire),
     .cpu_data_in(cpu_in_wire)
+//------------------------------------------
+    .address_in_valid(cpuins.address_out_valid),     //CPU传入给DMA地址值有效
+    .address_out_valid,   //DMA处于可以传出地址状态
+    .len_in,     //接收传入的长度
+    .addr_in,    //接收传入的地址
+    .
+    .address_out_enable,  //DMA传出地址值可被MEM接收
+    .address_in_enable,  //CPU传出地址值可被DMA接收, DMA处于可以接受地址状态
+    .mem_data_in, //内存信号输入
+    .cpu_data_in,  //中央处理器信号输入
+    .address_reg,   //地址暂存器
+    .len_reg        //长度暂存器 unit: bit
 
 );
 
