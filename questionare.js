@@ -49,8 +49,21 @@ function ShowTime(event, element) {
     for (var i = 0; i < window.multi_click.length; i++) {
         console.log("multiclick at", window.multi_click[i].name);
     }
-
-    return result;
+    console.log("------------------------------------------~~~///(^v^)");
+    for (var i = 0; i < window.time_array.length - 1; i++) {
+        console.log(window.element_record[i].name, window.element_record[i + 1].name);
+        // alert(window.time_array[i + 1] - window.time_array[i]);
+    }
+    console.log("------------------------------------------~~~///(^v^)");
+    for (var i = 0; i < window.time_array.length - 1; i++) {
+        console.log(window.time_array[i + 1] - window.time_array[i]);
+        // alert(window.time_array[i + 1] - window.time_array[i]);
+    }
+    console.log("------------------------------------------~~~///(^v^)");
+    for (var i = 0; i < window.multi_click.length; i++) {
+        console.log(window.multi_click[i].name);
+    }
+    // return result;
 }
 
 ShowTime();
