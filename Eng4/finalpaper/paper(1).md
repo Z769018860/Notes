@@ -13,7 +13,7 @@ This paper seeks to find out the behavior pattern of online take-out ordering an
 
 ## Methods
 
-Large amount of data is required to support a latent behavior pattern.  Consequently, an efficient way of data collecting is required.  Finally, we adopted the method of online questionnaire.  An online questionnaire enables us to directly obtain digital data through the backstage, which is convenient to manipulate especially when the sample scale is large. 
+Large amount of data is required to support a latent behavior pattern.  Consequently, an efficient way of data collecting is required.  Finally, we adopted the method of online questionnaire.  An online questionnaire enables us to directly obtain digital data through the backstage, which is convenient to manipulate especially when the sample scale is large.  
 
 In order to obtain an overall conclusion, we tried to cover a wide range of questions in the questionnaire.  However, a redundant questionnaire is time-consuming and will lead to a significantly low recovering rate.  Consequently, the quantity of questions is supposed to be limited.  The contents of the questionnaire are listed as follows:
 
@@ -188,18 +188,18 @@ WHY-AWFULCANTEEN (The participant choose taken-out for he can not bear the cante
 
 From the matrix above, we can conclude that the two groups of participants share similar distribution of the percentage of people choosing take-out for better meals. However, the two groups differ significantly in the attitudes towards the school canteen. In the left group, only half of its members claim that the canteen is awful, while in the other group, more than 80% of participants hold the idea that the canteen is unbearable. In fact, there are 15 attributes differ significantly between the two groups.
 
-Yet it was only the first trail with the raw data and initial parameters, doing further process of these attributes would undoubtly improve the outcome. We took two measures then: deleting useless data and merging similar options. 
+Yet it was only the first trial with the raw data and initial parameters. Further process of these attributes would undoubtly improve the outcome. We then took two measures: deleting useless data and merging similar options. 
 
 #### 5-2. Delete Useless Attributes
 
-For some of the attributes, the participants' choices gathered together in single options. 
+For some of the attributes, the choices gathered together in single choices. 
 
 ![attr](style.png)
 
 _Figure 5.1. Pre-processed data_|
 -|-
 
-For instance, in attributes like WHY-MATESUGGEST (which asked if the responder choose to order take-out because of other people's suggest), were greatly imbalanced. As the graph suggested, few participants order take-out because others' suggest. In this situation, this attribute can be deleted in the next EM test, for it can hardly provide any useful information for classification. According to the principle of EM. , deleting them will not harm the general result. Also, if left not processed, these imbalance attributes will introduce more randomness into the result of EM. Attributes with similar conditions are:
+For instance, in attributes like WHY-MATESUGGEST (which asked if the responder choose to order take-out because of other peoples' suggest), is greatly imbalanced. As the graph suggests, few participants order take-out because others' suggest. In this situation, this attribute can be deleted in the next EM test, for it can hardly provide any useful information for classification, so according to the principle of EM. , deleting them will not harm the general result. Also, if left untouched, these imbalance attribute will introduce more Randomness into the result of EM. Attributes with similar conditions are:
 
 ```
 WHY-IAMRICH
@@ -212,19 +212,17 @@ WHY-NOOUTDOOR
 ```
 _Table 5.2.  Attributes chosen_|
 -|-
-These attributes were removed to improve the result.
+These attributes were removed before the next turn of EM began.
 
 <!-- For we have found that other attributes showed no great difference in the two groups, -->
 
 #### 5-3. Merge Similar options
 
-Not only the common pattern will make blur of the results, but also one question with many different options can also add up to the difficulty of data analyzing. To avoid this, we chose to merge the options of such questions.
+Not only the common pattern will make blur of the results, but also one question with many different options can also add up to the difficulty of data analyze. To avoid this, we chose to merge the options of such questions.
 
-Taking the attribute "score for canteen" for instance. In the questionnaire, the question asking participants to make a score for the canteen was designed to be a Likert scale (Likert summated rating scale). The advantage of Likert scale is that it can show the slight difference in attitudes towards the canteen. Unfortunately, this design also made the result too complicated for the algorithm to work smoothly. To be more specific, the algorithm does not know the relationship between "dislike" and "hate", hence it considered these 2 options as 2 completely different emotions. While in fact, they were both negative emotions. Therefore, merge such options together as "negative attitude" can greatly improve the outcome of the algorithm (林东方, 2012).
+Take the score for canteen attribute for instance. In the questionnaire, the question asking participants to make a score foe the canteen was designed as a Likek scale (Likert summated rating scale) to make out the difference between the slight difference in attitudes towards the canteen. Unfortunately, this design also made the result too complicated so that the algorithm could not use this key to do classify works correctly. To be more specific, for instance, the algorithm does not know the relationship between "dislike" and "hate", hence it algorithm considered these 2 options as 2 completely different emotions, while in fact they both represent negative emotions, only to be different in levels. Therefore, merge such options together as negative attitude can greatly improve the outcome of the algorithm (林东方, 2012).
 
-This method was applied to "PRICE", "AT-TIME", "FREQUENCY", "SCORE-CANTEEN", "SCORE_TAKEOUT2s" and "SPEND-PERCENTAGE".
-
-Attributes with merged options are like following.
+Attributes with merged options are listed below. These attributes used to have no less than 5 options, while they have no more than 3 options after merging.
 ```
 SCORE-CANTEEN
   neutral               33.9477 26.0523
@@ -239,10 +237,11 @@ SCORE_TAKEOUT2s
 _Table 5.3. Attributes with merged options_|
 -|-
 
+The same method was also applied to "PRICE", "AT-TIME", "FREQUENCY" and "SPEND-PERCENTAGE".
 
-### 6. Final Result from the Second Trail
+### 6. Final Result by Second Trail
 
-After processing the data, the EM algorithm was applied once again to the adjusted data. The final result are as following:
+After processing the data, the EM algorithm was applied once again to the adjusted data, which lead to the final result as following:
 
 ```
 *Clustering model (full training set)
@@ -295,7 +294,7 @@ Log likelihood: -11.44594
 _Table 5.4. Clustering model_|
 -|-
 
-**The whole Clustering model is too long to list in paper's main body, so only several important attributes were listed. For full version of the clustering model, see table A-1 in the Appendix.*
+**The whole Clustering model is too long to list in paper's main body. Full version of the clustering model can be accessed in Appendix.*
 
 For some of the questions, the raw result was in format like "a, b, c, d, e", their meanings are as following:
 ```
@@ -327,9 +326,9 @@ _Table 5.5.  Check list for several questions_|
 -|-
 
 <!-- ### 7. Verifying of the final result by EM. -->
-Above is the final result generated by EM algorithm. Compared with the first result, this one divided the participants into two groups differ more significantly.
+Above is the full result generated by EM algorithm. Compared with the first result, this result divided the participants into two groups differ more significantly.
 
-This result can be repeated using the data set with the following command on Weka:
+This result can be repeated using the data set with the following commands on Weka:
 ```
 weka.clusterers.EM -I 100 -N -1 -X 10 -max -1 -ll-cv 1.0E-6 -ll-iter 1.0E-6 -M 1.0E-6 -K 10 -num-slots 1 -S 100
 ```
@@ -369,7 +368,6 @@ The first limitation is the content of questionnaire. Experience tells us that t
 The second limitation is about privacy of participants. For the fact that some participants are not willing to mention their GPA, it is hard to gather data related to academic performance. In addition, it is also impossible to take use of publicized information about grades, because the questionnaire is anonymous.
 
 As a result, the research only focus on take-out ordering behavior itself. We believe that further research on the relationship between take-out ordering and othor factors will lead to more exciting discovery.
-
 
 
 ## References
@@ -501,4 +499,3 @@ Log likelihood: -11.44594
 ``` 
 _Table A-1. Full Clustering model_|
 -|-
-

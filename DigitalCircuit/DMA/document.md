@@ -83,9 +83,8 @@ output reg cpu_to_dma_valid, //CPU传入的数据是否有效。
 output reg [7:0] cpu_out_socket //CPU的数据传出端口
 );
 
-其会随机产生数据并在收到数据时在命令行中显示出结果.
-
 ```
+其会随机产生数据并在收到数据时在命令行中显示出结果.
 
 ### 模拟MEM模块
 
@@ -136,17 +135,88 @@ output reg [3:0] mem_out_socket //MEM的数据传入端口
 ## 概述
 
 支持地址和长度的版本满足以下逻辑:
+```mermaid
+sequenceDiagram;
+
+地址控制模块->>原有DMA模块: 地址传输完成,启用原有DMA模块
+原有DMA模块->>地址控制模块: 传输的数据达到指定长度,移交控制权
+原有DMA模块-->>地址控制模块: 传输状态实时反映给地址控制模块
+```
 
 
+
+这部分实现在原有的DMA基础上外挂了一个地址控制模块, 使用地址控制模块接管原有DMA的输入输出控制端口. 
+
+地址控制模块的 **状态图** 如下图所示:
+
+```mermaid
+graph TD;
+fork{并行处理}
+reset-->等待地址输入;
+等待地址输入--地址输入-->等待地址输出;
+等待地址输出--地址输出:设置len计数器,进入数据操作状态-->数据操作状态;
+数据操作状态-->fork;
+fork--输入部分len计数器完成:置满fifo-->等待数据操作完成;
+fork--输出部分len计数器完成:清空fifo-->等待数据操作完成;
+等待数据操作完成--输入输出均完成-->等待地址输入;
+
+```
 
 ## 端口设置
 
-## 示意图
+在此前连接在原DMA上的CPU, MEM的控制端口由地址控制模块接管.
+
+逻辑如下所示:
+
+输入部分:
+
+输入长度未达到len, 仍可输入: 
+```verilog
+input mem_to_dma_valid, //MEM中传入的数据是否有效。 接通
+input cpu_to_dma_valid, //CPU传入的数据是否有效。   接通
+
+output mem_to_dma_enable, //DMA准备好自MEM接收数据  接通
+output cpu_to_dma_enable, //DMA准备好自CPU接收数据  接通
+```
+这里的接通是指由DMA自行控制;
+
+输入长度达到len, 输入端关闭: 
+```verilog
+input mem_to_dma_valid, //MEM中传入的数据是否有效。 置为0
+input cpu_to_dma_valid, //CPU传入的数据是否有效。   置为0
+
+output mem_to_dma_enable, //DMA准备好自MEM接收数据  置为0
+output cpu_to_dma_enable, //DMA准备好自CPU接收数据  置为0
+```
+
+输出部分:
+
+输出长度未达到len, 仍可输出: 
+```verilog
+input dma_to_mem_enable, //MEM是否准备好接收数据。  接通
+input dma_to_cpu_enable, //CPU是否准备好接收数据。  接通
+output dma_to_mem_valid, //向MEM传出的数据是否有效  接通
+output dma_to_cpu_valid, //向CPU传出的数据是否有效  接通
+```
+
+输出长度达到len, 输出端关闭: 
+```verilog
+input dma_to_mem_enable, //MEM是否准备好接收数据。  置为0
+input dma_to_cpu_enable, //CPU是否准备好接收数据。  置为0
+output dma_to_mem_valid, //向MEM传出的数据是否有效  置为0
+output dma_to_cpu_valid, //向CPU传出的数据是否有效  置为0
+```
+
+输入长度达到len时, 将DMA中当前输入FIFO直接置满;
+
+输出长度达到len时, 将DMA中当前输出FIFO直接置空; 
+
 
 ## 各模块变化
 
-
 ### DMA模块(DMA)
+
+额外引出了输入FIFO置满, 输出FIFO置空引脚.
 
 ### FIFO模块(FIFO)
 
@@ -161,9 +231,9 @@ output reg [3:0] mem_out_socket //MEM的数据传入端口
 ## 补充: 使用三段式状态机的版本
 
 ***
-Copyright (c) 2017 Augustus Wang.
+Copyright (c) 2017-2018 Augustus Wang.
 
 
 # 附件 DMA源代码
 
-Copyright (c) 2017 Augustus Wang.
+Copyright (c) 2017-2018 Augustus Wang.
