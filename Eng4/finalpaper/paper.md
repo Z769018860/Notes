@@ -371,17 +371,17 @@ To sum up, the first group of people can be defined as those who do not like sch
 
 With the method of supervised machine learning, our study summarized the behavior pattern of the UCAS takeout orderers for the first time. 
 
-In the model built by the EM algorithm, we find two kinds of groups with obvious differences in online-ordering behavior. People in one of them are not satisfied with the university canteen. People in the other group order takeout only for sake of its efficiency. Compared with other research on university students' takeout ordering, this research provides a quantified model for takeout ordering, which is more convincing and repeatable. By using this model, we can speculate a person's taken-out ordering behavior pattern with limited information.
+In the model built by EM algorithm, we found two kinds of groups with obvious differences in online-ordering behavior. People in the first group are not satisfied with the university canteen. Yet people in another group order takeout only for sake of its efficiency. Compared with other researches on university students' takeout ordering, this research provides a quantified model for takeout ordering, which is more convincing and repeatable. By using this model, we can speculate a person's takeout ordering behavior pattern with limited information.
 
 Some suggestions can be given from the result of our study:
 
-#### 1. Recommendations for the stores:
+#### 1. Recommendations for takeout providers:
 
-Most students are more willing to accept 15-25 yuan / order takeout. Stores can try to keep the profit while controlling the price within the range of 15-25 yuan / single, which might increase the sales. At the same time, the hygiene problem is one of the important areas which students are concerned about. Over 90% of the students worry about the hygiene safety of takeout to varying degrees. Stores should also pay attention to food hygiene and packaging forms in order to provide customers with better dining experience.
+Most students are more willing to accept 15-25 yuan / order takeout. Takeout providers can try to keep profit while controlling the price within the range of 15-25 yuan / order, which might lead to growth of sales. At the same time, the hygiene problem is one of the most important aspect which students are concerned about. Over 90% of the students worry about hygiene safety of takeout to varying degrees. As a result, stores should also pay attention to food hygiene and packaging forms in order to provide customers with better dining experience.
 
 #### 2. Recommendations for canteens:
 
-Most of the students give negative evaluation of college canteen, due to poor food taste and crowded environment. The canteen should frequently provide new dishes which prevents students from boredom. The canteen can also lengthen the meal time to meet the needs of more students. In addition, over 40% of the participants said they would give up takeout as long as the canteen improved its food and service. Therefore, the performance of college canteen may affect the takeout ordering behavior pattern of students significantly.
+Most of the students give negative evaluation of college canteen, due to poor food taste and crowded environment. The canteen should frequently provide new dishes which prevent students from boredom. The canteen can also lengthen meal time to meet the needs of more students. In addition, over 40% of the participants said they would give up takeout as long as the canteen improved its food and service. Therefore, the performance of college canteen may affect the students' takeout ordering behavior pattern significantly.
 
 #### 3. Recommendations for students:
 
@@ -389,13 +389,13 @@ It turns out that over half of the students formed a habit of ordering online, a
 
 #### Limitation and Prospect
 
-However, drawbacks of this research do exist. The greatest challenge is from the data we have access to. We suspect that takeout ordering behavior is also related to academic achievement and physical fitness of the orderers. However, for two limitation factors listed as follow, the doubt cannot be discussed in this paper. 
+Though EM algorithm provided a satisfying model, drawbacks of this research do exist. The greatest challenge is from the data we have access to. We suspect that takeout ordering behavior is also related to academic achievement and physical fitness of the orderers. However, for two limitation factors listed as follow, the doubt cannot be discussed in this paper. 
 
-The first limitation is the content of questionnaire. Experience tells us that too many questions will lead to poor recovery rate. In our questionnaire there are already 14 questions. As a result, it is unwise to add any question.
+The first limitation is the content of questionnaire. Experience tells us that too many questions will lead to poor recovery rate. In our questionnaire there are already 14 questions. As a result, it is unwise to add more question.
 
-The second limitation is about privacy of participants. For the fact that some participants are not willing to mention their GPA, it is hard to gather data related to academic performance. In addition, it is also impossible to make use of publicized information about grades, because the questionnaire is anonymous.
+The second limitation is about the privacy of participants. For the fact that some participants are not willing to mention their GPA, it is hard to gather data related to academic performance. In addition, it is also impossible to make use of publicized information about grades, because the questionnaire is anonymous.
 
-As a result, the research only focusses on takeout ordering behavior itself. We believe that further research on the relationship between takeout ordering and other factors will lead to more exciting discovery.
+As a result, the research only focused on takeout ordering behavior itself. We believe that further research on the relationship between takeout ordering and other factors will lead to more exciting discovery.
 
 ***
 
