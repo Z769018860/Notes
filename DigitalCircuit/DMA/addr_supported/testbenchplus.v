@@ -5,7 +5,10 @@
 // parameter mode_cpu_to_mem 1'b1;
 // parameter mode_mem_to_cpu 1'b0;
 
+
 module CPU(
+
+//数据部分    
 input clk,
 input resetn,
 input cpu_to_dma_enable, //DMA准备好自CPU接收数据
@@ -16,13 +19,15 @@ output reg dma_to_cpu_enable, //CPU是否准备好接收数据。
 output reg cpu_to_dma_valid, //CPU传入的数据是否有效。
 output reg [7:0] cpu_out_socket,
 //------------------------------
+//地址控制部分
 input addr_out_enable,  //DMA准备好自CPU接收地址
 output reg addr_out_valid,  //CPU正在传出有效的地址
 
-output reg [31:0] addr_out,
-output reg [31:0] len_out
+output reg [31:0] addr_out, //地址输出
+output reg [31:0] len_out  //数据长度输出
 
 );
+
 reg [31:0] out_cnt;
 reg [31:0] addr_save;
 
@@ -76,6 +81,8 @@ end
 endmodule
 
 module MEM(
+
+//数据部分
 input clk,
 input resetn,
 input mem_to_dma_enable, //DMA准备好自MEM接收数据
@@ -86,13 +93,15 @@ output reg dma_to_mem_enable, //MEM是否准备好接收数据。
 output reg mem_to_dma_valid, //MEM传入的数据是否有效。
 output reg [3:0] mem_out_socket,
 //--------------------------------------
+//地址控制部分
 input addr_in_valid,  //DMA传出有效的地址
 output reg addr_in_enable,  //MEM可以接收地址
 
-input [31:0] addr_in,
-input [31:0] len_in
+input [31:0] addr_in, //地址输入
+input [31:0] len_in //数据长度输入
 
 );
+
 reg [7:0] _received;
 reg [7:0]  _sent;
 reg _rec_high;
