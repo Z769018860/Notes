@@ -419,7 +419,7 @@ begin
         end
     end
 
-    if((dma_mem==len_reg)&(dma_cpu==len_reg))//进出数据均已传输完成, 可以进行下一次地址传输
+    if((dma_mem==len_reg)&(dma_cpu==len_reg)&(len_reg!=0))//进出数据均已传输完成, 可以进行下一次地址传输
     begin
         dma_mem<=0;
         dma_cpu<=0;
@@ -450,17 +450,19 @@ output mem_to_dma_enable, //DMA准备好自MEM接收数据
 output cpu_to_dma_enable, //DMA准备好自CPU接收数据
 output dma_to_cpu_valid, //向CPU传出的数据是否有效
 
+output [3:0] mem_data_in, //内存信号输入
+output [7:0] cpu_data_in,  //中央处理器信号输入
+
 //地址控制部分------------------------------------------------------
 
 input address_in_valid,     //CPU传入给DMA地址值有效
-input address_out_valid,   //DMA处于可以传出地址状态
+input address_out_enable,  //DMA传出地址值可被MEM接收
 input [31:0]len_in,     //接收传入的长度
 input [31:0]addr_in,    //接收传入的地址
 
-output address_out_enable,  //DMA传出地址值可被MEM接收
+output address_out_valid,   //DMA处于可以传出地址状态
 output address_in_enable,  //CPU传出地址值可被DMA接收, DMA处于可以接受地址状态
-output [3:0] mem_data_in, //内存信号输入
-output [7:0] cpu_data_in,  //中央处理器信号输入
+
 output [31:0] address_reg,   //地址暂存器
 output [31:0] len_reg        //长度暂存器 unit: bit
 

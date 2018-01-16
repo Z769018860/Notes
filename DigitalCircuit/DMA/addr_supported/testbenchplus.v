@@ -37,36 +37,37 @@ begin
     //give out random status and data.
     dma_to_cpu_enable<=$random%2;
     cpu_to_dma_valid<=$random%2;
+    
     cpu_out_socket=$random%'b100000000;
     //---------------------------------------------
 
-    addr_out_valid<=1;
-    len_out<=0;
-    addr_out<=0;
-    addr_save<=0;
+    addr_out_valid<=$random%2;
+    len_out<=8;
+    addr_out<=$random;
+    // addr_save<=0;
 if(resetn)
 begin
 //-------------------------------------------------------------------------
-        if(addr_out_enable&addr_out_valid)
-        begin
-          addr_out=$random;
-          addr_len=8;
-          addr_out_enable<=0;
-          addr_save<=addr_out;
-        end
-        if(!addr_out_valid) //Data transfering
-            if(cpu_to_dma_enable&cpu_to_dma_valid)
-            begin
-              out_cnt=out_cnt+1;
-              if(out_cnt>=addr_save) //Transfer finished
-              begin
-                out_cnt<=0;
-                addr_save<=0;
-                addr_out_valid<=1;
-              end
-            end
+        // if(addr_out_enable&addr_out_valid)
+        // begin
+        //   addr_out=$random;
+        //   addr_len=8;
+        //   addr_out_enable<=0;
+        //   addr_save<=addr_out;
+        // end
+        // if(!addr_out_valid) //Data transfering
+        //     if(cpu_to_dma_enable&cpu_to_dma_valid)
+        //     begin
+        //       out_cnt=out_cnt+1;
+        //       if(out_cnt>=addr_save) //Transfer finished
+        //       begin
+        //         out_cnt<=0;
+        //         addr_save<=0;
+        //         addr_out_valid<=1;
+        //       end
+        //     end
 //===================================================================
-        if(cpu_to_dma_valid&cpu_to_dma_enable&addr_out_enable&addr_out_valid)
+        if(cpu_to_dma_valid&cpu_to_dma_enable)
         begin
             $display("cpu->dma: cpu gived %x",cpu_out_socket);
         end
@@ -74,6 +75,11 @@ begin
         if(dma_to_cpu_enable&dma_to_cpu_valid)
         begin
             $display("dma->cpu: cpu received %x",cpu_in_socket);
+        end
+
+        if(addr_out_valid&addr_out_enable)
+        begin
+            $display("addr::cpu->dma: addr: %x len: %d",addr_out,len_out);
         end
 end
 end
@@ -126,6 +132,7 @@ begin
     dma_to_mem_enable<=$random%2;
     mem_to_dma_valid<=$random%2;
     mem_out_socket<=$random%'b10000;
+    addr_in_enable<=$random%2;
     
 if(resetn)
     begin
@@ -152,7 +159,7 @@ if(resetn)
         if(_rec_high)
         begin
             _received[7:4]=mem_in_socket;
-            $display("mem gived %x in 8 bits",_received);
+            $display("mem received %x in 8 bits",_received);
             _rec_high=~_rec_high;            
         end
         else
@@ -160,6 +167,11 @@ if(resetn)
             _received[3:0]=mem_in_socket;
             _rec_high=~_rec_high;
         end
+    end
+
+    if(addr_in_enable&addr_in_valid)
+     begin
+        $display("addr::dma->mem: addr: %x len: %d",addr_in,len_in);
     end
 end
 end
@@ -192,7 +204,15 @@ MEM memins(
     .dma_to_mem_enable(dma_to_mem_enable),
     .dma_to_mem_valid(dma_to_mem_valid),
     .mem_in_socket(mem_in_wire),
-    .mem_out_socket(mem_out_wire)
+    .mem_out_socket(mem_out_wire),
+    //--------------------------------------
+//地址控制部分
+.addr_in_valid(dmains.address_out_valid),  //DMA传出有效的地址
+// .addr_in_enable,  //MEM可以接收地址
+
+.addr_in(dmains.address_reg), //地址输入
+.len_in(dmains.len_reg) //数据长度输入
+
 );
 
 CPU cpuins(
@@ -203,10 +223,15 @@ CPU cpuins(
     .dma_to_cpu_enable(dma_to_cpu_enable),
     .dma_to_cpu_valid(dma_to_cpu_valid),
     .cpu_in_socket(cpu_in_wire),
-    .cpu_out_socket(cpu_out_wire)
+    .cpu_out_socket(cpu_out_wire),
+    //------------------------------
+    //地址控制部分
+    .addr_out_enable(dmains.address_in_enable)  //DMA准备好自CPU接收地址
+    // .addr_out_valid,  //CPU正在传出有效的地址
+
 );
 
-DMA dmains(
+DMA_ADDRESS dmains(
     .clk(clk),
     .resetn(resetn),
     .mode(mode),
@@ -224,20 +249,16 @@ DMA dmains(
     .cpu_to_dma_enable(cpu_to_dma_enable), //DMA准备好自CPU接收数据
     .dma_to_cpu_valid(dma_to_cpu_valid), //向CPU传出的数据是否有效
 
-    .mem_data_in(mem_in_wire),
-    .cpu_data_in(cpu_in_wire)
+    .mem_data_in(mem_in_wire), //内存信号输入
+    .cpu_data_in(cpu_in_wire), //中央处理器信号输入
 //------------------------------------------
-    .address_in_valid(cpuins.address_out_valid),     //CPU传入给DMA地址值有效
-    .address_out_valid,   //DMA处于可以传出地址状态
-    .len_in,     //接收传入的长度
-    .addr_in,    //接收传入的地址
-    .
-    .address_out_enable,  //DMA传出地址值可被MEM接收
-    .address_in_enable,  //CPU传出地址值可被DMA接收, DMA处于可以接受地址状态
-    .mem_data_in, //内存信号输入
-    .cpu_data_in,  //中央处理器信号输入
-    .address_reg,   //地址暂存器
-    .len_reg        //长度暂存器 unit: bit
+    .address_in_valid(cpuins.addr_out_valid),     //CPU传入给DMA地址值有效
+    .address_out_valid(memins.addr_in_valid),   //DMA处于可以传出地址状态
+    .address_out_enable(memins.addr_in_enable),  //DMA传出地址值可被MEM接收
+    .address_in_enable(memins.addr_in_enable),  //CPU传出地址值可被DMA接收, DMA处于可以接受地址状态
+    
+    .len_in(cpuins.len_out),     //接收传入的长度
+    .addr_in(cpuins.addr_out)    //接收传入的地址
 
 );
 
