@@ -169,7 +169,7 @@ assign buf2.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_va
 // assign mem_data_out[3:0]=(input_buf==`buf1)?buf1.fifo_in[3:0]:buf2.fifo_in[3:0];
 // assign cpu_data_out[7:0]=(input_buf==`buf1)?buf1.fifo_in:buf2.fifo_in;
 assign buf1.fifo_in=((mode==`mode_cpu_to_mem)?cpu_data_out:{4'b0000,mem_data_out});
-assign buf2.fifo_in=((mode==`mode_mem_to_cpu)?cpu_data_out:{4'b0000,mem_data_out});
+assign buf2.fifo_in=((mode==`mode_cpu_to_mem)?cpu_data_out:{4'b0000,mem_data_out});
 
 // P-code
 // always@(*)

@@ -206,7 +206,7 @@ assign buf1.empty_fifo=((~input_buf==`buf1)?empty_fifo:0);
 assign buf2.empty_fifo=((~input_buf==`buf2)?empty_fifo:0);
 
 assign dma_cpu_trans=(mode==`mode_cpu_to_mem)?(cpu_to_dma_valid&cpu_to_dma_enable):(dma_to_cpu_enable&dma_to_cpu_valid);
-assign dma_mem_trans=(mode==`mode_mem_to_cpu)?(mem_to_dma_valid&mem_to_dma_enable):(dma_to_mem_enable&dma_to_mem_valid);
+assign dma_mem_trans=(mode==`mode_cpu_to_mem)?(mem_to_dma_valid&mem_to_dma_enable):(dma_to_mem_enable&dma_to_mem_valid);
 
 // P-code
 // always@(*)
