@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Augustus Wang.
 
-`define MODE 0
+`define MODE 1
 `timescale 1ns/1ps
 // parameter mode_cpu_to_mem 1'b1;
 // parameter mode_mem_to_cpu 1'b0;
@@ -38,7 +38,7 @@ begin
     dma_to_cpu_enable<=$random%2;
     cpu_to_dma_valid<=$random%2;
     
-    cpu_out_socket=$random%'b100000000;
+    cpu_out_socket<=$random%'b100000000;
     //---------------------------------------------
 
     addr_out_valid<=$random%2;
