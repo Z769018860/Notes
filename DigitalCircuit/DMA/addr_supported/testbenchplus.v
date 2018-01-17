@@ -42,7 +42,7 @@ begin
     //---------------------------------------------
 
     addr_out_valid<=$random%2;
-    len_out<=8;
+    len_out<=12;
     addr_out<=$random;
     // addr_save<=0;
 if(resetn)
@@ -69,17 +69,17 @@ begin
 //===================================================================
         if(cpu_to_dma_valid&cpu_to_dma_enable)
         begin
-            $display("cpu->dma: cpu gived %x",cpu_out_socket);
+            $display("      cpu->dma: cpu gived %x",cpu_out_socket);
         end
 
         if(dma_to_cpu_enable&dma_to_cpu_valid)
         begin
-            $display("dma->cpu: cpu received %x",cpu_in_socket);
+            $display("      dma->cpu: cpu received %x",cpu_in_socket);
         end
 
         if(addr_out_valid&addr_out_enable)
         begin
-            $display("addr::cpu->dma: addr: %x len: %d",addr_out,len_out);
+            $display("\naddr::cpu->dma: addr: %x len: %d",addr_out,len_out);
         end
 end
 end
@@ -143,7 +143,7 @@ if(resetn)
         if(_st_high)
         begin
             _sent[7:4]=mem_out_socket;
-            $display("mem gived %x in 8 bits",_sent);
+            $display("      mem gived %x in 8 bits",_sent);
             _st_high=~_st_high;            
         end
         else
@@ -159,7 +159,7 @@ if(resetn)
         if(_rec_high)
         begin
             _received[7:4]=mem_in_socket;
-            $display("mem received %x in 8 bits",_received);
+            $display("      mem received %x in 8 bits",_received);
             _rec_high=~_rec_high;            
         end
         else

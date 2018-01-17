@@ -38,13 +38,30 @@ begin
         position<=3'b0;
         writehigh<=0;
     end
+
     if(fill_fifo)//置满
     begin
+
+        if(input_enable&input_valid)
+        begin
+            if(workmode==`workmode_8)        
+            begin
+                ram[position]<=fifo_in;
+            end
+            else
+            begin
+                if(writehigh)
+                begin
+                    ram[position][7:4]<=fifo_in;
+                end
+            end
+        end
         input_enable<=0;
         output_valid<=1;
         position<=3'b0;
         writehigh<=0;
     end
+
     else
     if(empty_fifo)//置空
     begin
@@ -198,15 +215,15 @@ assign buf2.input_valid=((mode==`mode_cpu_to_mem)?cpu_to_dma_valid:mem_to_dma_va
 // assign mem_data_out[3:0]=(input_buf==`buf1)?buf1.fifo_in[3:0]:buf2.fifo_in[3:0];
 // assign cpu_data_out[7:0]=(input_buf==`buf1)?buf1.fifo_in:buf2.fifo_in;
 assign buf1.fifo_in=((mode==`mode_cpu_to_mem)?cpu_data_out:{4'b0000,mem_data_out});
-assign buf2.fifo_in=((mode==`mode_mem_to_cpu)?cpu_data_out:{4'b0000,mem_data_out});
+assign buf2.fifo_in=((mode==`mode_cpu_to_mem)?cpu_data_out:{4'b0000,mem_data_out});
 
 assign buf1.fill_fifo=((input_buf==`buf1)?fill_fifo:0);
 assign buf2.fill_fifo=((input_buf==`buf2)?fill_fifo:0);
 assign buf1.empty_fifo=((~input_buf==`buf1)?empty_fifo:0);
 assign buf2.empty_fifo=((~input_buf==`buf2)?empty_fifo:0);
 
-assign dma_cpu_trans=(mode==`mode_cpu_to_mem)?(cpu_to_dma_valid&cpu_to_dma_enable):(dma_to_cpu_enable&dma_to_cpu_valid);
-assign dma_mem_trans=(mode==`mode_cpu_to_mem)?(mem_to_dma_valid&mem_to_dma_enable):(dma_to_mem_enable&dma_to_mem_valid);
+assign dma_cpu_trans=((mode==`mode_cpu_to_mem)?(cpu_to_dma_valid & cpu_to_dma_enable):(dma_to_cpu_enable & dma_to_cpu_valid));
+assign dma_mem_trans=((mode==`mode_cpu_to_mem)?(dma_to_mem_enable & dma_to_mem_valid):(mem_to_dma_valid & mem_to_dma_enable));
 
 // P-code
 // always@(*)
@@ -413,7 +430,7 @@ begin
             end
         else
             begin
-                dma_cpu<=dma_cpu+1;
+                dma_mem<=dma_mem+1;
                 mem_4bit_cnt<=0;
             end
         end
@@ -427,6 +444,8 @@ begin
     end
 end
     
+    assign fill_fifo=(mode_reg==`mode_mem_to_cpu)?((dma_mem==(len_reg-1))&dma_mem_trans&(mem_4bit_cnt)):((dma_cpu==(len_reg-1))&dma_cpu_trans);
+    assign empty_fifo=(mode_reg==`mode_mem_to_cpu)?((dma_cpu==(len_reg-1))&dma_cpu_trans):((dma_mem==(len_reg-1))&dma_mem_trans&(mem_4bit_cnt));
 endmodule
 
 module DMA_ADDRESS(
@@ -538,13 +557,13 @@ wire dma_cpu_control;
 assign dma_mem_control=addr.dma_mem_control;
 assign dma_cpu_control=addr.dma_cpu_control;
 
-assign _dma_to_mem_enable=dma_to_mem_enable*dma_mem_control;
-assign _mem_to_dma_valid=mem_to_dma_valid*dma_mem_control;
-assign _dma_to_cpu_enable=dma_to_cpu_enable*dma_cpu_control;
-assign _cpu_to_dma_valid=cpu_to_dma_valid*dma_cpu_control;
-assign dma_to_mem_valid=_dma_to_mem_valid*dma_mem_control;
-assign mem_to_dma_enable=_mem_to_dma_enable*dma_mem_control;
-assign cpu_to_dma_enable=_cpu_to_dma_enable*dma_cpu_control;
-assign dma_to_cpu_valid=_dma_to_cpu_valid*dma_cpu_control;
+assign _dma_to_mem_enable=dma_to_mem_enable&dma_mem_control;
+assign _mem_to_dma_valid=mem_to_dma_valid&dma_mem_control;
+assign _dma_to_cpu_enable=dma_to_cpu_enable&dma_cpu_control;
+assign _cpu_to_dma_valid=cpu_to_dma_valid&dma_cpu_control;
+assign dma_to_mem_valid=_dma_to_mem_valid&dma_mem_control;
+assign mem_to_dma_enable=_mem_to_dma_enable&dma_mem_control;
+assign cpu_to_dma_enable=_cpu_to_dma_enable&dma_cpu_control;
+assign dma_to_cpu_valid=_dma_to_cpu_valid&dma_cpu_control;
 
 endmodule
