@@ -254,51 +254,6 @@ assign buf2.empty_fifo=((~input_buf==`buf2)?empty_fifo:0);
 assign dma_cpu_trans=((mode==`mode_cpu_to_mem)?(cpu_to_dma_valid & cpu_to_dma_enable):(dma_to_cpu_enable & dma_to_cpu_valid));
 assign dma_mem_trans=((mode==`mode_cpu_to_mem)?(dma_to_mem_enable & dma_to_mem_valid):(mem_to_dma_valid & mem_to_dma_enable));
 
-// P-code
-// always@(*)
-// if(mode==`mode_mem_to_cpu)
-// begin
-//     if(input_buf==`buf1)
-//     begin
-//         mem_to_dma_enable=buf1.input_enable;
-//         buf1.input_valid=mem_to_dma_valid;
-//         dma_to_cpu_valid=buf2.output_valid;
-//         buf2.output_enable=dma_to_cpu_enable;
-//         buf1.fifo_in=mem_data_out;
-//         cpu_data_in=buf2.fifo_out;
-//     end
-//     else//(input_buf==`buf2)
-//     begin
-//         mem_to_dma_enable=buf2.input_enable;
-//         buf2.input_valid=mem_to_dma_valid;
-//         dma_to_cpu_valid=buf1.output_valid;
-//         buf1.output_enable=dma_to_cpu_enable;
-//         buf2.fifo_in=mem_data_out;
-//         cpu_data_in=buf1.fifo_out;
-//     end
-// end
-// else//(mode==`mode_cpu_to_mem)
-// begin
-//     if(input_buf==`buf1)
-//     begin
-//         cpu_to_dma_enable=buf1.input_enable;
-//         buf1.input_valid=cpu_to_dma_valid;
-//         dma_to_mem_valid=buf2.output_valid;
-//         buf2.output_enable=dma_to_mem_enable;
-//         buf1.fifo_in=cpu_data_out;
-//         mem_data_in=buf2.fifo_out;
-//     end
-//     else//(input_buf==`buf2)
-//     begin
-//         cpu_to_dma_enable=buf2.input_enable;
-//         buf2.input_valid=cpu_to_dma_valid;
-//         dma_to_mem_valid=buf1.output_valid;
-//         buf1.output_enable=dma_to_mem_enable;
-//         buf2.fifo_in=cpu_data_out;
-//         mem_data_in=buf1.fifo_out;
-//     end
-// end
-
 
 //这部分代码用于根据传输方向, 初始化两个FIFO的工作模式
 always@(posedge clk)
