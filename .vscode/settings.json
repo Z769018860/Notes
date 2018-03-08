@@ -1,0 +1,27 @@
+{
+    "files.associations": {
+        "lazy.h": "c",
+        "stdio.h": "c",
+        "limits": "c",
+        "*.tcc": "c",
+        "system_error": "c",
+        "cmath": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "printboard.h": "c",
+        "initializer_list": "cpp",
+        "math.h": "c",
+        "charlib.h": "c",
+        "support.h": "c",
+        "stdlib.h": "c",
+        "algo_linear.h": "c",
+        "algo_basic.h": "c",
+        "timer.h": "c",
+        "forbidden_move.h": "c",
+        "algo_rebuild.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Enabled",
+    "cSpell.words": [
+        "boundry"
+    ]
+}
