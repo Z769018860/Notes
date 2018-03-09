@@ -52,7 +52,7 @@ int LinklistCpyAll(pLnode dist, pLnode src);
 int LinklistLength(pLnode plinklist);
 int LinklistPosition(pLnode plinklist, pLnode pnode);
 pLnode LinklistBefore(pLnode plinklist, pLnode pnode);
-pLnode LinklistNext(pLnode plinklist, pLnode pnode);
+pLnode LinklistNext(pLnode pnode);
 int LinklistTranspose(pLnode plinklist);
 
 //array linklist func prototype
@@ -419,7 +419,7 @@ int LinklistLength(pLnode plinklist)
     if (plinklist)
     {
         int cnt = 0;
-        while (plinklist = plinklist->next;)
+        while (plinklist = plinklist->next)
         {
             cnt++;
         }
@@ -445,20 +445,19 @@ int LinklistPosition(pLnode plinklist, pLnode pnode)
     return ERROR;
 }
 
-pLnode LinklistBefore(pLnode plinklist, pLnode pnode);
+pLnode LinklistBefore(pLnode plinklist, pLnode pnode)
 {
     if (plinklist)
     {
-
-        while (plinklist->next && plinklist != pnode)
+        while (plinklist->next && plinklist->next != pnode)
         {
-            cnt++;
+            plinklist = plinklist->next;
         }
-        if (plinklist == pnode)
-            return cnt;
-        return OVERFLOW;
+        if (plinklist->next == pnode)
+            return plinklist;
+        return NULL;
     }
-    return ERROR;
+    return NULL;
 }
 
 pLnode LinklistNext(pLnode pnode)
@@ -467,11 +466,31 @@ pLnode LinklistNext(pLnode pnode)
     {
         return pnode->next;
     }
+    return NULL;
+}
+
+int LinklistTranspose(pLnode plinklist)
+{
+    if (plinklist && plinklist->next)
+    {
+        pLnode newhead=plinklist->next;//temp
+        pLnode cur = plinklist->next;//1st one
+        pLnode nxt = cur->next;
+        while (nxt) //nxt exists, not end
+        {
+            cur = nxt;
+            nxt = cur->next;
+            cur->next = newhead;
+            newhead = cur;
+        }
+        plinklist->next->next = 0;
+        plinklist->next = newhead;
+        return 0;
+    }
     return ERROR;
 }
 
-int LinklistTranspose(pLnode plinklist);
-//for debug
+    //for debug
 
 #ifdef _UNITTEST_LINKLIST_C
 
@@ -543,6 +562,17 @@ int _debug_Linklist()
     puts("---------");
     LinklistCpyAll(r, result);
     LinklistMap(r, Showint);
+    puts("---------");    
+    LinklistTranspose(r);
+    LinklistMap(r, Showint);
+    pLnode o=LinklistInit();
+    LinklistMap(o, Showint);
+    LinklistAdd(o, 1);
+    LinklistMap(o, Showint);
+    LinklistTranspose(o);
+    LinklistMap(o, Showint);
+    
+    
 }
 
 int main()

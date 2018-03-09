@@ -18,8 +18,4 @@
 
 ***
 
-王华强
-计算机科学与技术系
-本科部
-中国科学院大学
-wanghuaqiang16@mails.ucas.ac.cn
+---
