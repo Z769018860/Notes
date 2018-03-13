@@ -1,2 +1,0 @@
-
-    LinklistMap(ll, Showint);

@@ -5,7 +5,7 @@
 
 // virtualmem.c
 
-#define _UNITTEST_VIRTUALMEM_C
+// #define _UNITTEST_VIRTUALMEM_C
 
 #ifndef _VIRTUALMEM_C
 #define _VIRTUALMEM_C
@@ -92,7 +92,7 @@ int VirtualmemNext(pVMhead vm, int position)
     int i = 0;
     int cnt = 0;
     pVMunit p = vm->head;
-
+    
     while (cnt <= position)
     {
         i = p[i].next;

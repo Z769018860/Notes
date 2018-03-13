@@ -6,7 +6,7 @@
 // linklist.c
 
 //TODO: 用raw string ## 实现模板? /滑稽
-#define _UNITTEST_LINKLIST_C
+// #define _UNITTEST_LINKLIST_C
 
 #ifndef _LINKLIST_C
 #define _LINKLIST_C
@@ -19,32 +19,32 @@
 #include <malloc.h>
 #include "lazy.h"
 
-// typedef int Datatype;
-#define Datatype int
+// typedef int DatatypeLinklist;
+#define DatatypeLinklist int
 
 //simple linklist func prototype
 
 typedef struct Lnode
 {
-    Datatype data;
+    DatatypeLinklist data;
     struct Lnode *next;
 } Lnode, *pLnode;
 
 pLnode LinklistInit();
 int LinklistFree(pLnode plinklist);
 int LinklistClear(pLnode plinklist);
-int LinklistAdd(pLnode plinklist, Datatype data);
-// int LinklistInsFirst(pLnode plinklist, Datatype data);
-int LinklistAppend(pLnode plinklist, Datatype data);
+int LinklistAdd(pLnode plinklist, DatatypeLinklist data);
+// int LinklistInsFirst(pLnode plinklist, DatatypeLinklist data);
+int LinklistAppend(pLnode plinklist, DatatypeLinklist data);
 int LinklistAppendLinklist(pLnode ll1, pLnode ll2);
 int LinklistMap(pLnode plinklist, void func());
-int LinklistFind(pLnode plinklist, Datatype data);
-int LinklistGet(pLnode plinklist, int position, Datatype *pdata);
+int LinklistFind(pLnode plinklist, DatatypeLinklist data);
+int LinklistGet(pLnode plinklist, int position, DatatypeLinklist *pdata);
 int LinklistDel(pLnode plinklist, int position);
-int LinklistInsert(pLnode plinklist, int position, Datatype data);
-int LinklistInsertAfter(pLnode plinklist, int position, Datatype data);
-int LinklistInsertStrict(pLnode plinklist, int position, Datatype data);
-int LinklistPop(pLnode plinklist, int position, Datatype *pdata);
+int LinklistInsert(pLnode plinklist, int position, DatatypeLinklist data);
+int LinklistInsertAfter(pLnode plinklist, int position, DatatypeLinklist data);
+int LinklistInsertStrict(pLnode plinklist, int position, DatatypeLinklist data);
+int LinklistPop(pLnode plinklist, int position, DatatypeLinklist *pdata);
 pLnode LinklistMerge(pLnode ll1, pLnode ll2, int compfunc());
 pLnode LinklistCpyNode(pLnode src);
 pLnode LinklistCounterpart(pLnode src);
@@ -59,20 +59,20 @@ int LinklistTranspose(pLnode plinklist);
 
 typedef struct ALnode
 {
-    Datatype data;
+    DatatypeLinklist data;
     int next;
 } ALnode, *pALnode;
 
 // pALnode ALinklistInit();
-// int ALinklistAppend(pALnode plinklist, Datatype data);
-// int ALinklistAdd(pALnode plinklist, Datatype data);
+// int ALinklistAppend(pALnode plinklist, DatatypeLinklist data);
+// int ALinklistAdd(pALnode plinklist, DatatypeLinklist data);
 // int ALinklistMap(pALnode plinklist, void func());
-// int ALinklistFind(pALnode plinklist, Datatype data);
-// int ALinklistGet(pALnode plinklist, int position, Datatype *pdata);
-// int ALinklistInsert(pALnode plinklist, int position, Datatype data);
-// int ALinklistInsertStrict(pALnode plinklist, int position, Datatype data);
+// int ALinklistFind(pALnode plinklist, DatatypeLinklist data);
+// int ALinklistGet(pALnode plinklist, int position, DatatypeLinklist *pdata);
+// int ALinklistInsert(pALnode plinklist, int position, DatatypeLinklist data);
+// int ALinklistInsertStrict(pALnode plinklist, int position, DatatypeLinklist data);
 // int ALinklistDel(pALnode plinklist, int position);
-// int ALinklistPop(pALnode plinklist, int position, Datatype *pdata);
+// int ALinklistPop(pALnode plinklist, int position, DatatypeLinklist *pdata);
 // int ALinklistFree(pALnode plinklist);
 // pLnode ALinklistMerge(pALnode ll1, pALnode ll2, int compfunc());
 
@@ -80,20 +80,20 @@ typedef struct ALnode
 
 typedef struct DLnode
 {
-    Datatype data;
+    DatatypeLinklist data;
     struct Lnode *next;
 } DLnode, *pDLnode;
 
 // pDLnode DLinklistInit();
-// int DLinklistAppend(pDLnode plinklist, Datatype data);
-// int DLinklistAdd(pDLnode plinklist, Datatype data);
+// int DLinklistAppend(pDLnode plinklist, DatatypeLinklist data);
+// int DLinklistAdd(pDLnode plinklist, DatatypeLinklist data);
 // int DLinklistMap(pDLnode plinklist, void func());
-// int DLinklistFind(pDLnode plinklist, Datatype data);
-// int DLinklistGet(pDLnode plinklist, int position, Datatype *pdata);
-// int DLinklistInsert(pDLnode plinklist, int position, Datatype data);
-// int DLinklistInsertStrict(pDLnode plinklist, int position, Datatype data);
+// int DLinklistFind(pDLnode plinklist, DatatypeLinklist data);
+// int DLinklistGet(pDLnode plinklist, int position, DatatypeLinklist *pdata);
+// int DLinklistInsert(pDLnode plinklist, int position, DatatypeLinklist data);
+// int DLinklistInsertStrict(pDLnode plinklist, int position, DatatypeLinklist data);
 // int DLinklistDel(pDLnode plinklist, int position);
-// int DLinklistPop(pDLnode plinklist, int position, Datatype *pdata);
+// int DLinklistPop(pDLnode plinklist, int position, DatatypeLinklist *pdata);
 // int DLinklistFree(pDLnode plinklist);
 // pDLnode DLinklistMerge(pDLnode ll1, pDLnode ll2, int compfunc());
 
@@ -106,7 +106,7 @@ pLnode LinklistInit()
     return p;
 }
 
-int LinklistAppend(pLnode plinklist, Datatype data)
+int LinklistAppend(pLnode plinklist, DatatypeLinklist data)
 {
     pLnode p = plinklist;
     while (p->next != 0)
@@ -124,7 +124,7 @@ int LinklistAppend(pLnode plinklist, Datatype data)
     return ERROR;
 }
 
-int LinklistAdd(pLnode plinklist, Datatype data)
+int LinklistAdd(pLnode plinklist, DatatypeLinklist data)
 {
     pLnode p = plinklist;
     pLnode n = (pLnode)malloc(sizeof(Lnode));
@@ -156,7 +156,7 @@ int LinklistMap(pLnode plinklist, void func())
     return ERROR;
 }
 
-int LinklistFind(pLnode plinklist, Datatype data)
+int LinklistFind(pLnode plinklist, DatatypeLinklist data)
 {
     int cnt = 0;
     while (plinklist = plinklist->next)
@@ -170,7 +170,7 @@ int LinklistFind(pLnode plinklist, Datatype data)
     return 0;
 }
 
-int LinklistGet(pLnode plinklist, int position, Datatype *pdata)
+int LinklistGet(pLnode plinklist, int position, DatatypeLinklist *pdata)
 {
     if (position < 1)
         return 0;
@@ -187,7 +187,7 @@ int LinklistGet(pLnode plinklist, int position, Datatype *pdata)
     return ERROR;
 }
 
-int LinklistInsert(pLnode plinklist, int position, Datatype data)
+int LinklistInsert(pLnode plinklist, int position, DatatypeLinklist data)
 {
     if (position < 1)
         return ERROR;
@@ -211,7 +211,7 @@ int LinklistInsert(pLnode plinklist, int position, Datatype data)
     return ERROR;
 }
 
-int LinklistInsertAfter(pLnode plinklist, int position, Datatype data)
+int LinklistInsertAfter(pLnode plinklist, int position, DatatypeLinklist data)
 {
     if (position < 1)
         return ERROR;
@@ -235,7 +235,7 @@ int LinklistInsertAfter(pLnode plinklist, int position, Datatype data)
     return ERROR;
 }
 
-int LinklistInsertStrict(pLnode plinklist, int position, Datatype data)
+int LinklistInsertStrict(pLnode plinklist, int position, DatatypeLinklist data)
 {
     int cnt = 0;
     while (plinklist && cnt < (position - 1))
@@ -276,7 +276,7 @@ int LinklistDel(pLnode plinklist, int position)
     return 0;
 }
 
-int LinklistPop(pLnode plinklist, int position, Datatype *pdata)
+int LinklistPop(pLnode plinklist, int position, DatatypeLinklist *pdata)
 {
     int cnt = 0;
     while (plinklist && cnt < (position - 1))
@@ -371,7 +371,7 @@ int LinklistClear(pLnode plinklist)
     return ERROR;
 }
 
-int LinklistInsFirst(pLnode plinklist, Datatype data)
+int LinklistInsFirst(pLnode plinklist, DatatypeLinklist data)
 {
     LinklistAdd(plinklist, data);
 }
