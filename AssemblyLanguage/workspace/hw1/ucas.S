@@ -5,6 +5,7 @@
 .section .bss
 .section .text
 .globl _start
+
 _start:
 /*
 4号调用：写文件
@@ -17,12 +18,12 @@ _start:
 
     EBX：返回值
 */
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, offset output
-    mov edx, 17
-    int 0x80
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, offset output
+    mov edx, 18
+    syscall
 
-    mov eax, 1
-    mov ebx, 0
-    int 0x80
+    mov rax, 60
+    mov rdi, 0
+    syscall

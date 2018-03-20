@@ -221,9 +221,9 @@ value flag_bits section alignment name
 * Info //info registers 
 * Nexti
 * Stepi
-* Display //在每个断点显示表达式的值
-* print
-* X
+* Display /c //在每个断点显示表达式的值
+* print /c  
+* X //地址
 * Disassemble
 * quit
 
@@ -257,6 +257,8 @@ echo running $1
 
 ## HW1
 
+32位版本
+
 ```x86asm
 #ucas.S
     .intel_syntax noprefix
@@ -266,7 +268,7 @@ echo running $1
 .section .text
 .globl _start
 
-_start
+_start:fi
 /*
 4号调用：写文件
 
@@ -281,11 +283,49 @@ _start
     mov eax, 4
     mov ebx, 1
     mov ecx, offset output
-    mov edx, 17
+    mov edx, 18
     int 0x80
 
     mov eax, 1
     mov ebx, 0
     int 0x80
+
+```
+
+64位版本
+
+```x86asm
+#ucas.S
+    .intel_syntax noprefix
+.section .data
+    output: .ascii "University of CAS\n"
+.section .bss
+.section .text
+.globl _start
+
+_start:
+/*
+    64位系统
+    1号调用：写文件
+
+    RDI：文件描述符，1表示终端
+    RSI：输出缓冲区（Buffer）的地址
+    EDX：输出的字节数
+
+    60号调用：程序退出
+
+    RDI：返回值
+
+    系统中断使用 syscall 语句
+*/
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, offset output
+    mov edx, 18
+    syscall
+
+    mov rax, 60
+    mov rdi, 0
+    syscall
 
 ```
