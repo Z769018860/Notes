@@ -39,6 +39,29 @@
             ]
         },
         {
+            "name": "(g++) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${file}.exe",
+            // "args": ["-e","-3","-b"],
+            // "args": ["-e","-3","-w"],
+            // "args": ["-test"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "G:/mingw/bin/g++.exe",
+            "preLaunchTask": "g++",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "AI-BLACK",
             "type": "cppdbg",
             "request": "launch",

@@ -199,10 +199,12 @@ echo running $1
 
 options:
 
+```
    -x       Display the contents of all headers, 显示所有文件头
    -d      Display assembler contents of executable sections, 反汇编代码
    -s      Display the full contents of all sections requested, 显示所有内容
    -D       反汇编所有内容
+```
 
     File off //文件偏移      
     Algn     //对齐
@@ -233,19 +235,19 @@ info registers
 
 ## 汇编Debug信息的程序
 
-```bash
+```sh
 as --gstabs -o hello.o hello.S
 ld -o hello hello.o
 ```
 
 ## 汇编32bit的程序
 
-```bash
+```sh
 as --32 --gstabs -o hello.o hello.S
 ld -m elf_i386 -o hello hello.o
 ```
 
-```shell
+```sh
 echo as --32 --gstabs -o $1.o $1.S
 as --32 --gstabs -o $1.o $1.S
 echo ld -m elf_i386 -o $1 $1.o
