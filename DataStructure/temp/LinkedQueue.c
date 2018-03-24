@@ -45,6 +45,8 @@ Status QueueTraverse(LinkQueue Q, void visit(ElemType e));
 Status InitQueue(LinkQueue* Q)
 {
     *Q = (LinkQueue)malloc(sizeof(struct _LinkQueue_struct));
+    if(!Q)
+        return ERROR;
     (*Q)->front = (*Q)->rear = (QNodeptr)malloc(sizeof(QNode));
     if (!(*Q)->front)
         exit(OVERFLOW);
@@ -132,7 +134,7 @@ Status DeQueue(LinkQueue Q, ElemType *E)
     return OK;
 }
 
-Status QueueTraverse(LinkQueue Q, void visit(ElemType e))
+Status QueueTraverse(LinkQueue Q, void (*visit)(ElemType e))
 {
     if ((!Q) || (Q->front == Q->rear))
         return ERROR;
@@ -150,27 +152,27 @@ void _test(int i)
     printf("%d ", i);
 }
 
-// #include"lazy.h"
-// int main()
-// {
-//     LinkQueue Q;
-//     InitQueue(&Q);
-//     CK(QueueEmpty(Q));
-//     ClearQueue(Q);
-//     CK(QueueLength(Q));  
-//     EnQueue(Q, 1);
-//     EnQueue(Q, 2);
-//     EnQueue(Q, 3);
-//     EnQueue(Q, 4);
-//     int a;
-//     GetHead(Q,&a);
-//     CK(a);
-//     DeQueue( Q,  &a);
-//     DeQueue( Q,  &a);
-//     CK(a);
-//     QueueTraverse(Q, _test);
-//     DestoryQueue(Q);
-//     return 0;
-// }
+#include"lazy.h"
+int main()
+{
+    LinkQueue Q;
+    InitQueue(&Q);
+    CK(QueueEmpty(Q));
+    ClearQueue(Q);
+    CK(QueueLength(Q));  
+    EnQueue(Q, 1);
+    EnQueue(Q, 2);
+    EnQueue(Q, 3);
+    EnQueue(Q, 4);
+    int a;
+    GetHead(Q,&a);
+    CK(a);
+    DeQueue( Q,  &a);
+    DeQueue( Q,  &a);
+    CK(a);
+    QueueTraverse(Q, _test);
+    DestoryQueue(Q);
+    return 0;
+}
 
 #endif
