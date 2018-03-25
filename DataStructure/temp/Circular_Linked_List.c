@@ -27,9 +27,9 @@ typedef struct LNode_C *LinkList_C;
 
 //---------|FuncList|----------
 Status InitList_C(LinkList_C *L);
-//构造一个空的顺序表L
+//构造一个空的循环链表L
 Status DestroyList_C(LinkList_C L);
-//销毁顺序表L
+//销毁循环链表L
 void ClearList_C(LinkList_C L);
 //将L重置为空表
 Status ListEmpty_C(LinkList_C L);
@@ -41,22 +41,24 @@ Status GetElem_C(LinkList_C L, int, ElemType *);
 int compare(ElemType, ElemType);
 //元素的比较函数
 int LocateElem_C(LinkList_C L, ElemType, int (*compare)(ElemType, ElemType));
-//在顺序顺序表L中查找第1个值与e满足compare()的元素的位序
+//在循环链表L中查找第1个值与e满足compare()的元素的位序
 Status PriorElem_C(LinkList_C L, ElemType, ElemType *);
 //返回cur_e的前驱节点pre_e
 Status NextElem_C(LinkList_C L, ElemType, ElemType *);
 //返回cur_e的后继节点next_e
 Status ListInsert_C(LinkList_C L, int, ElemType);
-//在顺序表L中第i个位置之前插入新的元素e
+//在循环链表L中第i个位置之前插入新的元素e
 Status ListDelete_C(LinkList_C L, int, ElemType *);
-//在顺序表L中删除第i个元素，并用e返回其值
+//在循环链表L中删除第i个元素，并用e返回其值
 void MergeList_C(LinkList_C L, LinkList_C Y, LinkList_C B, int (*compare)(ElemType, ElemType));
-//已知顺序表La和Lb的元素按值非递减排列
+//已知循环链表La和Lb的元素按值非递减排列
 Status ListTraverse_C(LinkList_C L, Status (*visit)(ElemType *));
 //依次对L的每个数据元素调用函数visit()，一旦visit()失败，则操作失败
 Status PrintList_C(LinkList_C L);
-//打印顺序表L
+//打印循环链表L
 //-----------------------------
+
+//循环链表定义: 若首节点.next==0则为空节点, 否则此节点中有元素存在.
 
 //-----------------------------
 Status InitList_C(LinkList_C *L) //2.3
@@ -66,9 +68,10 @@ Status InitList_C(LinkList_C *L) //2.3
     *L = (LinkList_C)malloc(sizeof(struct LNode_C));
     if (!*L)
         exit(OVERFLOW);
-    (*L)->next = *L;
+    (*L)->next = 0;
     return OK;
-} //构造一个空的顺序表L
+} //构造一个空的循环链表L
+
 Status DestroyList_C(LinkList_C L)
 {
     //输入参数是一个LinkList类型的变量L
@@ -77,6 +80,8 @@ Status DestroyList_C(LinkList_C L)
     if (!L)
         exit(OVERFLOW);
     initial = L;
+    if (L->next == 0)
+        free(L);
     for (temp = L->next; temp != initial;)
     {
         if (!temp)
@@ -88,10 +93,11 @@ Status DestroyList_C(LinkList_C L)
     free(L);
     L = NULL;
     return OK;
-} //销毁顺序表L
+} //销毁循环链表L
+
 void ClearList_C(LinkList_C L)
 {
-    //这个函数和上面那个Destroy一模一样
+    //删除所有元素, 保留循环链表的空表头
     LinkList_C temp, temp1, initial;
     if (!L)
         exit(OVERFLOW);
@@ -104,18 +110,19 @@ void ClearList_C(LinkList_C L)
         free(temp);
         temp = temp1;
     }
-    free(L);
-    L = NULL;
+    L->next = 0;
     return;
 } //将L重置为空表
+
 Status ListEmpty_C(LinkList_C L)
 {
     //输入一个LinkList类型的L，判断其是否是空串（NULL）
-    if (!L)
+    if (!L || L->next == 0)
         return TRUE;
     else
         return FALSE;
 } //判断L是否为空表
+
 int ListLength_C(LinkList_C L)
 {
     //输入是一个LinkList类型的变量L
@@ -125,11 +132,12 @@ int ListLength_C(LinkList_C L)
     if (!L)
         exit(OVERFLOW);
     if (!L->next)
-        exit(OVERFLOW);
+        return 0;
     for (i = 1; temp != L; i++)
         temp = temp->next;
     return i;
 } //返回L中数据元素的个数
+
 Status GetElem_C(LinkList_C L, int i, ElemType *e)
 {
     //有三个参数，第一个参数是链表L，第二个参数是元素序数，记得是从1开始数的，如果i大于链表长度就会报错
@@ -139,6 +147,8 @@ Status GetElem_C(LinkList_C L, int i, ElemType *e)
     LinkList_C p = L;
     if (!L)
         exit(OVERFLOW);
+    if (ListEmpty_C(L))
+        return ERROR;
     n = ListLength_C(L);
     for (j = 1; j != i && j != n; j++)
         p = p->next;
@@ -151,6 +161,7 @@ Status GetElem_C(LinkList_C L, int i, ElemType *e)
     }
 
 } //用e返回L中第i个数据元素的值
+
 int compare(ElemType a, ElemType b)
 {
     //两个参数都是元素类型，如果a大于b就输出1，等于输出0，小于输出-1
@@ -161,6 +172,7 @@ int compare(ElemType a, ElemType b)
     else
         return -1;
 } //元素的比较函数
+
 int LocateElem_C(LinkList_C L, ElemType e, int (*compare)(ElemType, ElemType))
 {
     //输入参数是一个循环链表L，一个用来比较的元素e，和用来比较的函数指针
@@ -168,6 +180,8 @@ int LocateElem_C(LinkList_C L, ElemType e, int (*compare)(ElemType, ElemType))
     int i;
     int n;
     LinkList_C p = L;
+    if (ListEmpty_C(L))
+        return ERROR;
     n = ListLength_C(L);
     for (i = 1; compare(L->data, e) && i != n; i++, p = p->next)
         ;
@@ -175,7 +189,8 @@ int LocateElem_C(LinkList_C L, ElemType e, int (*compare)(ElemType, ElemType))
         return ERROR;
     else
         return i;
-} //在顺序顺序表L中查找第1个值与e满足compare()的元素的位序
+} //在循环链循环链表L中查找第1个值与e满足compare()的元素的位序
+
 Status PriorElem_C(LinkList_C L, ElemType cur_e, ElemType *pre_e)
 {
     //三个参数第一个是循环链表L，第二个是用来比较的cur_e，第三个用来返回值
@@ -184,6 +199,8 @@ Status PriorElem_C(LinkList_C L, ElemType cur_e, ElemType *pre_e)
     LinkList_C temp, p;
     n = ListLength_C(L);
     p = L;
+    if (ListEmpty_C(L))
+        return ERROR;
     for (i = 0, temp = L; p->data != cur_e && i != n; i++, p = p->next)
         temp = p;
     if (i == n && p->data != cur_e)
@@ -195,12 +212,15 @@ Status PriorElem_C(LinkList_C L, ElemType cur_e, ElemType *pre_e)
     }
 }
 //返回cur_e的前驱节点pre_e
+
 Status NextElem_C(LinkList_C L, ElemType cur_e, ElemType *next_e)
 {
     //三个参数第一个是循环链表L，第二个是用来比较的cur_e，第三个用来返回值
     //返回后继结点
     int i, n;
     LinkList_C temp, p;
+    if (ListEmpty_C(L))
+        return ERROR;
     n = ListLength_C(L);
     p = L;
     for (i = 0, temp = L; p->data != cur_e && i != n; i++, p = p->next)
@@ -214,11 +234,14 @@ Status NextElem_C(LinkList_C L, ElemType cur_e, ElemType *next_e)
     }
 }
 //返回cur_e的后继节点next_e
+
 Status ListInsert_C(LinkList_C L, int i, ElemType e)
 {
     //在循环链表L中第i个位置之前插入新的元素e
     int j, n;
     LinkList_C p, temp, temp1;
+    if (ListEmpty_C(L))
+        return ERROR;
     n = ListLength_C(L);
     p = L;
     if (i > n)
@@ -245,12 +268,17 @@ Status ListInsert_C(LinkList_C L, int i, ElemType e)
     }
 }
 //在循环链表L中第i个位置之前插入新的元素e
+
 Status ListDelete_C(LinkList_C L, int i, ElemType *e)
 {
     //在循环表L中删除第i个元素，并用e返回其值
     int j, n;
     LinkList_C p, temp;
+    if (ListEmpty_C(L))
+        return ERROR;
     n = ListLength_C(L);
+    if(n==1)
+        L->next = 0;
     p = L;
     if (i > n)
         return ERROR;
@@ -282,28 +310,32 @@ Status CreatList_C(LinkList_C *L, int n) //函数返回Status类型
     //函数体首行写函数功能
     //注释对齐, 见下方注释
     //建议考虑一下复杂度和函数用时, 比如malloc操作就很费时间
-    int i;
-    LinkList_C p;
-    *L = (LinkList_C)malloc(sizeof(struct LNode_C));
-    if (!*L)
-        exit(OVERFLOW);
-    (*L)->next = NULL; //先建立一个带头结点的单链表
-    for (i = n; i > 0; i--)
+    InitList_C(L);
+    int i = 0;
+    while (i++ < n)
     {
-        p = (LinkList_C)malloc(sizeof(struct LNode_C)); //生成新结点
-        if (!p)
-            exit(OVERFLOW);
-        scanf("%d", &p->data); //输入元素值 issue:未考虑ElemType
-        p->next = (*L)->next;     //插入到表头
-        (*L)->next = p;
+        ElemType a;
+        scanf("%d", &a);
+        ListInsert_C(*L, 1, a);
     }
-    return OK;
 } //ClearList_C
 
 void MergeList_C(LinkList_C La, LinkList_C Lb, LinkList_C Lc, int (*compare)(ElemType, ElemType))
 {
     //已知单循环链表La和Lb的元素按值非递减排列
     //归并La和Lb得到新的单循环链表Lc，Lc的元素也按值非递减排列
+
+    if (ListEmpty_C(La))
+    {
+        Lc = La;
+        return;
+    }
+
+    if (ListEmpty_C(Lb))
+    {
+        Lc = Lb;
+        return;
+    }
     LinkList_C pa, pb, pc;
     pa = La->next;
     pb = Lb->next;
@@ -340,7 +372,7 @@ Status ListTraverse_C(LinkList_C L, Status (*visit)(ElemType *))
     //依次对L的每个数据元素调用函数visit()，一旦visit()失败，则操作失败
     LinkList_C p;
     p = L->next;
-    if (ListEmpty_C(L) == TRUE)
+    if (ListEmpty_C(L))
         return ERROR;
     while (p != L && visit(&p->data) == OK)
         p = p->next;
@@ -363,8 +395,7 @@ Status PrintList_C(LinkList_C L)
     printf("\n");
 } //PrintList_C
 
-
-#include"lazy.h"
+#include "lazy.h"
 int main()
 {
 
@@ -385,16 +416,15 @@ int main()
     PrintList_C(Q);
     DestroyList_C(L);
     ClearList_C(Q);
-    
-    a=ListEmpty_C(Q);
+
+    a = ListEmpty_C(Q);
     CK(a);
     ListLength_C(LL);
     CK(LocateElem_C(LL, 1, compare));
-    
-    
+
     PriorElem_C(LL, 1, &a);
     NextElem_C(LL, 1, &a);
-    Status mprint(int* t)
+    Status mprint(int *t)
     {
         printf("%d ", *t);
     }

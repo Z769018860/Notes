@@ -27,3 +27,22 @@ With the attack for retaking Mosul by the anti-ISIL allies, thousands of refugee
 
 The man in the picture was once fined for smoking in ISIL controled area and threatened to be executed the next time. Now he has already fled from the control of ISIL, yet with no money, no house left.  
 
+## Some Topics to do for task 1.
+
+### Education-Education Fairness
+
+In China, many people belivev that getting enough education is the best way for then to have an access to the upper level. However, it seems harder for poor students in rural areas to win in the competation for a ticket to higher education. As a recent report by Peking University suggests, the students who get into Peking University from rural country decrased sharply in the past 20 years. When students in center city enjoy the perority of abundant educational resource, the students in counery still suffer from the lack of well trained teachers. At the same time, people always say that the kids are suffering from overwheelming schoolwork and the government should release the stress on the students. However, is releasing stress the right thing to do for the people in rural area? When urban students spent so many money and time on study, how can stunents in edu-less-developed area reach their dream school? More serviously, how much will it contributes to the class solidification in China?
+
+### Gaming-ESports
+
+Gaming had been seen as flood and monster in China for several years, however, when the first generation grow up with e-game become the main work force of the society and the development of mobile Internet, the public view for video games seems to be changed.
+
+With the fast growing of live streaming under the help of mobile Internet, ESports draws more and more people to pay attention to them, therefore more and more captial is coming into this area, which helps Esports to become a hot industrial all over the world. Bllizard Entertainment in the U.S. was favored by the capital recently, for it founded its Overwatch League. Vaule gains millions of dollars from the Ti series, which is a global championship on dota2. How does the industrial runs, and how can capital get reward from it. What are the players like in their real life? There are so may things to be discussed about e-sports.
+
+### Computers-FPGA
+
+If you spend at least 10 minutes on exploring news on the Internet, you must have heard of Bitcoin, which is a kind of digital curency and it has already been used by many people. You may have also heard of cloud calculation service, like AWS by amazon and Azure by Mircosoft. Some of you may know about the deep learning technology. These new technology all have connections with a kind of hardware called FPGA.
+
+FPGA, which is short for Field－Programmable Gate Array, is a kind of hardware that can be used for acclearing certain calculations. Along with the fast development of the 3 technology mentioned above, the need for FPGA is rising sharply, because the speed of calculation is quite important for these fields and FPGA can calculate much more quickly than CPUS which can be universally used.   
+
+## A day for a photographer.
