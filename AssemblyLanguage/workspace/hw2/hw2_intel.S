@@ -20,6 +20,7 @@ loopmark:
     loop    loopmark
 
     mov dbyte ptr ecx, 8
+    
 #	movl	$4, %eax
 #	movl	$1, %ebx
 #	movl	$stringvar, %ecx
