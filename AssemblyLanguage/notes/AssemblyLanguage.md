@@ -2,7 +2,7 @@
 
 ***
 
-## Example
+## Example: 汇编程序示例
 
 ```attasm
 #hello.S
@@ -141,6 +141,9 @@ Ld默认的入口地址：_start
 _start:
     <instruction code>
 ```
+
+注意: .text、.data、.bss等基本节的名字用小写, 其他的汇编指导大小写混合不影响
+
 
 ## Intel语法
 
@@ -328,6 +331,255 @@ _start:
 
     mov rax, 60
     mov rdi, 0
+    syscall
+
+```
+
+***
+
+## MOV指令
+
+### Intel Syntax
+
+指令格式：
+
+    MOV  destination, source    
+
+语义：destination = source
+适用范围: 寄存器之间, 内存<->寄存器
+
+### AT&T Syntax
+
+指令格式：
+
+    MOVx  source, destination   
+
+其中，x  = b, w, l，用于指定内存操作数的大小
+## 内存操作数指令示例（AT&T）
+```x86asm
+movb   var, %al				disp
+movw  (%ebx), ax			base
+movl  $4, 4(%ebx)			base+disp
+movl  (%ebx, %esi),%eax		base+index
+movl  4(%ebx, %esi),%eax		base+index+disp
+movl  %eax, (%ebx, %esi, 2) 	base+index*scale
+movl  4(%ebx, %esi, 2), %eax	base+index*scale+disp
+movl  4(,%esi,2), %eax		index*scale+disp
+```
+
+```x86asm
+disp(基地址,index,scale)
+```
+## XCHG指令
+
+Intel syntax
+
+指令格式：
+
+    XCHG  destination, source
+
+语义：destination与source交换, i.e. 源操作数与目的操作数交换数据
+
+适用范围: 寄存器之间, 内存<->寄存器
+
+## MOVZX和MOVSX指令
+
+Intel syntax
+
+指令格式：
+
+    MOVZ  destination, source
+
+语义：移动的同时扩展数据宽度. MOVZX描述用0来进行扩展, MOVS使用符号位来进行扩展
+
+适用范围: 寄存器之间, 内存<->寄存器
+
+## MOVZX/MOVSX指令示例（AT&T）
+
+```x86asm
+movzbw		bytevar, %ax
+movsbw		bytevar+4, %cx
+movzwl		%cx, %ebx
+movswl		wordvar+2, %edx
+movzbl		bytevar+2, %esi
+movsbl		%al, %edi
+```
+
+## 二进制算术指令
+
+INC, DEC, ADD, SUB, NEG
+
+算术指令在CPU内部计算时不区分有符号数和无符号数, 都按照无符号数计算, 根据指令和计算结果设置相应的标志位，供程序使用
+
+注: 可以使用8位的立即数, 会自动扩展为对应的宽度
+
+### EFLAGS的状态标志位
+
+* CF - Carry
+* 无符号数运算溢出（最高位发生进位或借位）
+* OF - Overflow
+* 有符号数运算溢出（正+正=负, 负+负=正, 正-负=负, 负-正=正）
+* SF - Sign
+* 结果为负数
+* ZF - Zero
+* 结果为0
+* AF - Auxiliary Carry
+* Bit 3 到 Bit 4的进位
+* PF - Parity
+* 奇偶标志，最低字节”1”的个数为偶数
+
+## INC, DEC
+
+INC：加1
+
+指令格式：
+
+    INC destination
+
+语义：destination <- destination + 1
+
+CF标志位不变，其他标志位根据计算结果改变
+
+DEC：减1
+
+指令格式：
+    
+    DEC destination
+
+语义：destination <- destination – 1
+
+CF标志位不变，其他标志位根据计算结果改变
+
+## ATT语法宽度的自动识别
+
+如果操作数大小可以通过寄存器区分，则指令后缀可省略，汇编器自动识别
+
+如：
+
+```x86asm
+inc	%al		等价于	incb	%al
+dec	%ax		等价于	decw	%ax
+inc	%ecx		等价于	incl	%ecx
+decb	bytevar
+incw	(%ebx, %esi, 2)
+decl	4(%eax)
+```
+
+## ADD, SUB
+
+ADD：加
+
+指令格式：
+
+    ADD destination, source
+
+语义：destination = destination + source
+
+根据计算结果改变标志位CF、OF、SF、ZF、AF、PF
+
+SUB：减
+
+指令格式：
+    
+    SUB destination, source
+
+语义：destination = destination – source
+
+根据计算结果改变标志位CF、OF、SF、ZF、AF、PF
+
+remark: 
+
+* 源与目的操作数大小一致，即都是8位、16位或32位
+* 内存操作数最多只有一个
+* 立即数只能作为源操作数
+
+## NEG
+
+NEG：求相反数（补码）
+
+指令格式：
+
+    NEG destination
+
+语义：destination = 0 - destination
+
+标志位: 如果destination =0，CF=0，否则CF=1, 其他标志位根据结果设置
+
+## LOOP
+
+LOOP：循环（Loop with ECX counter)
+
+指令格式：
+
+    LOOP  destination
+
+语义：counter = counter - 1, 如果 counter ≠ 0，跳转到标号destination处（循环入口）执行，否则
+
+结束LOOP指令，执行LOOP之后第一条指令
+
+16位地址counter是CX寄存器
+
+```x86asm
+  mov 	$10, %ecx
+  mov 	$0, %al
+  mov 	$bytevar, %ebx
+l1:
+  movb 	%al, (%ebx)
+  inc  	%ebx
+  inc  	%al
+  loop 	l1
+```
+## C语言对应的汇编
+
+使用
+
+    gcc -S xxxx.c
+    gcc -S -masm=intel xxxx.c
+
+来生成汇编代码.
+
+## HW2
+
+```x86asm
+#hw2.S
+.section .data
+stringvar:
+  .ascii	"0123456789abcdef"
+  /*要输出1032547698badcfe*/
+.section .text
+.globl _start
+_start:
+
+#main
+    movl    $8, %ecx
+    movl    $0, %ebx
+    movl    $stringvar, %edx
+loopmark:
+    xchgb   (%edx,%ebx,2), %al
+    xchgb   1(%edx,%ebx,2), %al
+    xchgb   (%edx,%ebx,2), %al
+    incl    %ebx
+    loop    loopmark
+
+#	movl	$4, %eax
+#	movl	$1, %ebx
+#	movl	$stringvar, %ecx
+#	movl	$16, %edx
+#	int	$0x80
+#	movl	$1, %eax
+#	movl	$0, %ebx
+#	int	$0x80
+
+#output
+    mov $1, %rax
+    mov $1, %rdi
+    mov $stringvar, %rsi
+    mov $16, %edx
+    syscall
+
+#exit
+    mov $60, %rax
+    mov $0, %rdi
     syscall
 
 ```
