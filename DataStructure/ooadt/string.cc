@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <cstdlib>
 #include <vector>
 
 #include "adt.h"
@@ -64,18 +65,19 @@ public:
   int clear();
   int adhere(String_C &src);
   int cat(String_C &src);
-  String_C sub_string(int pos, int len)const;
+  String_C sub_string(int pos, int len) const;
   int index(String_C &sub_string, int start_pos = 0);
   int replace(String_C &target, String_C &src);
   int insert(int ins_before, String_C &src);
   int del(int pos, int len);
-  int kmp(String_C &target);
+  int kmp(String_C &target, int start_pos = 0);
 
   virtual int print();
   friend ostream &operator<<(ostream &output, const String_C S);
 
-private:
   char *data_;
+
+private:
 };
 
 // class String_H : public String
@@ -161,14 +163,15 @@ int char_string_size(char *src)
 
 String_C::String_C()
 {
-  // data_ = new char [1];
+  data_ = new char[1];
   *data_ = 0;
 }
 
 String_C::String_C(char *src)
 {
+  delete[] data_;
   int i;
-  data_ = new char [char_string_size(src) + 1];
+  data_ = new char[char_string_size(src) + 1];
   char *pdata = data_;
   do
   {
@@ -178,61 +181,117 @@ String_C::String_C(char *src)
   } while (*src != 0);
 }
 
-String_C::String_C(const String_C &) //StrCopy
+String_C::String_C(const String_C &src) //StrCopy
 {
+  delete[] data_;
+  int size = src.length() + 1;
+  data_ = new char[size];
+  memcpy(data_, src.data_, size);
 }
 // String_C(const String_H &);
 // String_C(const String_L &);
 String_C::~String_C()
 {
-  delete data_;
+  delete[] data_;
 }
 
 void String_C::operator=(char *)
 {
+  delete[] data_;
+  int i;
+  data_ = new char[char_string_size(src) + 1];
+  char *pdata = data_;
+  do
+  {
+    *pdata = *src;
+    ++pdata;
+    ++src;
+  } while (*src != 0);
 }
 
-void String_C::operator=(const String_C &)
+void String_C::operator=(const String_C &src)
 {
+  delete[] data_;
+  int size = src.length() + 1;
+  data_ = new char[size];
+  memcpy(data_, src.data_, size);
 }
 // String_C operator=(const String_H &);
 // String_C operator=(const String_L &);
 
 String_C::empty() //StrEmpty
 {
-  return 0;
+  if (data_)
+    return !(int)*data_;
+  return 1;
 }
 
-String_C::compare(const String_C &) //StrCmp
+String_C::compare(const String_C &S) //StrCmp
 {
-  return 0;
+  if (this->empty() || S.empty())
+  {
+    std::stderr << "Cmp failed." << std::endl;
+    return 0;
+  }
+  char *a = data_;
+  char *b = S.data_;
+  while (*a != *b && *a != 0 && *b != 0)
+  {
+    ++a;
+    ++b;
+  }
+  return *a - *b;
 }
-int compare(const String_C &, const String_C &)
+
+int compare(const String_C P &, const String_C &S)
 {
-  return 0;
+  if (P.empty() || S.empty())
+  {
+    std::stderr << "Cmp failed." << std::endl;
+    return 0;
+  }
+  char *a = P.data_;
+  char *b = S.data_;
+  while (*a != *b && *a != 0 && *b != 0)
+  {
+    ++a;
+    ++b;
+  }
+  return *a - *b;
 }
 
 String_C::length()
 {
-  return 0;
+  return char_string_size(data_);
 }
 
 String_C::clear()
 {
+  delete[] data_;
+  data_ = new char[1];
+  data[1] = 0;
   return 0;
 }
 
 String_C::adhere(String_C &src)
 {
+  int len_this = this->length();
+  int len_target = src.length();
+  char *data = data_;
+  char *result = new char[len_target + len_this + 1];
+
+  memcpy(result, data_, len_this);
+  memcpy(result + len_this, src.data_, len_target);
+  result[len_this + len_target] = 0;
   return 0;
 }
 
 String_C::cat(String_C &src)
 {
-  return 0;
+  this->adhere(String_C & src);
 }
 
-String_C String_C::sub_string(int pos, int len)const
+String_C String_C::sub_string(int pos, int len) const
 {
   char *result = new char[len + 1];
   int cnt = 0;
@@ -261,22 +320,207 @@ String_C String_C::sub_string(int pos, int len)const
 
 int String_C::index(String_C &sub_string, int start_pos)
 {
+  int cnt = start_pos;
+  char *data = data_;
+  char *sub = sub_string;
+  while (*data)
+  {
+    int match = 0;
+    char *p = data;
+    while (*p == *sub && *p != 0)
+    {
+      data++;
+      p++;
+      cnt++;
+      if (*sub == 0)
+        return cnt;
+    }
+    if (*sub == 0)
+      return -1;
+    if (*p == 0)
+      return -1;
+    throw(std::bad_exception);
+  }
+}
+
+namespace String_Replace
+{
+
+int is_head_equal(char *a, char *b)
+{
+  while (*a == *b && *a != 0)
+  {
+    a++;
+    b++;
+    if (*b == 0)
+    {
+      return 1;
+    }
+  }
   return 0;
 }
+
+int add_b_to_a(char *a &, char *b)
+{
+  while (*b != 0)
+  {
+    *a = *b;
+    a++;
+    b++;
+  }
+  return 0;
+}
+}
+
+#define BUFSIZE 1024
 String_C::replace(String_C &target, String_C &src)
 {
-  return 0;
+  using namespace String_Replace;
+  char *buf = new char[BUFSIZE];
+  int overflow_cnt = 0;
+  int len_target = target.length();
+  char *a = data_;
+  char *b = target.data_;
+  char *c = buf;
+  while (*a != 0 && overflow_cnt < (BUFSIZE - 1))
+  {
+    if (is_head_equal(a, b))
+    {
+      char *d = src.data_;
+      while (*d != 0)
+      {
+        *c = *d;
+        d++;
+        c++;
+        overflow_cnt++;
+      }
+      a += len_target;
+    }
+    else
+    {
+      *c++ = *a++;
+    }
+  }
+  *c = 0;
+
+  char *result = new char[overflow_cnt + 1];
+  memcpy(result, buf, overflow_cnt + 1);
+  delete[] buf;
+  data_ = result;
+  return OK;
 }
+
 String_C::insert(int ins_before, String_C &src)
 {
-  return 0;
+  if (ins_before < 0)
+    throw(std::domain_error);
+  int cnt = 0;
+  char *a = data_;
+  char *b = new char[BUFSIZE];
+  char *c = src.data_;
+
+  while (*a != 0 && cnt != ins_before)
+  {
+    *b = *a;
+    a++;
+  }
+  if (*a != 0)
+  {
+    while (*c)
+    {
+      *b = *c;
+      b++;
+      c++;
+    }
+    while (*a != 0 && cnt != ins_before)
+    {
+      *b = *a;
+      a++;
+    }
+    *b = 0;
+  }
+
+  int bufsize = char_string_size(b);
+  char *d = new char[bufsize + 1];
+  memcpy(d, b, bufsize + 1);
+  data_ = d;
+  delete[] b;
+
+  return OK;
 }
+
 String_C::del(int pos, int len)
 {
-  return 0;
+  int len_data = this->length();
+  if (pos < 0 || pos + len > len_data)
+    throw(std::domain_error);
+  int cnt = 0;
+  char *a = data_;
+  while (cnt != pos && *a != 0)
+  {
+    cnt++;
+    a++;
+  }
+  char *backp = a;
+  a += len;
+  while (*a)
+  {
+    *backp = *a;
+    ++a;
+    ++backp;
+  }
+  *backp = 0;
+  return OK;
 }
-String_C::kmp(String_C &target)
+#undef BUFSIZE
+
+namespace String_Kmp
 {
+int *set_next(char *data)
+{
+  int len_tgt = char_string_size(data);
+  int *result = new int[lentgt];
+  int i = 0;
+  result[0] = -1;
+  j = -1;
+  while (i < len_tgt)
+  {
+    if (j == -1 || data[i] == data[j])
+    {
+      ++i;
+      ++j;
+      if (data[i] != data[j])
+        result[i] = j;
+      else
+        result[i] = result[j];
+    }
+    else
+      j = result[j];
+  }
+}
+
+String_C::kmp(String_C &target, int start_pos)
+{
+  int *next = set_next(target.data_);
+  int i = pos;
+  j = 0;
+  int len_data = this->length();
+  int len_tgt = target.length();
+
+  while (i <= len_data && j <= len_tgt)
+  {
+    if (j == -1 || data_[i] == target.data_[j])
+    {
+      ++i;
+      ++j;
+    }
+    else
+    {
+      j = next[j];
+    }
+  }
+  if (j > len_tgt)
+    return i - len_tgt;
   return 0;
 }
 
@@ -284,7 +528,11 @@ String_C::print()
 {
   printf("%s", data_);
 }
-ostream &operator<<(ostream &output, const String_C S);
+
+ostream &operator<<(ostream &output, const String_C S)
+{
+  printf("%s", S.data_);
+}
 
 // String_C::ostream &operator<<();
 
