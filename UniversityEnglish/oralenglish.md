@@ -13,6 +13,7 @@
 1. greatest weakness
 1. imagine you are the only surviver of a plane crash... what it the first 5 things you will do?
 
+
 1. devoted self-motivated 
 1. a student who is willing to take part in the school affair and who has the ability to gather a group of people to finish some project.
 1. the only hero i can trust is myself. In fact I like to work with other people, yet there is no other people that can help you all along, except yourself. therefore rather than waiting for a hero to save me, I would like to help myself on my own.  

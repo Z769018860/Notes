@@ -1,9 +1,11 @@
 # Esports express
 
-## E-Sports and its industrial
+--
 
+## E-Sports and its industrial
 by: UCAS post
 
+---
 <!-- magezine -->
 
 * history
@@ -12,3 +14,7 @@ by: UCAS post
 * team and story
 * amator matches
 * exclusive interviews
+
+---
+
+## Article 1 
