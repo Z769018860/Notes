@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <exception>
 #include <cstdlib>
 #include <vector>
 
@@ -58,19 +59,19 @@ public:
   // String_C operator=(const String_H &);
   // String_C operator=(const String_L &);
 
-  int empty();                   //StrEmpty
-  int compare(const String_C &); //StrCmp
+  int empty()const;                   //StrEmpty
+  int compare(const String_C &)const; //StrCmp
   friend int compare(const String_C &, const String_C &);
-  int length();
+  int length()const;
   int clear();
   int adhere(String_C &src);
   int cat(String_C &src);
   String_C sub_string(int pos, int len) const;
-  int index(String_C &sub_string, int start_pos = 0);
+  int index(String_C &sub_string, int start_pos = 0)const;
   int replace(String_C &target, String_C &src);
   int insert(int ins_before, String_C &src);
   int del(int pos, int len);
-  int kmp(String_C &target, int start_pos = 0);
+  int kmp(String_C &target, int start_pos = 0)const;
 
   virtual int print();
   friend ostream &operator<<(ostream &output, const String_C S);
@@ -173,12 +174,13 @@ String_C::String_C(char *src)
   int i;
   data_ = new char[char_string_size(src) + 1];
   char *pdata = data_;
-  do
+  while (*src != 0)
   {
     *pdata = *src;
     ++pdata;
     ++src;
-  } while (*src != 0);
+  }
+  *pdata = 0;
 }
 
 String_C::String_C(const String_C &src) //StrCopy
@@ -195,7 +197,7 @@ String_C::~String_C()
   delete[] data_;
 }
 
-void String_C::operator=(char *)
+void String_C::operator=(char *src)
 {
   delete[] data_;
   int i;
@@ -219,20 +221,19 @@ void String_C::operator=(const String_C &src)
 // String_C operator=(const String_H &);
 // String_C operator=(const String_L &);
 
-String_C::empty() //StrEmpty
+String_C::empty()const //StrEmpty
 {
   if (data_)
     return !(int)*data_;
   return 1;
 }
 
-String_C::compare(const String_C &S) //StrCmp
+String_C::compare(const String_C &S)const //StrCmp
 {
-  if (this->empty() || S.empty())
-  {
-    std::stderr << "Cmp failed." << std::endl;
-    return 0;
-  }
+  // if (this->empty() || S.empty())
+  // {
+  //   throw("Empty cmp;");
+  // }
   char *a = data_;
   char *b = S.data_;
   while (*a != *b && *a != 0 && *b != 0)
@@ -243,13 +244,13 @@ String_C::compare(const String_C &S) //StrCmp
   return *a - *b;
 }
 
-int compare(const String_C P &, const String_C &S)
+int compare(const String_C& P, const String_C &S)
 {
-  if (P.empty() || S.empty())
-  {
-    std::stderr << "Cmp failed." << std::endl;
-    return 0;
-  }
+  // if (P.empty() || S.empty())
+  // {
+  //   std::stderr << "Cmp failed." << std::endl;
+  //   return 0;
+  // }
   char *a = P.data_;
   char *b = S.data_;
   while (*a != *b && *a != 0 && *b != 0)
@@ -260,7 +261,7 @@ int compare(const String_C P &, const String_C &S)
   return *a - *b;
 }
 
-String_C::length()
+String_C::length()const
 {
   return char_string_size(data_);
 }
@@ -269,7 +270,7 @@ String_C::clear()
 {
   delete[] data_;
   data_ = new char[1];
-  data[1] = 0;
+  data_[0] = 0;
   return 0;
 }
 
@@ -288,7 +289,7 @@ String_C::adhere(String_C &src)
 
 String_C::cat(String_C &src)
 {
-  this->adhere(String_C & src);
+  this->adhere(src);
 }
 
 String_C String_C::sub_string(int pos, int len) const
@@ -318,11 +319,11 @@ String_C String_C::sub_string(int pos, int len) const
   return nstring;
 }
 
-int String_C::index(String_C &sub_string, int start_pos)
+int String_C::index(String_C &sub_string, int start_pos)const
 {
   int cnt = start_pos;
   char *data = data_;
-  char *sub = sub_string;
+  const char *sub = sub_string.data_;
   while (*data)
   {
     int match = 0;
@@ -339,7 +340,7 @@ int String_C::index(String_C &sub_string, int start_pos)
       return -1;
     if (*p == 0)
       return -1;
-    throw(std::bad_exception);
+    throw(std::bad_exception());
   }
 }
 
@@ -360,7 +361,7 @@ int is_head_equal(char *a, char *b)
   return 0;
 }
 
-int add_b_to_a(char *a &, char *b)
+int add_b_to_a(char *(&a) , char *b)
 {
   while (*b != 0)
   {
@@ -413,7 +414,7 @@ String_C::replace(String_C &target, String_C &src)
 String_C::insert(int ins_before, String_C &src)
 {
   if (ins_before < 0)
-    throw(std::domain_error);
+    throw(std::domain_error("domain_error"));
   int cnt = 0;
   char *a = data_;
   char *b = new char[BUFSIZE];
@@ -453,7 +454,7 @@ String_C::del(int pos, int len)
 {
   int len_data = this->length();
   if (pos < 0 || pos + len > len_data)
-    throw(std::domain_error);
+    throw(std::domain_error("domain_error"));
   int cnt = 0;
   char *a = data_;
   while (cnt != pos && *a != 0)
@@ -479,10 +480,10 @@ namespace String_Kmp
 int *set_next(char *data)
 {
   int len_tgt = char_string_size(data);
-  int *result = new int[lentgt];
+  int *result = new int[len_tgt];
   int i = 0;
   result[0] = -1;
-  j = -1;
+  int j = -1;
   while (i < len_tgt)
   {
     if (j == -1 || data[i] == data[j])
@@ -498,12 +499,15 @@ int *set_next(char *data)
       j = result[j];
   }
 }
+}
 
-String_C::kmp(String_C &target, int start_pos)
+String_C::kmp(String_C &target, int start_pos)const
 {
+  using namespace String_Kmp;
+
   int *next = set_next(target.data_);
-  int i = pos;
-  j = 0;
+  int i = start_pos;
+  int j = 0;
   int len_data = this->length();
   int len_tgt = target.length();
 
@@ -521,7 +525,7 @@ String_C::kmp(String_C &target, int start_pos)
   }
   if (j > len_tgt)
     return i - len_tgt;
-  return 0;
+  return -1;
 }
 
 String_C::print()

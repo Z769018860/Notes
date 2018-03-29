@@ -19,7 +19,8 @@
         "timer.h": "c",
         "forbidden_move.h": "c",
         "algo_rebuild.h": "c",
-        "cstdio": "cpp"
+        "cstdio": "cpp",
+        "stdexcept": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "cSpell.words": [
