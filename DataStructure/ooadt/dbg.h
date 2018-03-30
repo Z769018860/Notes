@@ -27,13 +27,14 @@
 //签名
 #endif
 
+#define L (std::printf("------------------------------ File:%s Line:%d\n", __FILE__, __LINE__))
+//分割线
+
 #define LICENSE (std::printf("\n%s\n", __FILE__), std::printf("Copyright (c) 2018 Augustus Wang (Wang Huaqiang) \n"), printf("Compiled on %s at %s\n\n", __DATE__, __TIME__))
 //签名
 
-
 #define GET(x) std::scanf("%d", &x)
 //读取整数
-
 
 #define LEN(x) (sizeof(x) / sizeof(x[0]))
 //数组长度

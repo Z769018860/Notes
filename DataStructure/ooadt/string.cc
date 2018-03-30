@@ -3,17 +3,25 @@
 //https://github.com/AugustusWillisWang/Notes/tree/master/DataStructure/ooadt
 //Developed by AugustusWillisWang
 
-#include <iostream>
-#include <algorithm>
+#include <iostream> 
 #include <exception>
 #include <cstdlib>
-#include <vector>
+#include <cstring>
+// #include <algorithm>
+// #include <vector>
+
+#include <string.h>
+#include <stdio.h>
 
 #include "adt.h"
 #include "dbg.h"
 
 using std::istream;
 using std::ostream;
+using std::memcpy;
+
+using std::string;
+
 // class String
 // {
 // public:
@@ -50,6 +58,7 @@ class String_C
 public:
   String_C();                 //StrAssign
   String_C(char *);           //StrAssign
+  String_C(const string src);           //StrAssign
   String_C(const String_C &); //StrCopy
   // String_C(const String_H &);
   // String_C(const String_L &);
@@ -151,7 +160,7 @@ private:
 //   int node_size;
 // };
 
-int char_string_size(char *src)
+int char_string_size(const char *src)
 {
   int length = 0;
   while (*src != 0)
@@ -170,7 +179,23 @@ String_C::String_C()
 
 String_C::String_C(char *src)
 {
-  delete[] data_;
+  // delete[] data_;
+  int i;
+  data_ = new char[char_string_size(src) + 1];
+  char *pdata = data_;
+  while (*src != 0)
+  {
+    *pdata = *src;
+    ++pdata;
+    ++src;
+  }
+  *pdata = 0;
+}
+
+String_C::String_C(const string ssrc) //StrAssign
+{
+  const char *src = ssrc.data();
+  // delete[] data_;
   int i;
   data_ = new char[char_string_size(src) + 1];
   char *pdata = data_;
@@ -185,7 +210,7 @@ String_C::String_C(char *src)
 
 String_C::String_C(const String_C &src) //StrCopy
 {
-  delete[] data_;
+  // delete[] data_;1
   int size = src.length() + 1;
   data_ = new char[size];
   memcpy(data_, src.data_, size);
@@ -221,14 +246,14 @@ void String_C::operator=(const String_C &src)
 // String_C operator=(const String_H &);
 // String_C operator=(const String_L &);
 
-String_C::empty()const //StrEmpty
+int String_C::empty()const //StrEmpty
 {
   if (data_)
     return !(int)*data_;
   return 1;
 }
 
-String_C::compare(const String_C &S)const //StrCmp
+int String_C::compare(const String_C &S)const //StrCmp
 {
   // if (this->empty() || S.empty())
   // {
@@ -261,12 +286,12 @@ int compare(const String_C& P, const String_C &S)
   return *a - *b;
 }
 
-String_C::length()const
+int String_C::length()const
 {
   return char_string_size(data_);
 }
 
-String_C::clear()
+int String_C::clear()
 {
   delete[] data_;
   data_ = new char[1];
@@ -274,7 +299,7 @@ String_C::clear()
   return 0;
 }
 
-String_C::adhere(String_C &src)
+int String_C::adhere(String_C &src)
 {
   int len_this = this->length();
   int len_target = src.length();
@@ -287,7 +312,7 @@ String_C::adhere(String_C &src)
   return 0;
 }
 
-String_C::cat(String_C &src)
+int String_C::cat(String_C &src)
 {
   this->adhere(src);
 }
@@ -374,7 +399,7 @@ int add_b_to_a(char *(&a) , char *b)
 }
 
 #define BUFSIZE 1024
-String_C::replace(String_C &target, String_C &src)
+int String_C::replace(String_C &target, String_C &src)
 {
   using namespace String_Replace;
   char *buf = new char[BUFSIZE];
@@ -411,7 +436,7 @@ String_C::replace(String_C &target, String_C &src)
   return OK;
 }
 
-String_C::insert(int ins_before, String_C &src)
+int String_C::insert(int ins_before, String_C &src)
 {
   if (ins_before < 0)
     throw(std::domain_error("domain_error"));
@@ -450,7 +475,7 @@ String_C::insert(int ins_before, String_C &src)
   return OK;
 }
 
-String_C::del(int pos, int len)
+int String_C::del(int pos, int len)
 {
   int len_data = this->length();
   if (pos < 0 || pos + len > len_data)
@@ -498,10 +523,11 @@ int *set_next(char *data)
     else
       j = result[j];
   }
+  return result;
 }
 }
 
-String_C::kmp(String_C &target, int start_pos)const
+int String_C::kmp(String_C &target, int start_pos)const
 {
   using namespace String_Kmp;
 
@@ -511,7 +537,7 @@ String_C::kmp(String_C &target, int start_pos)const
   int len_data = this->length();
   int len_tgt = target.length();
 
-  while (i <= len_data && j <= len_tgt)
+  while (i <= len_data && j < len_tgt)
   {
     if (j == -1 || data_[i] == target.data_[j])
     {
@@ -523,26 +549,44 @@ String_C::kmp(String_C &target, int start_pos)const
       j = next[j];
     }
   }
-  if (j > len_tgt)
+  if (j >= len_tgt)
     return i - len_tgt;
   return -1;
 }
 
-String_C::print()
+int String_C::print()
 {
   printf("%s", data_);
+  return 0;
 }
 
 ostream &operator<<(ostream &output, const String_C S)
 {
   printf("%s", S.data_);
+  return output;
 }
 
 // String_C::ostream &operator<<();
 
 int main(int argc, char *argv[])
 {
-  String_C a((char *)"22223333");
+  LICENSE;
+  String_C a((char*)"22223333");
   a.print();
+  // delete a;
+  String_C b=(char*)"12345678";
+  CK(b.length());
+  b.clear();
+  CK(b.empty());
+  String_C *c = new String_C;
+  c->print();
+  CK(c->length());
+  CK(c->empty());
+  delete c;
   // String_C b = (char *)"123468";
+  L;
+  CK(b.compare("234567"));
+  a.print();
+  String_C d("233");
+  CK(a.kmp(d));
 }

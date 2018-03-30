@@ -20,7 +20,11 @@
         "forbidden_move.h": "c",
         "algo_rebuild.h": "c",
         "cstdio": "cpp",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "iostream": "cpp",
+        "cstring": "cpp",
+        "exception": "cpp",
+        "array": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "cSpell.words": [

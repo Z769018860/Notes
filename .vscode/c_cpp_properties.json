@@ -1,6 +1,5 @@
 {
-    "configurations": [
-        {
+    "configurations": [{
             "name": "Mac",
             "includePath": [
                 "/usr/include",
@@ -46,13 +45,12 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceRoot}",
-                "G:/VisualStudio/VC/include/*",
-                "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
-                "C:/Program Files (x86)/Windows Kits/8.1/Include/shared",
-                "C:/Program Files (x86)/Windows Kits/8.1/Include/winrt",
                 "G:/mingw/bin",
-                "G:/mingw/include",
-                "G:\\mingw\\lib\\gcc\\mingw32\\5.3.0\\include"
+                "G:\\mingw\\include",
+                "G:\\mingw\\lib\\gcc\\mingw32\\5.3.0\\include",
+                "G:\\mingw\\include\\c++\\3.4.5",
+                "G:\\mingw\\include\\c++\\3.4.5\\mingw32\\bits"
+
             ],
             "defines": [
                 "_DEBUG",
@@ -62,11 +60,10 @@
             "browse": {
                 "path": [
                     "${workspaceRoot}",
-                    "G:/VisualStudio/VC/include/*",
                     "G:\\mingw\\lib\\gcc\\mingw32\\5.3.0\\include",
-                    "C:/Program Files (x86)/Windows Kits/8.1/Include/shared",
-                    "G:/mingw/include",
-                    "G:/mingw/bin"
+                    "G:\\mingw\\include",
+                    "G:/mingw/bin",
+                    "G:\\mingw\\include\\c++\\3.4.5"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
