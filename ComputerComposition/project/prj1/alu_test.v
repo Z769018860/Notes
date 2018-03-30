@@ -34,6 +34,10 @@ module alu_test
 		test(1555,11111,`AND);
 		test(1555,11111,`OR);
 		test(1555,11111,`SLT);
+		test(11111,33,`SLT);
+		test(32'hffffffff,1,`SLT);
+		test(32'hffffffff,2,`SLT);
+		test(1,2,`SUB);
 	end
 
 

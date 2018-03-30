@@ -61,9 +61,9 @@ begin
 	  	`SLT:
 		  	begin
 				{CarryOut,Temp}=A+~B+1;
-				Overflow=(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
+				Overflow=(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(Temp[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
 				Result[`DATA_WIDTH-1:1]=0;
-				Result[0]=Temp[`DATA_WIDTH-1]&&Overflow;
+				Result[0]=Temp[`DATA_WIDTH-1]^Overflow;
 			end
 		default:
 			begin
