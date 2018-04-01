@@ -19,8 +19,11 @@ module alu(
 	output [`DATA_WIDTH - 1:0] Result
 );
 
+    wire [`DATA_WIDTH-1:0] Chooser;
+    assign Chooesr=
 //Zero
 	assign Zero=({Result}==0);
 
-    assign {CarryOut}
+    assign {CarryOut,Reuslt}=
+        &&
 endmodule

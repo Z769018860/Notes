@@ -1,6 +1,13 @@
 {
     "version": "0.2.0",
     "configurations": [
+    {
+        "name": "Integrated Terminal/Console",
+        "type": "python",
+        "request": "launch",
+        "program": "${file}",
+        "console": "integratedTerminal"
+    },
         {
             "name": "Python Module",
             "type": "python",
