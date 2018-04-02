@@ -6,8 +6,6 @@
 `define ADD 3'b010
 `define SUB 3'b110
 `define SLT 3'b111
-`define todo 1
-`define UNDEFINED 0
 
 module alu(
 	input [`DATA_WIDTH - 1:0] A,
@@ -20,13 +18,17 @@ module alu(
 );
 
 
-	reg Overflow;
 	reg CarryOut;
 	// reg Zero;
 	reg [`DATA_WIDTH - 1:0] Result;
-	reg [`DATA_WIDTH-1:0] Temp;
+	wire [`DATA_WIDTH-1:0] Temp;//A+~B+1
 
 	assign Zero=({Result}==0);
+	assign Temp=A+~B+1;
+	assign Overflow=
+		((ALUop==`ADD)?
+		(A[`DATA_WIDTH - 1]==B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]):
+		(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(Temp[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]));
 
 always@*
 begin
@@ -34,42 +36,24 @@ begin
 		`AND:
 			begin
 				{CarryOut,Result}=A&B;			
-				Overflow=`UNDEFINED;
-				Temp=`UNDEFINED;
 			end
 		`OR:
 			begin
 				{CarryOut,Result}=A|B;			
-				Overflow=`UNDEFINED;
-				Temp=`UNDEFINED;				
 			end
 	  	`ADD:
 		  	begin
 				{CarryOut,Result}=A+B;
-				Overflow=(A[`DATA_WIDTH - 1]==B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
-				Temp=`UNDEFINED;
-				
 			end
 	  	`SUB:
 		  	begin
 				{CarryOut,Result}=A+~B+1;
-				Overflow=(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
-				Temp=`UNDEFINED;
-				
-				//todo Overflow
-			end
-	  	`SLT:
-		  	begin
-				{CarryOut,Temp}=A+~B+1;
-				Overflow=(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(Temp[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
-				Result[`DATA_WIDTH-1:1]=0;
-				Result[0]=Temp[`DATA_WIDTH-1]^Overflow;
 			end
 		default:
-			begin
-			    {CarryOut,Temp}=`UNDEFINED;
-				Overflow=`UNDEFINED;
-				Temp=`UNDEFINED;				
+	  	// `SLT:
+		  	begin
+				Result[`DATA_WIDTH-1:1]=0;
+				Result[0]=Temp[`DATA_WIDTH-1]^Overflow;
 			end
 	endcase
 end

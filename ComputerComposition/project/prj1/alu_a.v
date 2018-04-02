@@ -18,12 +18,46 @@ module alu(
 	output Zero,
 	output [`DATA_WIDTH - 1:0] Result
 );
+	wire [`DATA_WIDTH : 0]adder;
+	wire [`DATA_WIDTH : 0]suber;
+	wire [`DATA_WIDTH : 0]ander;
+	wire [`DATA_WIDTH : 0]orer;
+	
+	assign adder=A+B;
+	assign suber=A+~B+1;
+	assign ander=A&B;
+	assign orer=A|B;
 
-    wire [`DATA_WIDTH-1:0] Chooser;
-    assign Chooesr=
-//Zero
 	assign Zero=({Result}==0);
+	assign CarryOut=((ALUop==`ADD)?adder[`DATA_WIDTH]:suber[`DATA_WIDTH]);
+	
+always@*
+begin
+	case(ALUop[2:0])
+		`AND:
+			begin
+				Result=ander;
+			end
+		`OR:
+			begin
+				Result=orer;
+			end
+	  	`ADD:
+		  	begin
+				Overflow=(A[`DATA_WIDTH - 1]==B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
+			end
+	  	`SUB:
+		  	begin
+				Overflow=(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
+			end
+		default:
+	  	// `SLT:
+		  	begin
+				Overflow=(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(Temp[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]);
+				Result[`DATA_WIDTH-1:1]=0;
+				Result[0]=Temp[`DATA_WIDTH-1]^Overflow;
+			end
+	endcase
+end
 
-    assign {CarryOut,Reuslt}=
-        &&
 endmodule

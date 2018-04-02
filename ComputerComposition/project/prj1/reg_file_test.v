@@ -27,22 +27,25 @@ module reg_file_test
 	initial begin
 	   cnt=0;
 	   clk=0;
-	   while(cnt<1000)
-               begin
-                   cnt=cnt+1;
-                   single_unit_test();
-               end
-               cnt=0;
-		while(cnt<1000)
+	end
+	
+	always@(posedge clk)
+	begin
+	   while(cnt<20)
+           begin
+               cnt=cnt+1;
+               single_unit_test();
+           end
+           cnt=0;
+		while(cnt<100)
 		begin
 			cnt=cnt+1;
-
-                   rand_test();
+           rand_test();
 		end
 	end
 
 	always begin
-		#5 clk = ~clk;
+		#1 clk = ~clk;
 	end
 
 //任务定义： 
@@ -87,6 +90,17 @@ task  rand_test;
 
 endtask 
 
+task test;
+input _rst;
+input [`ADDR_WIDTH-1:0]_waddr;
+input [`ADDR_WIDTH-1:0]_raddr1;
+input [`ADDR_WIDTH-1:0]_raddr2;
+input [`DATA_WIDTH-1:0]_wdata;
+input _wen;
+begin
+	$display("waddr=%d,raddr1=%d,raddr2=%d,wdata=%d,rdata1=%d,rdata2=%d",waddr,raddr1,raddr2,wdata,rdata1,rdata2);
+end
+endtask
 
 	reg_file u_reg_file(
 		.clk(clk),
