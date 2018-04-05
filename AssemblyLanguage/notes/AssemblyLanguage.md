@@ -346,7 +346,7 @@ _start:
     MOV  destination, source    
 
 语义：destination = source
-适用范围: 寄存器之间, 内存<->寄存器
+适用范围: 寄存器之间, 内存<->寄存器, ie:内存只出现一次
 
 ### AT&T Syntax
 
@@ -380,7 +380,7 @@ Intel syntax
 
 语义：destination与source交换, i.e. 源操作数与目的操作数交换数据
 
-适用范围: 寄存器之间, 内存<->寄存器
+适用范围: 寄存器之间, 内存<->寄存器, 内存只出现一次
 
 ## MOVZX和MOVSX指令
 
@@ -392,7 +392,7 @@ Intel syntax
 
 语义：移动的同时扩展数据宽度. MOVZX描述用0来进行扩展, MOVS使用符号位来进行扩展
 
-适用范围: 寄存器之间, 内存<->寄存器
+适用范围: 寄存器之间, 内存<->寄存器: ie:目的操作数必须是寄存器.
 
 ## MOVZX/MOVSX指令示例（AT&T）
 
@@ -450,6 +450,8 @@ DEC：减1
 
 CF标志位不变，其他标志位根据计算结果改变
 
+**目的操作数可以是寄存器/内存单元**
+
 ## ATT语法宽度的自动识别
 
 如果操作数大小可以通过寄存器区分，则指令后缀可省略，汇编器自动识别
@@ -505,6 +507,7 @@ NEG：求相反数（补码）
 
 标志位: 如果destination =0，CF=0，否则CF=1, 其他标志位根据结果设置
 
+**目的操作数必须是寄存器或内存单元**
 ## LOOP
 
 LOOP：循环（Loop with ECX counter)
@@ -583,3 +586,285 @@ loopmark:
     syscall
 
 ```
+
+***
+
+## 条件处理指令
+
+## AND/OR/XOR运算指令
+
+AND：按位与
+
+指令格式：
+
+    AND dest, src
+
+语义：dest = dest & src 
+
+OR：按位或
+
+    OR dest, src
+
+dest = dest | src
+
+XOR：按位异或
+
+    XOR dest, src
+
+dest = dest ^ src
+
+AND/OR/XOR对标志位的影响: OF=CF=0，SF、ZF、PF根据结果设置，AF未定义
+
+dest可取:寄存器, 内存单元. src可取:立即数, 内存单元, 寄存器
+
+## NOT指令
+
+NOT：按位非 destination
+
+指令格式：
+
+    NOT dest
+
+语义：dest = ~dest
+
+**不影响标志位,可以在逻辑运算后,TEST之后,条件转移之前使用**
+
+**dest可取:寄存器, 内存单元**
+
+## TEST指令
+
+TEST：逻辑比较
+
+指令格式：
+
+    TEST src1, src2
+
+语义：temp <- src1 & src2
+
+CF=OF=0, SF, ZF, PF根据结果设置，AF未定义
+
+TEST指令用于为条件转移指令设置标志位
+
+**TEST判空: `TEST %al, %al`**
+
+**TEST用来测试一个位: `TEST %al 100b`+`jnz xxx`(若%al第三位非0则跳转)**
+
+**内存单元在前src1, 立即数在后src2, 寄存器位置可任取**
+
+## CMP指令
+
+CMP：比较两个操作数
+
+指令格式：
+
+    CMP src1, src2
+
+语义：temp <- src1 - SignExtend(src2)
+
+如SUB指令一样设置标志位CF, OF, SF, ZF, AF, PF，但不产生计算结果
+
+**立即数在后, 内存单元出现一次**
+
+CMP指令用于为条件转移指令设置标志位
+
+## Jcc指令
+
+Jcc：根据条件码转移
+
+指令格式：
+
+    Jcc dest
+
+语义：若条件码满足，则转移到目的标号dest的地址，若条件码不满足，则执行Jcc之后的第一条指令
+
+(cc: condition code)
+
+指令助记符
+条件码
+描述
+Unsigned compari-son
+JA/JNBE
+CF=0 & ZF=0
+Jump if above/not below or equal
+JAE/JNB
+CF=0
+Jump if above or equal/not below
+JB/JNAE
+CF=1
+Jump if below/not above or equal
+JBE/JNA
+CF=1 | ZF=1
+Jump if below or equal/not above
+Signed compari-son
+JG/JNLE
+ZF=0 & SF=OF
+Jump if greater/not less or equal
+JGE/JNL
+SF=OF
+Jump if greater or equal/not less 
+JL/JNGE
+SF≠OF
+Jump if less/not greater or equal
+JLE/JNG
+ZF=1 | SF≠OF
+Jump if less or equal/not greater
+JC
+CF=1
+Jump if carry
+JNC
+CF=0
+Jump if not carry
+JE/JZ
+ZF=1
+Jump if equal / zero
+JNE/JNZ
+ZF=0
+Jump if not equal / not zero
+JO
+OF=1
+Jump if overflow
+JNO
+OF=0
+Jump if not overflow
+JS
+SF=1
+Jump if sign
+JNS
+SF=0
+Jump if not sign
+JP/JPE
+PF=1
+Jump if parity / parityeven
+JNP/JPO
+PF=0
+Jump if not parity / parity odd
+JCXZ
+CX = 0
+Jump if CX = 0
+JECXZ
+ECX = 0
+Jump if ECX =0
+
+## 数字标号（AT&T）
+
+对于局部标号N，如果N是一个正整数，则标号N可以在同一段代码中多次出现
+
+* Nb：紧邻的后一个标号N，’b’表示backward
+* Nf： 紧邻的前一个标号N，’f’表示forward
+
+## JMP：无条件转移指令
+
+JMP：无条件转移
+
+指令格式：
+
+    JMP dest
+
+语义：跳转到dest所指的目的地址
+
+可以使用:
+* 相对地址跳转
+* 绝对地址间接(段内)跳转; 可以根据内存单元值间接跳转, `jmp *(%eax)`
+* 远跳转(LJMP) `jmp *(%eax)`, `jmp $seg, $offset`
+
+## if语句
+
+```x86asm
+CMP A,B;
+jcc else;
+
+...(if)
+jmp end;
+
+else:
+...(else)
+
+end:
+...(end)
+```
+## switch语句
+
+短switch:
+```x86asm
+movl	8(%ebp), %eax
+	cmpl	$1, %eax
+	je	.L3
+	cmpl	$2, %eax
+	je	.L4
+	testl	%eax, %eax
+	jne	.L8
+
+```
+
+长switch(跳转表):
+```x86asm
+        cmpl    $4, 8(%ebp)
+        ja      .L2
+        movl    8(%ebp), %eax
+        sall    $2, %eax
+        addl    $.L4, %eax
+        movl    (%eax), %eax
+        jmp     *%eax
+        .section        .rodata
+        .align 4
+        .align 4
+.L4:
+        .long   .L3
+        .long   .L5
+        .long   .L6
+        .long   .L7
+        .long   .L8
+
+        .L3:
+        .L5:
+        ......
+        .L2:(default)
+        .L9:(end switch)
+```
+
+## for语句
+```x86asm
+	jmp	.L2
+
+# loop body
+.L3:
+	movl	-8(%ebp), %eax
+	addl	%eax, -4(%ebp)
+	addl	$1, -8(%ebp)
+
+# check loop condition
+.L2:
+	movl	-8(%ebp), %eax
+	cmpl	8(%ebp), %eax
+	jl	.L3
+
+#end loop
+	movl	-4(%ebp), %eax
+	leave
+	ret
+```
+
+GCC将循环先转成GOTO的形式;
+## while语句
+
+类似 for
+## dowhile语句
+
+类似for
+
+## CMOVcc指令: 条件传输指令(Jcc+MOV)
+
+CMOVcc：根据条件码进行数据传输
+
+指令格式：
+
+    CMOVcc dest, src
+
+语义：若条件码满足，则dest = src
+
+CMOVcc指令用于消除赋值类的条件分支, 相当于 Jcc+MOVE指令的组合, 从P6架构的处理器开始引入
+
+目的操作数只能是寄存器.
+
+condition code 同Jcc指令
+## HW3

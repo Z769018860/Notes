@@ -10,6 +10,7 @@ For university students in this era, as mentioned above, social media over mobil
 
 ## Something to discuss about video games and music
 
+***
 ## Aftermath near Mosul
 
 <!-- who
@@ -26,6 +27,8 @@ around Mosul
 With the attack for retaking Mosul by the anti-ISIL allies, thousands of refugees fled from the battle field around Mosul in october, 2017. Refugees' camps were set near the conflict area to accommodate these refugees. After the rough but sweet journey on boat or foot, these people can finally get rid of the veils and taboos laid on them by ISIL, and reunited with their beloved family members.
 
 The man in the picture was once fined for smoking in ISIL controled area and threatened to be executed the next time. Now he has already fled from the control of ISIL, yet with no money, no house left.  
+
+***
 
 ## Some Topics to do for task 1.
 
@@ -45,4 +48,26 @@ If you spend at least 10 minutes on exploring news on the Internet, you must hav
 
 FPGA, which is short for Field－Programmable Gate Array, is a kind of hardware that can be used for acclearing certain calculations. Along with the fast development of the 3 technology mentioned above, the need for FPGA is rising sharply, because the speed of calculation is quite important for these fields and FPGA can calculate much more quickly than CPUS which can be universally used.   
 
+***
+
 ## A day for a photographer.
+
+
+***
+
+## E-Sports and its industrial
+by: UCAS post
+
+---
+<!-- magezine -->
+
+* history
+* industrial how it runs
+* compare companies
+* team and story
+* amator matches
+* exclusive interviews
+
+## The industrial of e-sports.
+
+http://sc2.blizzard.cn/articles/1001/77540?blzcmp=app
