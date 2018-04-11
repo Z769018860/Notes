@@ -262,7 +262,7 @@ echo running $1
 
 ## HW1
 
-32位版本
+输出字符串, 32位版本
 
 ```x86asm
 #ucas.S
@@ -548,7 +548,7 @@ l1:
 .section .data
 stringvar:
   .ascii	"0123456789abcdef"
-  /*要输出1032547698badcfe*/
+  /*要输出1032547698badcfe,相邻字符两两交换*/
 .section .text
 .globl _start
 _start:
@@ -868,3 +868,327 @@ CMOVcc指令用于消除赋值类的条件分支, 相当于 Jcc+MOVE指令的组
 
 condition code 同Jcc指令
 ## HW3
+
+```x64asm
+.section .data
+iostring:
+  .asciz "ab1g2hA0H56po9wK78nB"
+.section .text
+.globl _start
+
+#补充完整下面的程序，将iostring中的小写字母转换为大写字母，然后输出转换后的iostring
+_start:
+  
+#start
+    mov $iostring,%eax
+    #mov $iostring,%ebx
+    mov $0,%edx #length
+
+#while
+WHILE:
+    inc %edx
+    movb (%eax),%bl
+    testb %bl,%bl
+    je END
+
+    #_if
+    #_ifcondition
+        cmpb $'a',(%eax)
+        jb ELSE
+        cmpb $'z',(%eax)
+        ja ELSE
+
+    #meet_IF_condition:
+        subb $32, (%eax)
+
+    ELSE:
+        #do nothing
+
+    #end_if
+    inc %eax
+    jmp WHILE
+
+END:
+#endwhile
+
+#output
+    mov $1, %rax
+    mov $1, %rdi
+    mov $iostring, %rsi
+    #mov $16, %edx
+    syscall
+
+#exit
+    mov $60, %rax
+    mov $0, %rdi
+    syscall
+
+#output
+	#movl	$4, %eax
+	#movl	$1, %ebx
+	#movl	$iostring, %ecx
+    #movl	$16, %edx
+    
+
+	#int	$0x80
+#exit
+	#movl	$1, %eax
+	#movl	$0, %ebx
+	#int	$0x80
+
+```
+
+***
+
+## STACK-栈
+
+STACK:
+
+* 传递函数的参数(寄存器放不下的参数)、返回值等
+* 存放函数的局部变量、返回地址等
+* 保存寄存器的旧值以备将来恢复使用
+
+
+X86-Linux-32的程序栈:
+
+* **自顶向下生长的栈**
+* **自高地址向低地址生长**
+* 栈底地址为0xbffffxxx
+* **栈顶指针是esp寄存器**
+* 栈单元大小是32位
+
+注:
+
+* **栈顶指针esp**
+* **栈底指针ebp**(当前栈帧基址)
+
+分配给一个过程使用的栈空间称为栈帧(stack frame)
+
+* 包括过程的局部变量
+* 子过程的形参地址单元
+* 调用子过程的返回地址
+* 临时保存的寄存器
+
+当前栈帧的基址(底部)保存上一个栈帧的基址.
+
+## 过程调用指令
+
+* CALL
+* RET
+* PUSH
+* POP
+* LEAVE
+
+## CALL
+
+CALL：过程调用
+
+指令格式：
+
+    CALL dest
+
+语义：将下一条指令的地址压入栈，跳转到dest所指示的目标地址执行
+
+等价于:
+
+    push(eip)；eip = eip+dest（相对地址调用）
+    push(eip)；eip = dest（绝对地址调用）
+
+注意:
+
+    CALL *%eax
+    JMP *%eax
+## RET
+
+RET：从过程返回
+
+指令格式：
+
+    RET(只返回)
+    RET src(返回加退栈:单位为字节,可用于返回时清除形参占据的栈空间)
+
+语义：从栈中弹出返回地址，即eip <- pop()；如果有立即数操作数src，则再退栈src字节，即esp = esp + src；跳到返回地址执行。
+
+## PUSH
+
+PUSH：压栈
+
+指令格式：
+
+    PUSH src
+
+语义：栈指针下移一个单元，将操作数src的内容压入该栈单元中
+
+对象: 立即数, 寄存器, 内存单元数据, 段寄存器内容
+
+**补充: 注意在64位下push,pop操作限制于64位, ex: push %rsi**
+## POP
+
+POP：退栈
+
+指令格式：
+
+    POP dest
+
+语义：将栈顶单元的内容传输到dest所在单元，栈指针上移一个单元
+
+对象: 寄存器, 内存单元数据, 段寄存器内容(除cs)
+
+注意：POP指令不能操作cs段寄存器
+
+## LEAVE
+
+LEAVE：释放当前栈帧
+
+指令格式：
+
+    LEAVE
+
+语义：把ebp寄存器的值传输给esp，然后从栈顶单元恢复ebp寄存器的值。即esp = ebp； ebp = pop()
+
+X86-Linux环境中GCC只使用LEAVE指令，不使用配套的ENTER指令.
+
+## RET 与 LEAVE
+
+LEAVE离开并释放当前栈帧, RET离开当前语句调用, 返回之前应执行的语句继续执行
+
+## 带参数的函数调用
+
+例子:
+
+```x86asm
+_start:
+        #写入参数
+        push    $12
+        push    $output
+        call    print_s
+/* exit */
+        movl    $1, %eax
+        movl    $0, %ebx
+        int     $0x80
+print_s:
+        movl    $4,%eax
+        movl    $1,%ebx
+        #注意参数顺序
+        movl    4(%esp),%ecx #$output
+        movl    8(%esp),%edx #$12
+        int     $0x80
+        ret     $8 #(完成参数退栈)
+
+```
+
+## 函数类型说明
+
+```x86asm
+.type print_s, @function
+print_s:
+        movl    $4, %eax
+        movl    $1, %ebx
+        movl    $output, %ecx
+        movl    $12, %edx
+        int     $0x80
+        ret
+```
+
+## 程序调用时的栈底
+
+%esp-->0x00000001 标记了程序调用时的参数数量, 没有参数则为1, 即自身路径及名称
+
+## C语言的程序调用
+
+.CFI编译指导:(call frame information)
+
+栈桢的主体部分是局部变量和子过程形参所占据的单元空间，以16字节为单位分配
+
+使用
+
+    andl    $-16, %esp
+    subl    $32, %esp
+
+分配栈帧.
+
+栈桢不是都需分配:
+
+叶子函数就可以不分配
+
+    gcc -O2 -S call.c
+
+* 栈桢的主体是局部变量和形参
+* **栈桢以16字节为单位分配**
+* **以容纳所有局部变量和形参数量最多的子函数的形参为限**
+* **局部分配在栈桢底部，形参分配在栈桢的顶部**
+
+## ABI
+
+* Application binary interface
+* 应用程序二进制接口
+* 在不同情况编成二进制代码后互相调用的接口约定，与硬件平台和操作系统相关
+* 主要约定寄存器的使用方式，保存和恢复的义务，参数与返回值的传递方式，栈帧的格式和维护义务
+
+### X86-Linux-32 abi
+
+参数与返回值约定:
+* 参数通过栈传递
+* 参数的传递顺序是从右向左
+* 参数由调用者维护，属于调用者栈帧
+* 返回值存放在的eax寄存器
+* 返回地址存放调用者的栈桢顶部
+
+寄存器使用约定
+* eax保存返回值
+* 调用者保存eax、edx、ecx寄存器
+* 被调用者自由使用
+* 被调用者保存ebx、esi、edi寄存器
+* 调用者自由使用
+* ebp和esp是栈桢指针和栈顶指针
+
+栈桢的约定:
+
+栈桢的布局
+1. ebp旧值寄存器
+1. 其他要保存的寄存器、局部变量
+1. 形参
+1. 返回地址
+
+栈帧主体部分以16字节为单位分配
+
+栈单元大小是32位
+
+"被调用者保存, 调用者自由使用"表示: 调用之后不改变这些寄存器的值.
+
+### X86-Linux-64 abi
+
+参数与返回值约定
+* 前6个参数通过寄存器传递(rdi, rsi, rdx, rcx ,r8, r9)
+* 第7个参数起通过栈传递，传递顺序是从右向左
+* 参数由调用者维护，属于调用者栈帧
+* 返回值存放在的rax寄存器
+* 返回地址存放调用者的栈桢顶部
+
+寄存器使用约定
+* rax保存返回值
+* 被调用者保存rbp, rbx, r12~r15寄存器
+* 调用者自由使用
+* 调用者保存其他寄存器
+* 被调用者自由使用
+* rsp是栈顶指针，rbp是栈桢指针
+
+栈桢结构
+* 栈帧主体部分16（32，64）字节对齐
+* 栈单元大小是64位
+* Red zone区域可以用于临时数据
+
+## *
+
+*代表转化为地址, 在使用jmp, jcc, call指令时使用:
+
+    jmp *%eax
+
+而不能使用
+
+    jmp (%eax)
+<!-- 被调用者保存, 调用者自由使用: 调用之后不改变这些寄存器的值. -->
+
+## registers
+
+![regs.png](regs.png)

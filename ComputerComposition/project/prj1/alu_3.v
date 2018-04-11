@@ -29,8 +29,11 @@ module alu(
 		(A[`DATA_WIDTH - 1]==B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]):
 		(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(AminusB[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]));
 	
+	wire plus;
+	assign plus=ALUop==`ADD;
+	
 	assign CarryOut=
-		((ALUop==`ADD)?
+		((plus)?
 		AplusB[`DATA_WIDTH]:
 		AminusB[`DATA_WIDTH]);
 
