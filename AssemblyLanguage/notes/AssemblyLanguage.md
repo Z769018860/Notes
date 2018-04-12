@@ -679,9 +679,11 @@ Jcc：根据条件码转移
 
 (cc: condition code)
 
+```
 指令助记符
 条件码
 描述
+
 Unsigned compari-son
 JA/JNBE
 CF=0 & ZF=0
@@ -695,6 +697,7 @@ Jump if below/not above or equal
 JBE/JNA
 CF=1 | ZF=1
 Jump if below or equal/not above
+
 Signed compari-son
 JG/JNLE
 ZF=0 & SF=OF
@@ -744,6 +747,8 @@ Jump if CX = 0
 JECXZ
 ECX = 0
 Jump if ECX =0
+
+```
 
 ## 数字标号（AT&T）
 
