@@ -294,52 +294,54 @@ module alu(
 );
 
 	// reg [`DATA_WIDTH - 1:0] Result;
-	wire [`DATA_WIDTH:0] AplusB;//A+B
-	wire [`DATA_WIDTH:0] AminusB;//A+~B+1
+
+	//公用加法器逻辑
+	wire [`DATA_WIDTH:0]adder;
+	wire [`DATA_WIDTH:0]addee;
+	assign addee=((ALUop==`ADD)?B:~B+1);
+	assign adder=A+addee; //共用加法器
+
+	//标志位输出逻辑
+	assign CarryOut=adder[32];
 
 	assign Zero=({Result}==0);
-	assign AplusB=A+B;
-	assign AminusB=A+~B+1;
+
 	assign Overflow=
 		((ALUop==`ADD)?
-		(A[`DATA_WIDTH - 1]==B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]):
-		(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(AminusB[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]));
+		(A[`DATA_WIDTH - 1]==B[`DATA_WIDTH - 1])&&(adder[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]):
+		(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(adder[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]));
 	
-	assign CarryOut=
-		((ALUop==`ADD)?
-		AplusB[`DATA_WIDTH]:
-		AminusB[`DATA_WIDTH]);
-
-
-always@*
-begin
-	case(ALUop[2:0])
-		`AND:
-			begin
-				Result=A&B;			
-			end
-		`OR:
-			begin
-				Result=A|B;			
-			end
-	  	`ADD:
-		  	begin
-				Result=AplusB;
-			end
-	  	`SUB:
-		  	begin
-				Result=AminusB;
-			end
-		default:
-	  	// `SLT:
-		  	begin
-				Result[`DATA_WIDTH-1:1]=0;
-				Result[0]=AminusB[`DATA_WIDTH-1]^Overflow;
-			end
-	endcase
-end
+	//选择器逻辑
+	always@*
+	begin
+		case(ALUop[2:0])
+			`AND:
+				begin
+					Result=A&B;			
+				end
+			`OR:
+				begin
+					Result=A|B;			
+				end
+		  	`ADD:
+			  	begin
+					Result=adder;
+				end
+		  	`SUB:
+			  	begin
+					Result=adder;
+				end
+			default:
+		  	// `SLT:
+			  	begin
+					Result[`DATA_WIDTH-1:1]=0;
+					Result[0]=adder[`DATA_WIDTH-1]^Overflow;
+				end
+		endcase
+	end
 
 endmodule
+
 
 ```
 
@@ -353,7 +355,10 @@ ALU部分经过多次修正, 修正前的代码见思考部分.
 
 <!-- ![reg.png](reg.png) -->
 
-**图2.1 ALU组合逻辑**
+**图2.1 ALU组合逻辑,加法器共用版本**
+
+
+**图2.1x ALU组合逻辑,加法器非共用版本**
 
 ![alu_right.png](alu_right.png)
 
@@ -433,7 +438,9 @@ ALU的计算结果在下一个时钟周期被读取, 以上算例涵盖了全部
 
 ![alutest2.png](alutest2.png)
 
-### 1.4 硬件详细分析
+### 1.4 硬件详细分析(旧版本.加法器不共用)
+
+*附注: 这是在提交之前完成的实验报告,对于加法器共用的版本来说,除加法器共用部分逻辑没有太大变化,变化的部分将在1.5中单独列出.(旧版本打了这么多我也不想删了/滑稽)*
 
 ```v
 	assign Zero=({Result}==0);
@@ -460,10 +467,11 @@ ALU的计算结果在下一个时钟周期被读取, 以上算例涵盖了全部
 大致优化如下:
 
 ```v
-wire [32:0]adder;
-assign addee=(ALUop==`ADD?A:~B+1);
-assign adder=A+addee; //共用加法器
-assign CarryOut=adder[32];
+	//公用加法器逻辑
+	wire [`DATA_WIDTH:0]adder;
+	wire [`DATA_WIDTH:0]addee;
+	assign addee=((ALUop==`ADD)?B:~B+1);
+	assign adder=A+addee; //共用加法器
 ```
 这样可以简化掉一个加法器.
 
@@ -497,6 +505,25 @@ assign Overflow=
 
 (因为是课前写的, 这部分逻辑应该仍有化简的空间. 简而言之, 这部分逻辑通过判断运算前后的符号变化是否合理判断是否出现有符号运算overflow)
 
+化简后的逻辑如下:
+
+//todo
+
+### 1.5 硬件详细分析(新版本.加法器共用)
+
+//todo
+
+新的完整逻辑电路图如下:
+
+
+
+共用加法器部分的逻辑如下:
+
+各flag位依靠共用加法器adder的结果进行输出:
+
+
+
+
 ***
 
 ## 2. 实验心得
@@ -516,10 +543,9 @@ assign Overflow=
 
 #### *ALU：*
 
-* 直接使用assign语句的ALU与使用case语句由verilog自动生成的ALU有何区别?
-* 怎样尽量减少自动综合出的门的个数和门的级数？
-* 进行怎样的处理才能提高ALU效率? 
-* 进行怎样的处理才能减少ALU所用的门和级数, 是否有一般性的规则? 
+* 直接使用assign语句的ALU与使用case语句由verilog自动生成的ALU性能上有何区别?
+* 怎样尽量减少自动综合出的门的个数和门的级数？只能靠手写吗...
+* 进行怎样的处理才能提高ALU效率? 进行怎样的处理才能减少ALU所用的门和级数, 是否有一般性的规则? 
 
 ### 2.2 实验经验部分:ALU代码的优化
 
@@ -660,7 +686,7 @@ endmodule
 
 ```
 
-这种代码综合处出的逻辑图如下, 注意图右侧的lench.
+这种代码综合处出的逻辑图如下, 注意图右侧的latch.
 
 **图3.1 含有锁存器的错误逻辑电路**
 
@@ -669,6 +695,8 @@ endmodule
 修改过后的代码见第一节。
 
 在上面的代码上, 还可以进行优化, 使得加法与减法运算公用一个加法器, 以减少电路复杂度. 在各部分详细分析部分已有说明, 不再详述.
+
+补充: 提交时得到要求: 强制使用同一加法器, 核心代码已经进行了修改.
 
 ### 2.3 实验经验部分:开发环境
 
@@ -691,7 +719,7 @@ ALUop是三位的, 对于这8种可能, 没有定义的三种可能应该作出�
 
 在case语句中设置default分支, 防止生成意料之外的硬件结构(如锁存器);
 
-在第一种写法中, 很有可能出现这样的问题. 而在直接使用assign语句设计组合逻辑的情况下(第二种写法)不会出现这一问题.
+在第一种写法中, 很有可能出现这样的问题. 而在直接使用assign语句设计组合逻辑的情况下(第二种写法)不会出现这一问题. 将SLT相关的指令放在case语句的default分支下.
 
 ***
 
@@ -701,6 +729,83 @@ ALUop是三位的, 对于这8种可能, 没有定义的三种可能应该作出�
 * Iverilog by Stephen Williams.
 * 陈欲晓同学提供了ALU写法的第二种思路(完全使用assign语句), 在此致谢.
 * 刘蕴哲同学坚持不懈优化ALU的精神值得学习......
+
+***
+
+## 5. 附: 旧版本代码
+
+```v
+//有一个多余加法器的版本
+
+`timescale 10 ns / 1 ns
+
+`define DATA_WIDTH 32
+`define AND 3'b000
+`define OR 3'b001
+`define ADD 3'b010
+`define SUB 3'b110
+`define SLT 3'b111
+
+module alu(
+	input [`DATA_WIDTH - 1:0] A,
+	input [`DATA_WIDTH - 1:0] B,
+	input [2:0] ALUop,
+	output Overflow,
+	output CarryOut,
+	output Zero,
+	output reg [`DATA_WIDTH - 1:0] Result
+);
+
+	// reg [`DATA_WIDTH - 1:0] Result;
+	wire [`DATA_WIDTH:0] AplusB;//A+B
+	wire [`DATA_WIDTH:0] AminusB;//A+~B+1
+
+	assign Zero=({Result}==0);
+	assign AplusB=A+B;
+	assign AminusB=A+~B+1;
+	assign Overflow=
+		((ALUop==`ADD)?
+		(A[`DATA_WIDTH - 1]==B[`DATA_WIDTH - 1])&&(Result[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]):
+		(A[`DATA_WIDTH - 1]!=B[`DATA_WIDTH - 1])&&(AminusB[`DATA_WIDTH - 1]!=A[`DATA_WIDTH - 1]));
+	
+	assign CarryOut=
+		((ALUop==`ADD)?
+		AplusB[`DATA_WIDTH]:
+		AminusB[`DATA_WIDTH]);
+
+
+always@*
+begin
+	case(ALUop[2:0])
+		`AND:
+			begin
+				Result=A&B;			
+			end
+		`OR:
+			begin
+				Result=A|B;			
+			end
+	  	`ADD:
+		  	begin
+				Result=AplusB;
+			end
+	  	`SUB:
+		  	begin
+				Result=AminusB;
+			end
+		default:
+	  	// `SLT:
+		  	begin
+				Result[`DATA_WIDTH-1:1]=0;
+				Result[0]=AminusB[`DATA_WIDTH-1]^Overflow;
+			end
+	endcase
+end
+
+endmodule
+
+
+```
 
 ***
 

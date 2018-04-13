@@ -20,20 +20,12 @@ module alu(
 	// reg [`DATA_WIDTH - 1:0] Result;
 
 	//公用加法器逻辑
-	wire [`DATA_WIDTH+1:0]adder_with_cin;
 	wire [`DATA_WIDTH:0]adder;
 	wire [`DATA_WIDTH:0]addee;
+	assign addee=((ALUop==`ADD)?B:~B+1);
+	assign adder=A+addee; //共用加法器
 
-	//加法器使用的cin
-	wire neg1;
-	assign neg1=((ALUop==`ADD)?0:1);
-
-	//带cin的共用加法器
-	assign addee=((ALUop==`ADD)?B:~B);
-	assign adder=adder_with_cin[`DATA_WIDTH+1:1];
-	assign adder_with_cin={1'b0,A,neg1}+{addee,neg1}; 
-
-	//标志位(flag)输出逻辑
+	//标志位输出逻辑
 	assign CarryOut=adder[32];
 
 	assign Zero=({Result}==0);
