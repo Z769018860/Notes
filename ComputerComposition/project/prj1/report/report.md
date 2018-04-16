@@ -14,6 +14,13 @@ zeweiwang@outlook.com
 <!-- 注1：本实验报告请以PDF格式提交。文件命名规则：学号-prjN.pdf，其中学号中的字母“K”为大写，“-”为英文连字符，“prj”和后缀名“pdf”为小写，“N”为1至5的阿拉伯数字。例如：2015K8009929000-prj1.pdf。PDF文件大小应控制在5MB以内。 -->
 
 <!-- 2016K8009929035-prj1.pdf -->
+
+## 0. 综述
+
+在此次实验中实现了reg_file和alu, 其中alu中的不同运算(ADD, SUB, SLT)公用**一个**32位加法器, reg_file支持同步读和异步写.
+
+由于虚拟机问题, 实验后期部分操作在资威同学的虚拟机上进行, 在资威同学的虚拟机上clone了prj1-AugustusWillisWang, 并使用`make USER=ziwei cloud_run`进行测试.  
+
 ## 1. 电路实现
 
 ## **PRAT1 REG_FILE部分**
@@ -265,7 +272,7 @@ endtask
 
 ## **PART2 ALU部分**
 <!-- 一、	逻辑电路结构与仿真波形的截图及说明（比如关键RTL代码段{包含注释}及其对应的逻辑电路结构、相应信号的仿真波形和信号变化的说明等） -->
-### 1.1 关键代码
+### 1.1 关键代码(新版本)
 
 这里使用两种写法, 第一种是使用reg, 并用vivado的优化功能将其综合为组合逻辑.
 
@@ -296,12 +303,20 @@ module alu(
 	// reg [`DATA_WIDTH - 1:0] Result;
 
 	//公用加法器逻辑
+	wire [`DATA_WIDTH+1:0]adder_with_cin;
 	wire [`DATA_WIDTH:0]adder;
 	wire [`DATA_WIDTH:0]addee;
-	assign addee=((ALUop==`ADD)?B:~B+1);
-	assign adder=A+addee; //共用加法器
 
-	//标志位输出逻辑
+	//加法器使用的cin
+	wire neg1;
+	assign neg1=((ALUop==`ADD)?0:1);
+
+	//带cin的共用加法器
+	assign addee=((ALUop==`ADD)?B:~B);
+	assign adder=adder_with_cin[`DATA_WIDTH+1:1];
+	assign adder_with_cin={1'b0,A,neg1}+{addee,neg1}; 
+
+	//标志位(flag)输出逻辑
 	assign CarryOut=adder[32];
 
 	assign Zero=({Result}==0);
@@ -342,7 +357,6 @@ module alu(
 
 endmodule
 
-
 ```
 
 第二种写法将case语句转为全部使用assign和wire定义实现。篇幅所限代码暂略。
@@ -357,6 +371,7 @@ ALU部分经过多次修正, 修正前的代码见思考部分.
 
 **图2.1 ALU组合逻辑,加法器共用版本**
 
+![a1.PNG](a1.PNG)
 
 **图2.1x ALU组合逻辑,加法器非共用版本**
 
@@ -505,24 +520,45 @@ assign Overflow=
 
 (因为是课前写的, 这部分逻辑应该仍有化简的空间. 简而言之, 这部分逻辑通过判断运算前后的符号变化是否合理判断是否出现有符号运算overflow)
 
-化简后的逻辑如下:
-
-//todo
 
 ### 1.5 硬件详细分析(新版本.加法器共用)
 
-//todo
+根据之前的说明, 化简ALU到使用一个共用的加法器. 加法器个数由之前的3个化简到1个, 电路级数减少一级.
+
+化简的核心原理如下:
+
+```v
+	//公用加法器逻辑
+	wire [`DATA_WIDTH+1:0]adder_with_cin;
+	wire [`DATA_WIDTH:0]adder;
+	wire [`DATA_WIDTH:0]addee;
+
+	//加法器使用的cin
+	wire neg1;
+	assign neg1=((ALUop==`ADD)?0:1);
+
+	//带cin的共用加法器
+	assign addee=((ALUop==`ADD)?B:~B);
+	assign adder=adder_with_cin[`DATA_WIDTH+1:1];
+	assign adder_with_cin={1'b0,A,neg1}+{addee,neg1}; 
+
+```
 
 新的完整逻辑电路图如下:
 
+![a1.PNG](a1.PNG)
 
 
 共用加法器部分的逻辑如下:
 
+![a2.PNG](a2.PNG)
+
+
 各flag位依靠共用加法器adder的结果进行输出:
 
+Overflow:
 
-
+![a3.PNG](a3.PNG)
 
 ***
 
@@ -729,6 +765,7 @@ ALUop是三位的, 对于这8种可能, 没有定义的三种可能应该作出�
 * Iverilog by Stephen Williams.
 * 陈欲晓同学提供了ALU写法的第二种思路(完全使用assign语句), 在此致谢.
 * 刘蕴哲同学坚持不懈优化ALU的精神值得学习......
+* 资威同学在我虚拟机爆炸的时候及时伸出了援手.
 
 ***
 
