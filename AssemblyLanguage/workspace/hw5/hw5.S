@@ -54,22 +54,20 @@
 .globl _start
 
 _start:
-    pushl var #4
+    pushl outputbuff
+    pushl var
     call print_signed_32_to_hex
+    mov %ecx,outputbuff
+    call printf
     mov   $1, %eax
     mov   $0, %ebx
     int   $0x80
 
 
 
-.type print_signed_32_to_hex, @function
-
-print_signed_32_to_hex:
-    push %ebp
-    mov %esp,%ebp
-    sub $16,%esp
 
 
+.type printf, @function
 printf:
     push %ebp
     push %esi
@@ -84,41 +82,91 @@ printf:
     pop %ebp
     ret
 
+.type printhex, @function
 printhex:
-#%eax:原地址
-#%ecx:缓冲区地址
+#参数: push(缓冲区地址)
+#参数: push(原数组地址)
 
-#%edx:长度暂存(缓冲区下标)
-#%esi:元数据复制
+#4(%ebp):原地址
+#8(%esp):缓冲区地址
+
+#%eax:元数据复制,除法用
+#%ebx:当前写入地址计数
+#%ecx:循环计数器
+#%edx:商
+#%esi:缓冲区起始地址
+#%edi:临时变量
+
+    push %ebp
+    mov %esp,%ebp
+    sub $16,%esp
     push %ebx
-    push %esi
-    push %edi
-    mov 3,%edx
-    movb $'0',1(%ecx)
-    movb $'x',2(%ecx)
-    movl (%eax),%esi
 
-    cmpl $0,%esi
+    mov 8(%ebp),%esi
+    mov 4(%ebp),%edi
+    mov (%edi),%eax
+
+    movb $'0',1(%esi)
+    movb $'x',2(%esi)
+    
+    #mov $0,%ebx
+    cmpl %eax,$0
     jng negative
     
     positive:
-        movb $'+',(%ecx)
+        movb $'+',(%esi)
         jmp endif
     negative:
         movb $'-',(%ecx)
         jmp endif
         movl $0,%ebx
-        subl %esi,%ebx
-        movl %ebx,%esi
+        subl %eax,%ebx
+        movl %ebx,%eax
 
     endif:
+        mov $0,%ecx
+        mov %eax,%edi
         
-    
+    loop1:
+        test $8,%cl
+        jz endloop1:
+        andb $15,%al
 
-    andl $15,%esi
+        inc %cl #ch:counter
+        shrl $4,%eax
+        test %al,%al
+        jz loop1
+        
+        mov %cl,%ch #ch:last counter have non 0 byte
+        jz loop1
+        
+    endloop1:
+        mov %ch,%cl
+        mov $0,%ch
+        mov %edi,%eax
+        movb $0,4(%esi,%ecx) # write'\0'
+        mov %ecx,%edx
 
-    pop %edi
-    pop %esi
+    loop2:
+
+    if1:
+        cmpb $10,%al
+        jnb alpha
+
+        number:
+        addb $30,%al
+        jmp endif1:
+
+        alpha:
+        addb $20,%al
+
+        endif1:
+
+        movb %al,3(%esi,%ecx)
+        loop loop2
+
+
     pop %ebx
-    ret
+    leave
+    ret 8
 
