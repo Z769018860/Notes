@@ -43,22 +43,27 @@
 
 .section .data
 
-    var: .int 0x12345678
+    var: .int 0x80001234
     var1: .int 0x00abcde1
     var2: .int 0xffffffff
     var3: .int 0xfffffffe
     var4: .int 0xffffffff
-    outputbuff: .ascii "123456789012345678901234567890"
+    outputbuff: .ascii "000000000000012345678901234567890"
+    mbreakpoint: .ascii "breakpoint\n"
 
-.section text
+.section .text
 .globl _start
 
 _start:
-    pushl outputbuff
-    pushl var
+
+    pushl $outputbuff
+    pushl $var
+    
     call printhex
-    mov %ecx,outputbuff
+    mov $outputbuff,%ecx
+    #mov $10,%edx
     call printf
+    #call printbuff
     mov   $1, %eax
     mov   $0, %ebx
     int   $0x80
@@ -73,10 +78,10 @@ printf:
     push %esi
     push %edi
     movl $4, %eax
-	movl $1, %ebx
-	#movl	$outputbuff, %ecx
-	#movl	$16, %edx
-	int	$0x80
+    movl $1, %ebx
+    #movl	$outputbuff, %ecx
+    #movl	$16, %edx
+    int	$0x80
     pop %edi
     pop %esi
     pop %ebp
@@ -102,8 +107,8 @@ printhex:
     sub $16,%esp
     push %ebx
 
-    mov 8(%ebp),%esi
-    mov 4(%ebp),%edi
+    mov 12(%ebp),%esi
+    mov 8(%ebp),%edi
     mov (%edi),%eax
 
     movb $'0',1(%esi)
@@ -117,56 +122,113 @@ printhex:
         movb $'+',(%esi)
         jmp endif
     negative:
-        movb $'-',(%ecx)
-        jmp endif
+        movb $'-',(%esi)
         movl $0,%ebx
         subl %eax,%ebx
         movl %ebx,%eax
+	jmp endif
 
     endif:
         mov $0,%ecx
         mov %eax,%edi
         
+	
+
     loop1:
-        test $8,%cl
-        jz endloop1
-        andb $15,%al
+
+        cmp $9,%cl
+        je endloop1
+
+	movb %al,%bl
+        andb $15,%bl
 
         inc %cl #ch:counter
         shrl $4,%eax
-        test %al,%al
+        test %bl,%bl
         jz loop1
         
         mov %cl,%ch #ch:last counter have non 0 byte
-        jz loop1
+        jmp loop1
         
     endloop1:
+
         mov %ch,%cl
         mov $0,%ch
-        mov %edi,%eax
-        movb $0,4(%esi,%ecx) # write'\0'
+        mov %edi,%eax #recover %eax
+        movb $0,3(%esi,%ecx) # write'\0'
         mov %ecx,%edx
 
     loop2:
 
     if1:
-        cmpb $10,%al
+	mov $15,%ebx
+	andb %al,%bl
+	shrl $4,%eax
+        cmpb $10,%bl
         jnb alpha
 
         number:
-        addb $30,%al
+        addb $48,%bl
         jmp endif1
 
         alpha:
-        addb $20,%al
+        addb $55,%bl
 
         endif1:
 
-        movb %al,3(%esi,%ecx)
+        movb %bl,2(%esi,%ecx)
+        #call printbuff
         loop loop2
 
-
+    addl $4,%edx
     pop %ebx
     leave
     ret
 
+breakpoint:
+
+    push %eax
+    push %ebx
+    push %ecx
+    push %edx
+    push %esi
+    push %edi
+	
+    movl $4, %eax
+    movl $1, %ebx
+    movl $mbreakpoint, %ecx
+    movl $12, %edx
+    int	$0x80
+	
+    pop %edi
+    pop %esi
+    pop %edx
+    pop %ecx
+    pop %ebx
+    pop %eax
+    
+    ret
+
+printbuff:
+
+    push %eax
+    push %ebx
+    push %ecx
+    push %edx
+    push %esi
+    push %edi
+	
+    movl $4, %eax
+    movl $1, %ebx
+    movl $outputbuff, %ecx
+    movl $12, %edx
+    int	$0x80
+	
+    pop %edi
+    pop %esi
+    pop %edx
+    pop %ecx
+    pop %ebx
+    pop %eax
+    
+    ret
