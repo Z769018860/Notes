@@ -56,7 +56,7 @@
 _start:
     pushl outputbuff
     pushl var
-    call print_signed_32_to_hex
+    call printhex
     mov %ecx,outputbuff
     call printf
     mov   $1, %eax
@@ -110,7 +110,7 @@ printhex:
     movb $'x',2(%esi)
     
     #mov $0,%ebx
-    cmpl %eax,$0
+    cmpl $0,%eax
     jng negative
     
     positive:
@@ -129,7 +129,7 @@ printhex:
         
     loop1:
         test $8,%cl
-        jz endloop1:
+        jz endloop1
         andb $15,%al
 
         inc %cl #ch:counter
@@ -155,7 +155,7 @@ printhex:
 
         number:
         addb $30,%al
-        jmp endif1:
+        jmp endif1
 
         alpha:
         addb $20,%al
@@ -168,5 +168,5 @@ printhex:
 
     pop %ebx
     leave
-    ret 8
+    ret
 
