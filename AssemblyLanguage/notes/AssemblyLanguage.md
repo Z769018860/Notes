@@ -28,7 +28,7 @@ _start:
 1. “#”开头的一行
 2. “/*”和 “*/”包围的一段内容
 
-注意：“;”不是注释标志
+注意: “;”不是注释标志
 
 ## 节
 
@@ -57,10 +57,10 @@ _start:
     output
 即为一个标号
 
-## 符号（symbol）
-* 由字母（大小写）、数字和’_.$’组成
+## 符号 (symbol) 
+* 由字母 (大小写) 、数字和’_.$’组成
 * 以字母或’._’开头
-* 作为标号（label）时后面紧跟’:’
+* 作为标号 (label) 时后面紧跟’:’
 * 符号区分大小写
 
     output :	.ascii	“Hello World\n”
@@ -70,7 +70,7 @@ _start:
 
 ## 程序入口地址
 
-Ld默认的入口地址：_start
+Ld默认的入口地址: _start
      _start必须是第一条指令的标号
 2. Ld -e entry可改变入口地址
 3. 入口地址必须定义为全局符号
@@ -78,14 +78,14 @@ Ld默认的入口地址：_start
     .globl _start
 
 ## 指令格式
-（以mov指令为例）
+ (以mov指令为例) 
 
 指令后缀表示数据类型
-* ’l’：表示32位数据
-* ’w’：表示16位数据
-* ‘b’：表示8位数据
+* ’l’: 表示32位数据
+* ’w’: 表示16位数据
+* ‘b’: 表示8位数据
 
-说明：
+说明: 
     mov指令涉及不同数据类型，需要后缀区分
     int指令没有不同数据类型
 
@@ -96,8 +96,8 @@ Ld默认的入口地址：_start
 
 立即数操作数
 
-   ‘$number’：表示立即数number
-    ‘$symbol’：表示标号地址
+   ‘$number’: 表示立即数number
+    ‘$symbol’: 表示标号地址
 
 寄存器
 
@@ -108,24 +108,24 @@ Ld默认的入口地址：_start
     左边是源操作数
     最右边是目的操作数
 
-## int 0x80（Linux32系统调用）
+## int 0x80 (Linux32系统调用) 
 
 > 系统调用即调用操作系统提供的功能，需要在核心态运行
 > 中断引发特权态改变，从用户态进入核心态
-> Linux约定0x80（128）号软中断为系统调用
+> Linux约定0x80 (128) 号软中断为系统调用
 > Linux系统调用的寄存器约定
-> EAX：系统调用号，4号是写文件，1号是程序退出
-> EBX、ECX、EDX、…：传递参数
+> EAX: 系统调用号，4号是写文件，1号是程序退出
+> EBX、ECX、EDX、…: 传递参数
 
-4号调用：写文件
+4号调用: 写文件
 
-    EBX：文件描述符，1表示终端
-    ECX：输出缓冲区（Buffer）的地址
-    EDX：输出的字节数
+    EBX: 文件描述符，1表示终端
+    ECX: 输出缓冲区 (Buffer) 的地址
+    EDX: 输出的字节数
 
-1号调用：程序退出
+1号调用: 程序退出
 
-    EBX：返回值
+    EBX: 返回值
 
 > 64bit下系统中断定义发生变化
 
@@ -163,7 +163,7 @@ _start:
 
 1. .intel_syntax表示采用Intel语法
 2. noprefix表示寄存器名前不加%
-3. offset label：引用标号地址
+3. offset label: 引用标号地址
 4. 目的寄存器在最左边
 5. 立即数不加$
 
@@ -275,15 +275,15 @@ echo running $1
 
 _start:fi
 /*
-4号调用：写文件
+4号调用: 写文件
 
-    EBX：文件描述符，1表示终端
-    ECX：输出缓冲区（Buffer）的地址
-    EDX：输出的字节数
+    EBX: 文件描述符，1表示终端
+    ECX: 输出缓冲区 (Buffer) 的地址
+    EDX: 输出的字节数
 
-1号调用：程序退出
+1号调用: 程序退出
 
-    EBX：返回值
+    EBX: 返回值
 */
     mov eax, 4
     mov ebx, 1
@@ -311,15 +311,15 @@ _start:fi
 _start:
 /*
     64位系统
-    1号调用：写文件
+    1号调用: 写文件
 
-    RDI：文件描述符，1表示终端
-    RSI：输出缓冲区（Buffer）的地址
-    EDX：输出的字节数
+    RDI: 文件描述符，1表示终端
+    RSI: 输出缓冲区 (Buffer) 的地址
+    EDX: 输出的字节数
 
-    60号调用：程序退出
+    60号调用: 程序退出
 
-    RDI：返回值
+    RDI: 返回值
 
     系统中断使用 syscall 语句
 */
@@ -341,21 +341,21 @@ _start:
 
 ### Intel Syntax
 
-指令格式：
+指令格式: 
 
     MOV  destination, source    
 
-语义：destination = source
+语义: destination = source
 适用范围: 寄存器之间, 内存<->寄存器, ie:内存只出现一次
 
 ### AT&T Syntax
 
-指令格式：
+指令格式: 
 
     MOVx  source, destination   
 
 其中，x  = b, w, l，用于指定内存操作数的大小
-## 内存操作数指令示例（AT&T）
+## 内存操作数指令示例 (AT&T) 
 ```x86asm
 movb   var, %al				disp
 movw  (%ebx), ax			base
@@ -374,11 +374,11 @@ disp(基地址,index,scale)
 
 Intel syntax
 
-指令格式：
+指令格式: 
 
     XCHG  destination, source
 
-语义：destination与source交换, i.e. 源操作数与目的操作数交换数据
+语义: destination与source交换, i.e. 源操作数与目的操作数交换数据
 
 适用范围: 寄存器之间, 内存<->寄存器, 内存只出现一次
 
@@ -386,15 +386,15 @@ Intel syntax
 
 Intel syntax
 
-指令格式：
+指令格式: 
 
     MOVZ  destination, source
 
-语义：移动的同时扩展数据宽度. MOVZX描述用0来进行扩展, MOVS使用符号位来进行扩展
+语义: 移动的同时扩展数据宽度. MOVZX描述用0来进行扩展, MOVS使用符号位来进行扩展
 
 适用范围: 寄存器之间, 内存<->寄存器: ie:目的操作数必须是寄存器.
 
-## MOVZX/MOVSX指令示例（AT&T）
+## MOVZX/MOVSX指令示例 (AT&T) 
 
 ```x86asm
 movzbw		bytevar, %ax
@@ -416,9 +416,9 @@ INC, DEC, ADD, SUB, NEG
 ### EFLAGS的状态标志位
 
 * CF - Carry
-* 无符号数运算溢出（最高位发生进位或借位）
+* 无符号数运算溢出 (最高位发生进位或借位) 
 * OF - Overflow
-* 有符号数运算溢出（正+正=负, 负+负=正, 正-负=负, 负-正=正）
+* 有符号数运算溢出 (正+正=负, 负+负=正, 正-负=负, 负-正=正) 
 * SF - Sign
 * 结果为负数
 * ZF - Zero
@@ -430,23 +430,23 @@ INC, DEC, ADD, SUB, NEG
 
 ## INC, DEC
 
-INC：加1
+INC: 加1
 
-指令格式：
+指令格式: 
 
     INC destination
 
-语义：destination <- destination + 1
+语义: destination <- destination + 1
 
 CF标志位不变，其他标志位根据计算结果改变
 
-DEC：减1
+DEC: 减1
 
-指令格式：
+指令格式: 
     
     DEC destination
 
-语义：destination <- destination – 1
+语义: destination <- destination – 1
 
 CF标志位不变，其他标志位根据计算结果改变
 
@@ -456,7 +456,7 @@ CF标志位不变，其他标志位根据计算结果改变
 
 如果操作数大小可以通过寄存器区分，则指令后缀可省略，汇编器自动识别
 
-如：
+如: 
 
 ```x86asm
 inc	%al		等价于	incb	%al
@@ -469,23 +469,23 @@ decl	4(%eax)
 
 ## ADD, SUB
 
-ADD：加
+ADD: 加
 
-指令格式：
+指令格式: 
 
     ADD destination, source
 
-语义：destination = destination + source
+语义: destination = destination + source
 
 根据计算结果改变标志位CF、OF、SF、ZF、AF、PF
 
-SUB：减
+SUB: 减
 
-指令格式：
+指令格式: 
     
     SUB destination, source
 
-语义：destination = destination – source
+语义: destination = destination – source
 
 根据计算结果改变标志位CF、OF、SF、ZF、AF、PF
 
@@ -497,26 +497,26 @@ remark:
 
 ## NEG
 
-NEG：求相反数（补码）
+NEG: 求相反数 (补码) 
 
-指令格式：
+指令格式: 
 
     NEG destination
 
-语义：destination = 0 - destination
+语义: destination = 0 - destination
 
 标志位: 如果destination =0，CF=0，否则CF=1, 其他标志位根据结果设置
 
 **目的操作数必须是寄存器或内存单元**
 ## LOOP
 
-LOOP：循环（Loop with ECX counter)
+LOOP: 循环 (Loop with ECX counter)
 
-指令格式：
+指令格式: 
 
     LOOP  destination
 
-语义：counter = counter - 1, 如果 counter ≠ 0，跳转到标号destination处（循环入口）执行，否则
+语义: counter = counter - 1, 如果 counter ≠ 0，跳转到标号destination处 (循环入口) 执行，否则
 
 结束LOOP指令，执行LOOP之后第一条指令
 
@@ -593,21 +593,21 @@ loopmark:
 
 ## AND/OR/XOR运算指令
 
-AND：按位与
+AND: 按位与
 
-指令格式：
+指令格式: 
 
     AND dest, src
 
-语义：dest = dest & src 
+语义: dest = dest & src 
 
-OR：按位或
+OR: 按位或
 
     OR dest, src
 
 dest = dest | src
 
-XOR：按位异或
+XOR: 按位异或
 
     XOR dest, src
 
@@ -619,13 +619,13 @@ dest可取:寄存器, 内存单元. src可取:立即数, 内存单元, 寄存器
 
 ## NOT指令
 
-NOT：按位非 destination
+NOT: 按位非 destination
 
-指令格式：
+指令格式: 
 
     NOT dest
 
-语义：dest = ~dest
+语义: dest = ~dest
 
 **不影响标志位,可以在逻辑运算后,TEST之后,条件转移之前使用**
 
@@ -633,13 +633,13 @@ NOT：按位非 destination
 
 ## TEST指令
 
-TEST：逻辑比较
+TEST: 逻辑比较
 
-指令格式：
+指令格式: 
 
     TEST src1, src2
 
-语义：temp <- src1 & src2
+语义: temp <- src1 & src2
 
 CF=OF=0, SF, ZF, PF根据结果设置，AF未定义
 
@@ -653,13 +653,13 @@ TEST指令用于为条件转移指令设置标志位
 
 ## CMP指令
 
-CMP：比较两个操作数
+CMP: 比较两个操作数
 
-指令格式：
+指令格式: 
 
     CMP src1, src2
 
-语义：temp <- src1 - SignExtend(src2)
+语义: temp <- src1 - SignExtend(src2)
 
 如SUB指令一样设置标志位CF, OF, SF, ZF, AF, PF，但不产生计算结果
 
@@ -669,13 +669,13 @@ CMP指令用于为条件转移指令设置标志位
 
 ## Jcc指令
 
-Jcc：根据条件码转移
+Jcc: 根据条件码转移
 
-指令格式：
+指令格式: 
 
     Jcc dest
 
-语义：若条件码满足，则转移到目的标号dest的地址，若条件码不满足，则执行Jcc之后的第一条指令
+语义: 若条件码满足，则转移到目的标号dest的地址，若条件码不满足，则执行Jcc之后的第一条指令
 
 (cc: condition code)
 
@@ -750,22 +750,22 @@ Jump if ECX =0
 
 ```
 
-## 数字标号（AT&T）
+## 数字标号 (AT&T) 
 
 对于局部标号N，如果N是一个正整数，则标号N可以在同一段代码中多次出现
 
-* Nb：紧邻的后一个标号N，’b’表示backward
-* Nf： 紧邻的前一个标号N，’f’表示forward
+* Nb: 紧邻的后一个标号N，’b’表示backward
+* Nf:  紧邻的前一个标号N，’f’表示forward
 
-## JMP：无条件转移指令
+## JMP: 无条件转移指令
 
-JMP：无条件转移
+JMP: 无条件转移
 
-指令格式：
+指令格式: 
 
     JMP dest
 
-语义：跳转到dest所指的目的地址
+语义: 跳转到dest所指的目的地址
 
 可以使用:
 * 相对地址跳转
@@ -859,13 +859,13 @@ GCC将循环先转成GOTO的形式;
 
 ## CMOVcc指令: 条件传输指令(Jcc+MOV)
 
-CMOVcc：根据条件码进行数据传输
+CMOVcc: 根据条件码进行数据传输
 
-指令格式：
+指令格式: 
 
     CMOVcc dest, src
 
-语义：若条件码满足，则dest = src
+语义: 若条件码满足，则dest = src
 
 CMOVcc指令用于消除赋值类的条件分支, 相当于 Jcc+MOVE指令的组合, 从P6架构的处理器开始引入
 
@@ -976,6 +976,33 @@ X86-Linux-32的程序栈:
 
 当前栈帧的基址(底部)保存上一个栈帧的基址.
 
+Remark: 栈帧的分配是按照以下方式进行的, 以长为16的栈帧为例:
+
+```x86asm
+push %ebp
+mov %esp,%ebp
+sub $16,%esp
+
+# do Sth
+
+leave (%rsp=%rbp; %rbp=pop())
+ret
+```
+
+?????
+
+分配为:
+
+地址|对应的寄存器|对应的功能
+-|-|-
+88|%ebp+8|之前栈帧中被push的部分, 作为传入的参数
+84|%ebp+4|函数调用时被push的%ebp的值
+84-81|%ebp-->84:(%esp+16)-(%esp+13)|当前栈帧的基址, 可以用来保存局部变量
+80-77|(%esp+12)-(%esp+9)|局部变量
+76-73|(%esp+8)-(%esp+5)|局部变量
+72-69|(%esp+4)-(%esp+1)|局部变量
+68|%esp所指向的位置|(push的下一个写入位置)将来写入子程序调用所需的参数
+
 ## 过程调用指令
 
 * CALL
@@ -986,18 +1013,18 @@ X86-Linux-32的程序栈:
 
 ## CALL
 
-CALL：过程调用
+CALL: 过程调用
 
-指令格式：
+指令格式: 
 
     CALL dest
 
-语义：将下一条指令的地址压入栈，跳转到dest所指示的目标地址执行
+语义: 将下一条指令的地址压入栈，跳转到dest所指示的目标地址执行
 
 等价于:
 
-    push(eip)；eip = eip+dest（相对地址调用）
-    push(eip)；eip = dest（绝对地址调用）
+    push(eip)；eip = eip+dest (相对地址调用) 
+    push(eip)；eip = dest (绝对地址调用) 
 
 注意:
 
@@ -1005,51 +1032,51 @@ CALL：过程调用
     JMP *%eax
 ## RET
 
-RET：从过程返回
+RET: 从过程返回
 
-指令格式：
+指令格式: 
 
     RET(只返回)
     RET src(返回加退栈:单位为字节,可用于返回时清除形参占据的栈空间)
 
-语义：从栈中弹出返回地址，即eip <- pop()；如果有立即数操作数src，则再退栈src字节，即esp = esp + src；跳到返回地址执行。
+语义: 从栈中弹出返回地址，即eip <- pop()；如果有立即数操作数src，则再退栈src字节，即esp = esp + src；跳到返回地址执行。
 
 ## PUSH
 
-PUSH：压栈
+PUSH: 压栈
 
-指令格式：
+指令格式: 
 
     PUSH src
 
-语义：栈指针下移一个单元，将操作数src的内容压入该栈单元中
+语义: 栈指针下移一个单元，将操作数src的内容压入该栈单元中
 
 对象: 立即数, 寄存器, 内存单元数据, 段寄存器内容
 
 **补充: 注意在64位下push,pop操作限制于64位, ex: push %rsi**
 ## POP
 
-POP：退栈
+POP: 退栈
 
-指令格式：
+指令格式: 
 
     POP dest
 
-语义：将栈顶单元的内容传输到dest所在单元，栈指针上移一个单元
+语义: 将栈顶单元的内容传输到dest所在单元，栈指针上移一个单元
 
 对象: 寄存器, 内存单元数据, 段寄存器内容(除cs)
 
-注意：POP指令不能操作cs段寄存器
+注意: POP指令不能操作cs段寄存器
 
 ## LEAVE
 
-LEAVE：释放当前栈帧
+LEAVE: 释放当前栈帧
 
-指令格式：
+指令格式: 
 
     LEAVE
 
-语义：把ebp寄存器的值传输给esp，然后从栈顶单元恢复ebp寄存器的值。即esp = ebp； ebp = pop()
+语义: 把ebp寄存器的值传输给esp，然后从栈顶单元恢复ebp寄存器的值。即esp = ebp； ebp = pop()
 
 X86-Linux环境中GCC只使用LEAVE指令，不使用配套的ENTER指令.
 
@@ -1179,7 +1206,7 @@ print_s:
 * rsp是栈顶指针，rbp是栈桢指针
 
 栈桢结构
-* 栈帧主体部分16（32，64）字节对齐
+* 栈帧主体部分16 (32，64) 字节对齐
 * 栈单元大小是64位
 * Red zone区域可以用于临时数据
 
@@ -1197,3 +1224,520 @@ print_s:
 ## registers
 
 ![regs.png](regs.png)
+
+## HW4
+
+```x86asm
+.section .data
+array:
+  .int 6, -5, 3, 1, -8, 7, 0, 2, 4, 9
+string:
+  .ascii "012345678901234567890123456789"
+mbreakpoint:
+  .ascii "breakpoint\n"  
+format: 
+   .asciz "%d\n" 
+.section .text
+.globl _start
+
+#进行插入排序
+_start:
+    mov $array,%rax
+    mov $40,%rbx
+    call sort
+    call ints_to_string    
+    call return
+
+    mov %rax,%r9
+    add %rbx,%r9
+
+    mov %rax,%rcx
+    add $4,%rcx #    int i;
+    #for(i = 1; i<n; i++)
+    for_sort:
+    cmp %rcx,%r9
+    je end
+    
+    movl (%ecx),%edx #tmp = a[i];
+    movl %ecx,%esi
+    sub $4,%esi #j = i - 1;
+
+    #while loop_ints_to_string
+    loop_while:
+        cmp %eax,%esi
+        jb end_while
+        cmp %edx,(%esi)
+        jng end_while
+
+        #temp reg %edi
+
+        movl (%esi),%edi
+        movl %edi,4(%esi)
+
+        sub $4,%esi
+        call debug
+        jmp loop_while
+    end_while:
+    call breakpoint
+    add $4,%esi    #a[j+1]=tmp;
+    mov %edx,(%esi)
+
+    #for loop    
+    add $4,%rcx
+    jmp for_sort
+
+    end:
+
+    ret
+
+
+ints_to_string:
+    #%eax,%ebx,%ecx,%edx is used.
+    mov $10,%rsi
+    mov $array,%eax
+    mov $string,%ecx
+    mov $0,%edx
+
+    loop_ints_to_string:
+    cmp $0,%rsi
+    je end_ints_to_string
+
+    call int_to_string
+    add $4,%eax
+    dec %rsi
+
+    jmp loop_ints_to_string
+
+    end_ints_to_string:
+    call add_endl
+    call printints
+    
+    ret
+
+
+return:
+    mov $60, %rax
+    mov $0, %rdi
+    syscall
+
+breakpoint:
+    push %rax
+    push %rdi
+    push %rsi
+    push %rdx
+    push %rcx
+    push %rbx
+    push %r8
+    push %r9
+
+    mov $1, %rax
+    mov $1, %rdi
+    mov $mbreakpoint, %rsi
+    mov $11, %edx
+    syscall
+
+    pop %r9
+    pop %r8
+    pop %rbx
+    pop %rcx
+    pop %rdx
+    pop %rsi
+    pop %rdi
+    pop %rax
+    
+    ret
+
+printints:
+# 参数: 将长度传入%edx中
+    push %rax
+    push %rdi
+    push %rsi
+    push %rdx
+    push %rcx
+    push %rbx
+
+    mov $1, %rax
+    mov $1, %rdi
+    mov $string, %rsi
+    #mov $11, %edx
+    syscall
+
+    pop %rbx
+    pop %rcx
+    pop %rdx
+    pop %rsi
+    pop %rdi
+    pop %rax
+    
+    ret
+
+int_to_string:
+# 使用寄存器%edx来累计字符串长度
+# 当前int地址用%eax传入
+# 待转化的数放入%ebx
+# 目的字符串放入%ecx
+
+    movl (%eax),%ebx
+    cmpl $0,%ebx
+    jnl not_negative
+    
+    movb $'-',(%ecx)
+    inc %ecx
+    inc %edx
+    mov %rbx,%rdi
+    mov $0,%rbx
+    sub %rdi,%rbx #取反, 变成正数
+
+    not_negative:
+
+    addl $48,%ebx
+    movb %bl,(%ecx)
+    inc %ecx
+    inc %edx
+
+    #add space
+    movb $' ',(%ecx)
+    inc %ecx
+    inc %edx
+
+    ret
+
+add_endl:
+# 使用寄存器%edx来累计字符串长度
+# 目的字符串放入%ecx
+
+    movb $'\n',(%ecx)
+    inc %ecx
+    inc %edx
+
+    ret
+
+debug:
+    push %rax
+    push %rdi
+    push %rsi
+    push %rdx
+    push %rcx
+    push %rbx
+    push %r8
+    push %r9
+
+    call ints_to_string
+
+    pop %r9
+    pop %r8
+    pop %rbx
+    pop %rcx
+    pop %rdx
+    pop %rsi
+    pop %rdi
+    pop %rax
+    
+    ret
+
+
+#output
+	#movl	$4, %eax
+	#movl	$1, %ebx
+	#movl	$iostring, %ecx
+    #movl	$16, %edx
+    
+
+	#int	$0x80
+#exit
+	#movl	$1, %eax
+	#movl	$0, %ebx
+	#int	$0x80
+
+```
+
+***
+
+## 移位指令
+
+* SHL: 逻辑左移
+* SHR: 逻辑右移
+* SAL: 算术左移
+* SAR: 算术右移
+* SHLD: 双精度左移(intel?)
+* SHRD: 双精度右移(intel?)
+
+## SHL/SAL: 逻辑左移/算术左移
+
+指令格式 (Intel)  : 
+
+    SHL dest, count 
+    
+    SAL dest, count
+
+count 可取 0-31 imm8, 或者使用寄存器的值, dest可以是寄存器或内存单元
+
+语义: 将dest操作数向左移动count位，CF位保存最后移出的一位，右侧低位补count个0
+
+标志位影响
+
+* 当count = 0时，所有标志位不受影响
+* 当count > 0时，CF位等于最后移出的一位，SF、ZF、PF根据移位结果设置，AF未定义
+* 当count = 1时，如果移位前dest的最高2位相同，OF = 0，否则OF = 1；当count > 1时，OF未定义
+
+## SHR: 逻辑右移
+
+指令格式 (Intel)  : 
+
+    SHR dest, count 
+
+count 可取 0-31 imm8, 或者使用寄存器的值, dest可以是寄存器或内存单元
+
+语义: 将dest操作数向右移动count位，CF位保存最后移出的一位，左侧高位补count个0
+
+标志位影响
+* 当count = 0时，所有标志位不受影响
+* 当count > 0时，CF位等于最后移出的一位，SF、ZF、PF根据移位结果设置，AF未定义
+* 当count = 1时，OF = 移位前dest的最高位；当count > 1时，OF未定义
+
+## SAR: 算术右移
+
+指令格式 (Intel)  : 
+
+    SAR dest, count 
+
+
+语义: 将dest操作数向右移动count位，CF位保存最后移出的一位，左侧高位补count个原符号位
+
+标志位影响
+* 当count = 0时，所有标志位不受影响
+* 当count > 0时，CF位等于最后移出的一位，SF、ZF、PF根据移位结果设置，AF未定义
+* 当count = 1时，OF = 0；当count > 1时，OF未定义
+
+## SHLD: 双精度左移(编译器可能不能实现)
+指令格式 (Intel)  : 
+
+    SHLD dest, src, count
+
+语义: 将dest操作数向左移动count位，CF位保存最后移出的一位，右侧低位补充来自src的count个高位
+
+注意: imm8或者cl寄存器的内容只使用低5位，即移位的位数是0~31, src操作数只能是寄存器
+
+
+标志位影响
+* 当count = 0时，所有标志位不受影响
+* 当count > 0时，CF位等于最后移出的一位，SF、ZF、PF根据移位结果设置，AF未定义
+* 当count = 1时，如果移位前后dest的符号位发生变化，OF = 1，否则OF = 0；当count > 1时，OF未定义
+
+## SHRD: 双精度右移(编译器可能不能实现)
+
+指令格式 (Intel)  : 
+
+    SHRD dest, src, count
+
+语义: 将dest操作数向右移动count位，CF位保存最后移出的一位，左侧高位补充来自src的count个低位
+
+注意: imm8或者cl寄存器的内容只使用低5位，即移位的位数是0~31, src操作数只能是寄存器
+
+标志位影响
+* 当count = 0时，所有标志位不受影响
+* 当count > 0时，CF位等于最后移出的一位，SF、ZF、PF根据移位结果设置，AF未定义
+* 当count = 1时，如果移位前后dest符号位发生变化，OF = 1，否则OF = 0；当count > 1时，OF未定义
+
+## SHLD/SHRD的AT&T指令格式
+
+    shldx	count, src, dest
+    
+    shrdx	count, src, dest
+
+指令后缀x可要可不要, 因为src是寄存器，可确定指令的操作数大小
+
+## 乘除指令
+
+* MUL
+* DIV
+* IMUL
+* IDIV
+* CBW/CWDE
+* CWD/CDQ
+
+## MUL: 无符号数乘法
+
+指令格式 (Intel)  : 
+
+    MUL src
+
+语义: **src与隐含操作数累加器 (AL/AX/EAX) 相乘，结果存放在 (AX/DX:AX/EDX:EAX) ，其中高位部分存放在AH/DX/EDX**
+
+注意: 这里的高位结果可能在**DX, EDX**, src来自内存, 寄存器
+
+标志位
+
+* 如果高位部分为0，CF=OF=0，否则，CF=OF=1
+* SF、ZF、PF、AF未定义
+
+## DIV: 无符号数除法
+
+指令格式 (Intel)  : 
+
+    DIV src
+
+语义: 隐含dest (AX/DX:AX/EDX:EAX) 除以src，结果存放在dest ( AH:AL/DX:AX/EDX:EAX ) ，其中**商放在低位寄存器，余数放在高位寄存器**
+
+注意: 8位除法被除数是16位，16位除法被除数是32位，32位除法被除数是64位, 当不能整除时，商的截取趋向0
+
+
+除法错例外 (#DE) 
+
+除数为0或者商的大小超过低位寄存器的大小
+
+标志位
+
+CF、OF、SF、ZF、PF、AF未定义
+
+## IMUL: 有符号数乘法
+
+指令格式 (Intel) 
+
+    imul src
+    imul dest, src
+    imul dest, src1, src2
+
+语义:
+* 单操作数:  src(r/m)与隐含操作数累加器 (AL/AX/EAX) 相乘，结果存放在 (AX/DX:AX/EDX:EAX) ，其中高位部分存放在AH/DX/EDX
+* 双操作数: src(r/m)与dest相乘，结果**截断后存放dest**
+* 三操作数: src1(r/m)与src2(imm)相乘，结果**截断后存放dest**
+
+注意: dest操作数是寄存器
+
+
+标志位:
+* SF=MSB (dest) (有时为未定义)
+* ZF、PF、AF未定义
+* 对于单操作数，如果高位寄存器的内容不是低位寄存器结果的符号扩展，则CF = OF =1， 否则CF = OF = 0；
+* 对于双操作数/三操作数，如果中间计算结果不是dest存放结果的符号扩展，则CF = OF =1，否则CF = OF = 0
+
+## IDIV: 有符号数除法
+
+指令格式 (Intel) : 
+
+    IDIV src
+
+语义: 隐含dest (AX/DX:AX/EDX:EAX) 除以src，结果存放在dest ( AH:AL/DX:AX/EDX:EAX ) ，其中商放在低位寄存器，余数放在高位寄存器
+
+注意: 
+* 8位除法被除数是16位，16位除法被除数是32位，32位除法被除数是64位
+* 当不能整除时，商的截取趋向0
+* 如-5 ÷3，商=-1， 余数=-2
+
+除法错例外 (#DE) 
+
+* 除数为0或者商的大小超过低位寄存器可表示的有符号数的大小
+
+标志位
+
+* CF、OF、SF、ZF、PF、AF未定义
+
+## CBW：字节扩展为字 (change byte to word)
+
+指令格式(Intel)：
+
+    CBW
+
+语义：将隐含源操作数**AL**的字节数据符号扩展为隐含目的操作数**AX**的字数据
+
+AX<- signed-extend(AL)
+
+指令格式(AT&T)：CBTW
+
+as汇编器也能正确识别CBW
+
+## CWDE：字扩展为双字 (change word to long)
+
+指令格式（Intel）：
+
+    CWDE
+
+语义：将隐含源操作数AX的字数据符号扩展为隐含目的操作数**EAX**的双字数据(仅仅扩宽)
+
+EAX<- signed-extend(AX)
+
+指令格式(AT&T)：CWTL
+
+as汇编器也能正确识别CWDE
+
+## CWD：字扩展为双字
+
+指令格式（Intel）：
+
+    CWD
+
+语义：将隐含源操作数AX的字数据符号扩展为隐含目的操作数**DX：AX**的双字数据(除法可用)
+
+DX：AX<- signed-extend(AX)
+
+指令格式（AT&T）：CWTD
+
+as汇编器也能正确识别CWD
+
+## 杂项指令
+
+## LEA：装载有效地址
+
+指令格式（Intel） ：
+
+    LEA dest(r16/r32),src(m)
+
+语义：dest <- effective address(src)，src是内存操作数，dest是寄存器操作数. (装载内存操作数的有效地址)
+
+注意:
+* 若lea r16,m中m的有效地址是32位，则截取低16位；
+* 若lea r32,m中m的有效地址是16位，则高16位0扩展
+
+
+LEA指令常被用作计算指令
+
+ex:
+
+```x86asm
+lea    0x20(%ebx),%eax
+lea    0x4(%edx,%esi,2),%cx
+```
+
+
+## NOP：空操作指令
+
+指令格式：
+
+    NOP / NOP src(占位用)
+
+语义：空操作，主要用于占据指令流的位置。无操作数的NOP是单字节指令，带src操作数的NOP指令用于产生多字节指令(仅仅占位没有实际意义)
+
+
+注意:
+* 采用复杂寻址方式的内存操作数，可形成9字节的NOP指令
+* 1字节前缀66H，2字节指令码，1字节ModR/m，1字节SIB，4字节displacement
+
+```x86asm
+nop
+nopl   0x4(%ebx)
+nopw 0x12345678(%edx,%esi,2) 
+nopw(2byte) (4bytemax)(1byte,1byte,1byte) 
+```
+
+## 字节指令
+
+## SETcc：根据条件码设置字节操作数
+
+指令格式（Intel） ：
+
+    SETcc dest(r/m8)
+
+    SET(condition code) dest
+
+语义：若条件码满足，则dest = 1，否则dest = 0
+
+`SETcc`指令用于消除逻辑赋值类的条件分支, 相当于`Jcc+MOV`指令的组合, MOV赋值的结果是0/1
+
+注意：
+
+* SETcc是字节操作指令，**操作数是8位**
+
+
+
+
