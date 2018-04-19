@@ -1738,6 +1738,40 @@ nopw(2byte) (4bytemax)(1byte,1byte,1byte)
 
 * SETcc是字节操作指令，**操作数是8位**
 
+## 汇编的gdb调试相关
 
+ref: https://blog.csdn.net/hejinjing_tom_com/article/details/26704487
 
+执行: 单指令。
 
+```
+ni
+si
+```
+
+用 
+
+    p $eax
+    p $edi 
+    
+等可以查看寄存器.
+
+在gdb中 敲入help layout 
+
+(gdb) help layout
+Change the layout of windows.
+Usage: layout prev | next | <layout_name> 
+Layout names are:
+   src   : Displays source and command windows.
+   asm   : Displays disassembly and command windows.
+   split : Displays source, disassembly and command windows.
+   regs  : Displays register window. If existing layout
+           is source/command or assembly/command, the 
+           register window is displayed. If the
+           source/assembly/command (split) is displayed, 
+           the register window is displayed with 
+           the window that has current logical focus.
+
+然后你可以用layout 去调试,很方便, 例如 layout asm.
+
+建议使用`layout asm`+`layout regs`
