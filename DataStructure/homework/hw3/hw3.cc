@@ -377,14 +377,32 @@ int ShowKLS(KLS src)
     return -1;
 }
 
+int ShowNextKLS(KLS src)
+{
+    if (src && src->next)
+    {
+        src = src->next;
+
+        while (src)
+        {
+            printf("%d ", src->kmp_next);
+            src = src->next;
+        }
+        printf("\n");
+        return 0;
+    }
+    return -1;
+}
+
 int InitNext(KLS src)
 {
     KLS i, j;
     if (!i)
         return -1;
     i = src->next;
+    i->kmp_next = src;
     j = src;
-    while (i)
+    while (i->next)
     {
         if (j == src || j->data == i->data)
         {
@@ -411,9 +429,9 @@ int InitNext(KLS src)
 int LengthKLS(KLS src)
 {
     int cnt = 0;
-    while (src->next)
+    while (src = src->next)
         cnt++;
-    return cnt;
+    return cnt - 1;
 }
 
 int KLSkmp_rint(KLS src, KLS sub)
@@ -422,17 +440,19 @@ int KLSkmp_rint(KLS src, KLS sub)
     int cnt = 0;
     KLS i = src->next;
     KLS j = sub;
-    while(i!=nullptr)
+    while (i != nullptr)
     {
-        if(j==sub||i->data==j->data)
+        if (j == sub || i->data == j->data)
         {
-            i=i->next;
+            i = i->next;
             ++cnt;
             j = j->next;
-            if(j->data==0)
+            if (j->data == 0)
                 return cnt - lensub;
-        }else{
-            j = j->next;
+        }
+        else
+        {
+            j = j->kmp_next;
         }
     }
     return -1;
@@ -447,20 +467,128 @@ struct result_4_30
     char *str;
 };
 
-struct result_4_30 A_4_30_trival(char* src)
+int FindCommon(const char *src, int a, int b)
 {
-    int len = strlen(src);
-    
+    if (a == b)
+        return -1;
+    int cnt = 0;
+    while (src[a] == src[b] && src[a] && src[b])
+    {
+        ++cnt;
+        ++a;
+        ++b;
+    }
+    return cnt;
 }
 
-int
-main()
+struct result_4_30 A_4_30_trival(const char *src) //暴力遍历 复杂度O(n^3)
 {
+    int max = 0;
+    int temp = 0;
+    int maxposition = -1;
+    int len = std::strlen(src);
+    for (int a = 0; a < len; a++)
+    {
+        for (int b = a; b < len; b++)
+        {
+            temp = FindCommon(src, a, b);
+            if (temp > max)
+            {
+                max = temp;
+                maxposition = a;
+            }
+        }
+    }
+    struct result_4_30 res;
+    if (maxposition != -1)
+    {
+        res.posi = maxposition;
+        res.str = new char[max + 1];
+        memcpy(res.str, src + maxposition, max);
+        res.str[maxposition + 1] = 0;
+        return res;
+    }
+    res.posi = maxposition;
+    return res;
+}
+
+//O(n^2*logn)原理:后缀排序->QS->相邻两者比较
+//Using STL
+#include <algorithm>
+
+int Cmphead(string a,string b){
+    int cnt = 0;
+    while(a[cnt]==b[cnt]&&a[cnt]!=0&&b[cnt]!=0){
+        cnt++;
+    }
+    return cnt;
+}
+
+struct result_4_30 A_4_30_bfqs(string src)
+{
+    int len = src.length();
+    vector<string> v;
+    string tmp;
+    for (int i = 0; i < len; i++) //(n^2)
+    {
+        tmp.clear();
+        for (int k = i; k < len; k++)
+        {
+            tmp += src[k];
+        }
+        v.push_back(tmp);
+    }
+    int max = 0;
+    string longest;
+    sort(v.begin(), v.end()); //(n^2*logn)
+    string s1 = 0;
+    string s2 = 0;
+    int p = 0;
+    while (!v.empty())
+    {
+        s1 = s2;
+        s2 = v.back();
+        v.pop_back();
+        p = Cmphead(s1, s2);
+        if (p > max)
+        {
+            max = p;
+            longest = s2;
+        }
+    }
+    //(n^2)
+
+    struct result_4_30 res;
+    res.str = s2.data();
+    res.str[max] = 0;
+    return res;
+}
+
+int main()
+{
+    cout << FindCommon("12341230", 0, 4) << endl;
+    struct result_4_30 r30 = A_4_30_trival("12341234512345");
+    cout << r30.posi << endl
+         << r30.str << endl;
+
+    cout << "---------------------------" << endl;
+
+    KLS m = InitKLS("12311123");
+    ShowKLS(m);
+    InitNext(m);
+    ShowNextKLS(m);
+    KLS r = InitKLS("12312312311123000000");
+    cout << KLSkmp_rint(r, m) << endl;
+
+    cout << "---------------------------" << endl;
+
     StringType a;
     StrAssign(a, "123444456789999");
     cout << StrLength(a) << endl
          << Reverse(a) << endl
          << a << endl;
+
+    cout << "---------------------------" << endl;
 
     StringType b;
     StrAssign(b, "23456");
@@ -470,6 +598,8 @@ main()
     {
         cout << result.a[i] << endl;
     }
+
+    cout << "---------------------------" << endl;
 
     BS p = SetupBS("1234567890123456789012345678901");
     ShowBS(p);
