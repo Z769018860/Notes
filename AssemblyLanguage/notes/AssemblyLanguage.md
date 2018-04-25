@@ -1775,3 +1775,525 @@ Layout names are:
 然后你可以用layout 去调试,很方便, 例如 layout asm.
 
 建议使用`layout asm`+`layout regs`
+
+```x86asm
+#编写一个符合x86-linux-32 ABI的子过程
+#输入参数： 32位有符号整数
+#返回值：无
+#功能：将输入的32位有符号整数以16进制字符串形式在终端输出，输出格式为：
+#[-]0xhhhhhhhh
+#其中，hhhhhhhh是16进制的绝对值，并消除前导0
+#如，
+#输入：0x0812abcd， 输出：0x812abcd
+#输入：0x80001234， 输出：-0x7fffedcc
+
+### X86-Linux-32 abi
+
+#参数与返回值约定:
+#* 参数通过栈传递
+#* 参数的传递顺序是从右向左
+#* 参数由调用者维护，属于调用者栈帧
+#* 返回值存放在的eax寄存器
+#* 返回地址存放调用者的栈桢顶部
+#
+#寄存器使用约定
+#* eax保存返回值
+#* 调用者保存eax、edx、ecx寄存器
+#* 被调用者自由使用
+#* 被调用者保存ebx、esi、edi寄存器
+#* 调用者自由使用
+#* ebp和esp是栈桢指针和栈顶指针
+#
+#栈桢的约定:
+#
+#栈桢的布局
+#1. ebp旧值寄存器
+#1. 其他要保存的寄存器、局部变量
+#1. 形参
+#1. 返回地址
+#
+#栈帧主体部分以16字节为单位分配
+#
+#栈单元大小是32位
+#
+#"被调用者保存, 调用者自由使用"表示: 调用之后不改变这些寄存器的值.
+
+#hw5.S
+
+.section .data
+
+    var: .int 0x80001234
+    var1: .int 0x00abcde1
+    var2: .int 0xffffffff
+    var3: .int 0xfffffffe
+    var4: .int 0xffffffff
+    outputbuff: .ascii "000000000000012345678901234567890"
+    mbreakpoint: .ascii "breakpoint\n"
+
+.section .text
+.globl _start
+
+_start:
+
+    pushl $outputbuff
+    pushl $var
+    
+    call printhex
+    mov $outputbuff,%ecx
+    #mov $10,%edx
+    call printf
+    #call printbuff
+    mov   $1, %eax
+    mov   $0, %ebx
+    int   $0x80
+
+
+
+
+
+.type printf, @function
+printf:
+    push %ebp
+    push %esi
+    push %edi
+    movl $4, %eax
+    movl $1, %ebx
+    #movl	$outputbuff, %ecx
+    #movl	$16, %edx
+    int	$0x80
+    pop %edi
+    pop %esi
+    pop %ebp
+    ret
+
+.type printhex, @function
+printhex:
+#参数: push(缓冲区地址)
+#参数: push(原数组地址)
+
+#4(%ebp):原地址
+#8(%esp):缓冲区地址
+
+#%eax:元数据复制,除法用
+#%ebx:当前写入地址计数
+#%ecx:循环计数器
+#%edx:商
+#%esi:缓冲区起始地址
+#%edi:临时变量
+
+    push %ebp
+    mov %esp,%ebp
+    sub $16,%esp
+    push %ebx
+
+    mov 12(%ebp),%esi
+    mov 8(%ebp),%edi
+    mov (%edi),%eax
+
+    movb $'0',1(%esi)
+    movb $'x',2(%esi)
+    
+    #mov $0,%ebx
+    cmpl $0,%eax
+    jng negative
+    
+    positive:
+        movb $'+',(%esi)
+        jmp endif
+    negative:
+        movb $'-',(%esi)
+        movl $0,%ebx
+        subl %eax,%ebx
+        movl %ebx,%eax
+	jmp endif
+
+    endif:
+        mov $0,%ecx
+        mov %eax,%edi
+        
+	
+
+    loop1:
+
+        cmp $9,%cl
+        je endloop1
+
+	movb %al,%bl
+        andb $15,%bl
+
+        inc %cl #ch:counter
+        shrl $4,%eax
+        test %bl,%bl
+        jz loop1
+        
+        mov %cl,%ch #ch:last counter have non 0 byte
+        jmp loop1
+        
+    endloop1:
+
+        mov %ch,%cl
+        mov $0,%ch
+        mov %edi,%eax #recover %eax
+        movb $0,3(%esi,%ecx) # write'\0'
+        mov %ecx,%edx
+
+    loop2:
+
+    if1:
+	mov $15,%ebx
+	andb %al,%bl
+	shrl $4,%eax
+        cmpb $10,%bl
+        jnb alpha
+
+        number:
+        addb $48,%bl
+        jmp endif1
+
+        alpha:
+        addb $55,%bl
+
+        endif1:
+
+        movb %bl,2(%esi,%ecx)
+        #call printbuff
+        loop loop2
+
+    addl $4,%edx
+    pop %ebx
+    leave
+    ret
+
+breakpoint:
+
+    push %eax
+    push %ebx
+    push %ecx
+    push %edx
+    push %esi
+    push %edi
+	
+    movl $4, %eax
+    movl $1, %ebx
+    movl $mbreakpoint, %ecx
+    movl $12, %edx
+    int	$0x80
+	
+    pop %edi
+    pop %esi
+    pop %edx
+    pop %ecx
+    pop %ebx
+    pop %eax
+    
+    ret
+
+printbuff:
+
+    push %eax
+    push %ebx
+    push %ecx
+    push %edx
+    push %esi
+    push %edi
+	
+    movl $4, %eax
+    movl $1, %ebx
+    movl $outputbuff, %ecx
+    movl $12, %edx
+    int	$0x80
+	
+    pop %edi
+    pop %esi
+    pop %edx
+    pop %ecx
+    pop %ebx
+    pop %eax
+    
+    ret
+
+```
+
+***
+
+## X87浮点指令
+
+X87浮点指令助记符
+
+* 指令助记符以字母F开头
+* 指令助记符的第二个字母指明内存操作数类型
+* B = bcd
+* I = integer
+* no letter: floating point
+
+如
+
+* FBLD	load binary coded decimal
+* FISTP	store integer and pop stack
+* FMUL	multiply floating-point operands
+
+X87浮点指令操作数
+
+* 操作数个数：0, 1, 2
+* 没有立即数操作数
+* 没有通用寄存器操作数 (EAX, EBX, ...)
+* 2个操作数时至少1个操作数为浮点寄存器
+
+## 浮点数的定义
+
+```x86asm
+.section	.data
+	floatvar:	.float 1
+	doublevar: .double 1
+	tfloatvar: .tfloat	1
+```
+
+## FLD：Load floating point value
+
+指令格式（Intel）： 
+
+    FLD	src(m32fp/m64fp/m80fp/st(i))
+
+st(i)代表浮点寄存器
+
+语义：将src单元的值压入浮点寄存器栈，并在入栈前转换为扩展双精度浮点值
+
+注意:压栈时栈顶指针减一，即TOP = TOP - 1
+
+## FST/FSTP：store floating point value
+
+指令格式（Intel）:
+
+    FST	dest(m32fp/m64fp/m80fp/st(i))
+    FSTP dest(m32fp/m64fp/m80fp/st(i))
+
+语义:
+
+* FST：将浮点栈顶寄存器ST(0)的值存入dest，并转换为dest指定的格式
+* FSTP：执行FST操作，Pop Stack
+
+注意:只有fstp指令可以在内存单元存入80位扩展双精度浮点值
+
+## FLDconst: Load Constant指令
+
+FLD1/FLDL2T/FLDL2E/FLDPI/FLDLG2/FLDLN2/FLDZ
+Load:  +1.0, log210, log2e, π, log102, loge2, +0.0
+
+无操作数, 将特定常数压入浮点寄存器栈
+
+## FXCH：交换浮点寄存器的内容(与st(0)交换)
+指令格式（Intel）:
+
+    FXCH ST(i)
+    FXCH
+
+语义：
+
+* FXCH ST(i)：交换ST(0)和ST(i)的内容
+* FXCH	：交换ST(0)和ST(1)的内容
+
+## FADD：浮点加
+指令格式（Intel）：
+
+    FADD src
+    FADD dest, src
+
+语义：
+* dest = dest + src
+* FADD src指令隐含的dest是浮点栈顶寄存器ST(0)
+
+注意:
+* 浮点运算指令的内存操作数没有扩展双精度浮点类型
+* FPU的内部格式都是扩展双精度浮点
+
+
+## FADDP：浮点加并退栈
+指令格式（Intel）： 
+
+    FADDP
+    FADDP ST(i), ST(0)
+
+语义：
+* FADDP	：ST(1) = ST(1) + ST(0)，Pop stack
+* FADDP ST(i), ST(0)： ST(i) = ST(i) + ST(0)，Pop Stack
+
+
+## FSUB/FSUBP: 浮点减指令
+指令格式：与FADD/FADDP类似
+
+语义：
+* dest = dest – src
+* FSUBP Pop Stack
+
+## FSUBR/FSUBRP: Reverse Subtract(Intel语法限定)
+
+指令格式：与FSUB/FSUBP类似
+
+语义：
+
+    dest = src – dest，**即被减数是src**
+
+* FSUBRP Pop Stack
+* Reverse的目的是减少一条数据传输指令
+
+AT&T指令助记符不同:
+
+只要出现ST(0)作为减数, 就使用r
+
+ST(0)为减数表示Reverse减法，如ST(i) – ST(0)
+
+```x86asm
+.section .data
+   	fvar1: .float 1
+   	dvar2: .double  1
+.section .text
+	…
+	fsubrs  fvar1		#ST(0) = fvar1 – ST(0)
+  	fsubrl  dvar2		#ST(0) = dvar2 – ST(0)
+ 	fsubr %st(1), %st	#ST(0) = ST(1) – ST(0)
+  	fsubr %st, %st(1)	#ST(1) = ST(1) – ST(0)
+	…
+  	fsubs  fvar1		#ST(0) = ST(0) – fvar1
+  	fsubl  dvar2		#ST(0) = ST(0) – dvar2
+  	fsub  %st(1), %st	#ST(0) = ST(0) – ST(1)
+	fsub  %st, %st(1)	#ST(1) = ST(0) – ST(1)
+```
+
+## FMUL/FMULP: 浮点乘
+
+指令格式：与FADD/FADDP相似
+
+语义：
+* dest = dest * src
+* FMULP Pop Stack
+
+## FDIV/FDIVP: 浮点除
+
+指令格式：与FSUB/FSUBP相似
+
+语义：
+* dest = dest / src
+* FDIVP Pop Stack
+
+## FDIVR/FDIVRP: Reverse Divide
+
+指令格式：与FSUBR/FSUBRP相似
+
+语义： 
+* dest = src / dest
+* FDIVRP Pop Stack
+
+## FCH：改变st(0)符号
+
+指令格式：
+    FCH
+
+语义：ST(0) = - ST(0)
+
+## FCOMI/FCOMIP/FUCOMI/FUCOMIP
+
+浮点比较并设置EFLAGS标志
+
+指令格式（Intel）：
+
+    FCOMI	ST, ST(i)
+    FCOMIP	ST, ST(i)
+    FUCOMI	ST, ST(i)
+    FUCOMIP	ST, ST(i)
+
+语义：	
+* 比较ST(0)和ST(i)，根据比较结果设置ZF、PF和CF，OF = AF = SF =0
+* 比较有4种结果：大于，小于，等于，及Unordered
+* FCOMIP/FUCOMIP比较后退栈
+
+X87 FPU没有浮点转移指令，因此浮点Condition Code需要转存到通用寄存器进行比较后转移，或者转存到EFLAGS寄存器后再执行转移
+
+## FCMOVcc
+
+FCMOVcc cc-list:
+
+* Below
+* Equal
+* Not
+* Unordered
+
+## 浮点相关的ABI
+
+* 参数通过栈传递
+* 返回值ST(0),(ST(1))
+* 寄存器无需保存:本身就是栈的形式
+
+浮点运算子程序:
+
+pop操作至少比load操作数少1;
+
+## SSE2标量浮点指令(x64对应)
+
+SSE2标量浮点指令
+
+数据传输指令
+
+    MOVSS、MOVSD
+
+运算指令
+
+    ADDSS、SUBSS、MULSS、DIVSS、SQRTSS、MINSS、MAXSS
+    ADDSD、SUBSD、MULSD、DIVSD、SQRTSD、MINSD、MAXSD
+
+比较指令
+
+    COMSS、COMISS、UCOMISS
+
+转换指令
+
+    CVTSS2SD、CVTSD2SS
+    CVTSD2SI、CVTSI2SD、CVTTSD2SI
+    CVTSS2SI、CVTSI2SS、CVTTSS2SI
+
+## MOVSD：Move Scalar Double-Precision Floating-Point Value
+指令格式（Intel）
+MOVSD xmm1, xmm2/m64
+MOVSD xmm2/m64, xmm1
+语义
+Move scalar double-precision floating-point value between xmm2/m64 and xmm1 register.
+
+## MULSD：Multiply Scalar Double-Precision Floating-Point Values
+
+指令格式（Intel）
+MULSD xmm1, xmm2/m64
+语义
+Multiply the low double-precision floating-point value in xmm2/m64 by low double-precision floating-point value in xmm1
+
+## UCOMISD：Unordered Compare Scalar Double-Precision Floating-Point Values and Set EFLAGS
+
+指令格式（Intel）:
+
+    UCOMISD xmm1, xmm2/m64
+
+语义:
+
+an unordered compare of the double-precision floating-point values in the low quadwords of xmm1 and xmm2/m64, and sets the ZF, PF, and CF flags
+
+## CVTSS2SD：Convert Scalar Single-Precision FP Value to Scalar Double-Precision FP Value
+
+指令格式（Intel）:
+
+    CVTSS2SD xmm1, xmm2/m64
+
+语义
+
+Converts a single-precision floating-point value in the xmm2/m64 to a double-precision floating-point value in xmm1
+
+## gcc调用浮点指令
+
+```shell
+gcc -S -mfpmath=sse -msse -O2 fsub.c
+#Or
+gcc -S -march=pentium4 -mfpmath=sse -O2 fsub.c
+```
+
+## 在汇编中调用printf
+
+***
+
+```

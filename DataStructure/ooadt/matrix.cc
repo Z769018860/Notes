@@ -16,7 +16,6 @@
 #include "adt.h"
 #include "dbg.h"
 
-// const int MAX_ROW_NUM = 233;
 
 class Matrix
 {
@@ -345,7 +344,7 @@ class Matrix_Orthogonal : public Matrix
 public:
   Matrix_Orthogonal();
   Matrix_Orthogonal(const Matrix_Orthogonal &src);
-  Matrix_Orthogonal::Matrix_Orthogonal(int col, int row);
+  Matrix_Orthogonal(int col, int row);
   Matrix_Orthogonal(const int *src, int row, int col);
   Matrix_Orthogonal(std::vector<int> src);
   ~Matrix_Orthogonal();
@@ -446,11 +445,85 @@ int Matrix_Orthogonal::print()
   }
 }
 // virtual int updatecnt();
-Matrix_Orthogonal Matrix_Orthogonal::transpose_orthogonal() {}
-Matrix_Orthogonal operator+(Matrix_Orthogonal tgt, Matrix_Orthogonal tgt2);
-Matrix_Orthogonal operator-(Matrix_Orthogonal tgt, Matrix_Orthogonal tgt2);
-Matrix_Orthogonal operator*(Matrix_Orthogonal tgt, Matrix_Orthogonal tgt2);
-int Matrix_Orthogonal::findpoint(int col, int row) {} //get the value of a point;
+Matrix_Orthogonal Matrix_Orthogonal::transpose_orthogonal()
+{
+  row_ = rowhead_.size();
+  for (int i = 0; i < row_; i++)
+  {
+    auto tmp = rowhead_[i];
+    while (tmp)
+    {
+      auto ptr = tmp;
+      tmp = tmp->rownext;
+      auto tmpptr = ptr->colnext;
+      ptr->colnext = ptr->rownext;
+      ptr->rownext = tmpptr;
+    }
+  }
+
+  int t = col_;
+  col_ = row_;
+  row_ = t;
+
+  std::vector<pMON> swp(colhead_);
+  colhead_.assign(rowhead_.begin(), rowhead_.end());
+  rowhead_.assign(swp.begin(), swp.end());
+}
+
+Matrix_Orthogonal operator+(Matrix_Orthogonal tgt, Matrix_Orthogonal tgt2)
+{
+  Matrix_Orthogonal result(tgt);
+  for (int a = 0; a < result.col_;a++){
+    for (int b = 0;b<result.row_;b++){
+      result.set(a, b, tgt2.findpoint(a, b));
+    }
+  }
+  return result;
+}
+
+Matrix_Orthogonal
+operator-(Matrix_Orthogonal tgt, Matrix_Orthogonal tgt2)
+{
+  Matrix_Orthogonal result(tgt);
+  for (int a = 0; a < result.col_; a++)
+  {
+    for (int b = 0; b < result.row_; b++)
+    {
+      result.set(a, b, -tgt2.findpoint(a, b));
+    }
+  }
+  return result;
+}
+
+Matrix_Orthogonal operator*(Matrix_Orthogonal tgt, Matrix_Orthogonal tgt2)
+{
+  
+  Matrix_Orthogonal result(tgt.col_,tgt2.row_);
+  int ct = tgt.row_;
+  for (int a = 0; a < result.col_; a++)
+  {
+    for (int b = 0; b < result.row_; b++)
+    {
+      for (int c = 0; c < ct;c++)
+      {
+        result.set(a, b, tgt.findpoint(a, c) * tgt2.findpoint(c, b));
+      }
+    }
+  }
+  return result;
+}
+
+int Matrix_Orthogonal::findpoint(int col, int row) //get the value of a point;
+{
+  auto tmp = rowhead_[row];
+  while (tmp)
+  {
+    if (tmp->col == col)
+      return tmp->data;
+    tmp = tmp->rownext;
+  }
+  return 0;
+}
 
 int Matrix_Orthogonal::set(int col, int row, int data) //get a point to given value
 {
@@ -459,22 +532,65 @@ int Matrix_Orthogonal::set(int col, int row, int data) //get a point to given va
   pMON pnewnode = new struct MONode;
   pnewnode->col = col;
   pnewnode->row = row;
+  pnewnode->rownext = 0;
+  pnewnode->colnext = 0;
+  pnewnode->data = data;
 
+  if(data==0)
+    return 0;
   pMON temp = colhead_[col];
-  if (!colhead_[col])
+  if (!colhead_[col] || colhead_[col]->row > row)
   {
+    pnewnode->colnext = colhead_[col];
     colhead_[col] = pnewnode;
-    pnewnode->colnext = 0;
   }
   else
-    while (temp && temp->row < row)
+  {
     {
-      temp = temp->colnext;
+      while (temp->colnext && temp->colnext->row < row)
+      {
+        temp = temp->colnext;
+      }
+      if (temp->colnext->row == row)
+      {
+        temp->colnext->data += data;
+      }
+      else
+      {
+        pnewnode->colnext = temp->colnext;
+        temp->colnext = pnewnode;
+      }
     }
+
+    if (!rowhead_[row] || rowhead_[row]->col > col)
+    {
+      pnewnode->rownext = rowhead_[row];
+      rowhead_[row] = pnewnode;
+    }
+    else
+    {
+      {
+        while (temp->rownext && temp->rownext->col < col)
+        {
+          temp = temp->rownext;
+        }
+        //if the node already exists, it has been dealed in the col part;
+        if (temp->rownext->col == col)
+        {
+          // temp->colnext->data += data;
+        }
+        else
+        {
+          pnewnode->rownext = temp->rownext;
+          temp->rownext = pnewnode;
+        }
+      }
+    }
+  }
 }
 
-int Matrix_Orthogonal::resize(int a, int b) {} //resize the shape of the matrix
+  // int Matrix_Orthogonal::resize(int a, int b) {} //resize the shape of the matrix
 
-int main()
-{
-}
+  int main()
+  {
+  }
