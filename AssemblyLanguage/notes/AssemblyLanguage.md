@@ -2252,16 +2252,22 @@ SSE2标量浮点指令
 
 ## MOVSD：Move Scalar Double-Precision Floating-Point Value
 指令格式（Intel）
-MOVSD xmm1, xmm2/m64
-MOVSD xmm2/m64, xmm1
+
+    MOVSD xmm1, xmm2/m64
+    MOVSD xmm2/m64, xmm1
+
 语义
+
 Move scalar double-precision floating-point value between xmm2/m64 and xmm1 register.
 
 ## MULSD：Multiply Scalar Double-Precision Floating-Point Values
 
 指令格式（Intel）
-MULSD xmm1, xmm2/m64
+
+    MULSD xmm1, xmm2/m64
+
 语义
+
 Multiply the low double-precision floating-point value in xmm2/m64 by low double-precision floating-point value in xmm1
 
 ## UCOMISD：Unordered Compare Scalar Double-Precision Floating-Point Values and Set EFLAGS
@@ -2296,4 +2302,46 @@ gcc -S -march=pentium4 -mfpmath=sse -O2 fsub.c
 
 ***
 
-```
+## 汇编语言的数据表示
+
+## 基本数据类型
+
+整数
+
+    b, l ,w ,q
+    char, short, int, long int
+
+浮点
+
+    s, l ,t
+    float, double, long double
+
+## 数组
+
+利用index进行索引.
+
+## 结构
+
+利用偏移量确定地址.
+
+## 联合
+
+略.
+
+## 内存分布
+
+内存地址对齐.(便于使用各种半字/Byte操作汇编指令, 避免在内存中取到两页中的跨页数据)
+
+在C语言中, 结构体对齐有以下要求:
+
+* 原则1、数据成员对齐规则：结构（struct或联合union）的数据成员，第一个数据成员放在offset为0的地方. 每个数据成员(包括子结构)存储的起始位置要从该成员大小的整数倍开始.
+* 原则2、结构体作为成员：如果一个结构里有某些结构体成员，则结构体成员要从其内部最大元素大小的整数倍地址开始存储。（struct a里存有struct b，b里有char，int，double等元素，那b应该从8的整数倍开始存储。）
+* 原则3、收尾工作：结构体的总大小，也就是sizeof的结果，必须是其内部最大成员的整数倍，不足的要补齐。
+
+***
+
+## 嵌入式汇编
+
+
+
+

@@ -6,6 +6,10 @@
 `define ADD 3'b010
 `define SUB 3'b110
 `define SLT 3'b111
+`define XOR 3'b100
+`define NOR 3'b101
+`define SLTU 3'b011
+
 
 module alu(
 	input [`DATA_WIDTH - 1:0] A,
@@ -63,6 +67,21 @@ module alu(
 			  	begin
 					Result=adder;
 				end
+			`XOR:
+				begin
+					Result=A^B;
+				end
+			`NOR:
+				begin
+					Result=~(A|B);
+				end
+			`SLTU:
+				begin
+					Result[`DATA_WIDTH-1:1]=0;
+					Result[0]=CarryOut; //????
+					
+				end
+
 			default:
 		  	// `SLT:
 			  	begin
